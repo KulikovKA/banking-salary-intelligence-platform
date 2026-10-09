@@ -2,4 +2,4 @@
 
 Канонический документ: [docs/implementation/MASTER_PLAN.md](docs/implementation/MASTER_PLAN.md).
 
-Архитектура v1.1 принята владельцем как база POC. WORK-01 / SRC-001 проверен частично и остаётся BLOCKED: автоматический сбор тарифных источников не подтверждён, оригиналы работодательских тарифов не получены. Техническая инвентаризация и блокеры — в [отчёте WORK-01](docs/reports/WORK-01.md) и [отчёте SRC-001](docs/reports/SRC-001.md). Полный план и статусы — в каноническом документе.
+Architecture v1.1 remains the accepted POC base. WORK-01/SRC-001 is BLOCKED: no bank source has G0-LIVE; bank-side permission and current employer tariff originals remain unconfirmed. G0-OFFLINE now admits listed WORK-02?09 checkpoints with isolated synthetic fixtures and no external ingestion egress. The decision does not pass G1/G2. See [ADR-006](docs/architecture/ADR/006-g0-offline-and-live-ingestion.md), [WORK-01 report](docs/reports/WORK-01.md), and [SRC-001 report](docs/reports/SRC-001.md).

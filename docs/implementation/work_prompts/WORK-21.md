@@ -1,5 +1,7 @@
 # Исполнительское задание WORK-21
 
+**Mode:** `live/acceptance` for independent audit/fix verification against actual evidence and stated gates. Offline/synthetic results do not prove G1/G2.
+
 Модель-исполнитель: **GPT-6 Luna**. Настройка reasoning: **Extra High**. Выставить настройку перед запуском; текст задания её не переключает.
 
 Выполни объединённое задание **Исправления по замечаниям аудита** в проекте Banking Salary Intelligence Platform. Работа с кодом разрешена только после отдельной команды начать реализацию; текущая редакция плана не является такой командой.

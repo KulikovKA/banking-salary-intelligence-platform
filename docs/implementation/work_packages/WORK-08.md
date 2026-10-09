@@ -4,11 +4,21 @@
 
 Почему этот уровень: Вертикальный сценарий вопрос→проверенный claim→полный оригинал. Для AI-002 отдельно назначен Extra High.
 
-Dependencies: [WORK-04](WORK-04.md), [WORK-06](WORK-06.md), [WORK-07](WORK-07.md)
 
-Gates входящих этапов: G0. Порядок внутри блока обязателен. G1 принимается после WORK-05, G2 после WORK-09. Реализация пока не начата; текущее поручение пользователя меняет только план.
 
 [Правила reasoning](../REASONING_GUIDE.md). [Готовый prompt](../work_prompts/WORK-08.md).
+
+Dependencies: Offline and full acceptance dependencies: WORK-04, WORK-06, and WORK-07.
+Offline checkpoint gate: G0-OFFLINE. Full acceptance retains original AC and applicable live/G1/G2 requirements.
+
+## Execution mode under ADR-006
+
+**Mode:** offline checkpoint under G0-OFFLINE; all live work requires exact source G0-LIVE and original acceptance gates.
+
+Offline work uses local data or explicitly synthetic fixtures only. External ingestion requests are forbidden, including redirects, subresources, parser workers, and browser renderers. Synthetic provenance is isolated from real manifests and publication. A checkpoint marked DONE does not make this WORK DONE or satisfy G1/G2. Preserve every original acceptance criterion.
+
+
+
 
 ## Общие условия
 

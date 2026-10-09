@@ -1,10 +1,10 @@
 # MASTER PLAN — объединённые задания
 
-Обновлено 09.10.2026: WORK-01/SRC-001 технически проверен частично по решениям владельца; архитектура v1.1 принята как база. Bank-side permission для автосбора и актуальные employer tariff originals не подтверждены.
+Обновлено 09.10.2026: WORK-01/SRC-001 остаётся BLOCKED после проверки новых URL Кубань Кредит, ВТБ и Альфа. Архитектура v1.1 принята как база. Два PDF Кубань Кредит запрещены robots и не сохранены; TLS мешает локальной проверке ВТБ/Альфа. Bank-side permission и актуальные employer tariff originals не подтверждены.
 
 ## Текущий статус
 
-**62 исходных задачи объединены в 22 рабочих блока: 20 для GPT-6 Luna и 2 независимых проверки для Astra.** Все 248 исходных подзадач и критерии сохранены как внутренняя детализация. Реализован только стартовый каркас INF-001; WORK-02 в работе. WORK-01/SRC-001 BLOCKED: четыре банка технически инвентаризированы, один справочный original сохранён вне Git, но автосбор blocked до подтверждения правил банков; полного employer tariff корпуса нет. Остальные блоки без изменений. Цель проверки раз в 24 часа предварительная; решение владельца проекта не является разрешением банка.
+Updated 2026-10-10: WORK-01/SRC-001 remains BLOCKED. ADR-006 is approved with changes: listed WORK-02?09 checkpoints may proceed under G0-OFFLINE; G0-LIVE(source) is not approved for any bank. Bank permission and current employer tariff originals remain unconfirmed.
 
 ## С чего начинать
 
@@ -17,7 +17,7 @@
 | Блок | Объединённая задача | Исполнитель | Reasoning | Внутренние этапы | Зависимости | Статус |
 |---|---|---|---|---|---|---|
 | [WORK-01](work_packages/WORK-01.md) | Источники и границы покрытия | GPT-6 Luna | **High** | SRC-001 | — | **BLOCKED** — bank-side permission/terms/rate limits и employer tariff originals не подтверждены |
-| [WORK-02](work_packages/WORK-02.md) | Окружение, репозиторий и базовая БД | GPT-6 Luna | **Medium** | INF-001, INF-002, DB-001 | WORK-01 | **IN_PROGRESS** — INF-001 выполнен; INF-002/DB-001 впереди |
+| [WORK-02](work_packages/WORK-02.md) | Environment, repository, and base DB | GPT-6 Luna | **Medium** | INF-001, INF-002, DB-001 | None for offline checkpoint; WORK-01 removed from full WORK-02 dependency | **IN_PROGRESS** ? INF-001 complete; INF-002/DB-001 under G0-OFFLINE; PostgreSQL runtime awaits Docker daemon |
 | [WORK-03](work_packages/WORK-03.md) | Архив, безопасная загрузка и фоновые задания | GPT-6 Luna | **Extra High** | STO-001, NET-001, JOB-001 | WORK-02 | TODO |
 | [WORK-04](work_packages/WORK-04.md) | HTML/PDF, структура документов и версии | GPT-6 Luna | **High** | HTML-001, PDF-001, DB-002, TXT-001, VER-001 | WORK-02, WORK-03 | TODO |
 | [WORK-05](work_packages/WORK-05.md) | Четыре банковских адаптера и проверка доступности G1 | GPT-6 Luna | **High** | ING-001, ING-002, ING-003, ING-004, QA-001 | WORK-01, WORK-04 | TODO |
@@ -40,11 +40,17 @@
 | [WORK-22](work_packages/WORK-22.md) | Независимая повторная проверка и итоговый статус | Astra | **—** | REV-003 | WORK-21 | TODO |
 
 
+## Offline checkpoints and execution modes
+
+WORK-02?WORK-09 have separate `offline_checkpoint` records in WORK_INDEX with `task_ids`, `deps`, `required_gates`, `status`, and `evidence`. Offline graph: WORK-02 has no source dependency; WORK-03 depends on offline 02; WORK-04 on 02/03; WORK-05 and WORK-06 on 04; WORK-07 on 04/06; WORK-08 on 04/06/07; WORK-09 on 08. Each requires G0-OFFLINE. A DONE checkpoint does not complete its WORK block or accept G1/G2. Full acceptance dependencies remain, except WORK-01 is removed from WORK-02.
+
+Offline/test/CI forbids external ingestion requests. Synthetic data is isolated from real archives, manifests, and publication. WORK-05 adapter scaffolds and WORK-06?09 harness work may use Fake/synthetic fixtures; live acceptance waits for exact G0-LIVE(source) and original gates. WORK-01 remains BLOCKED. WORK-10?WORK-19 remain behind accepted G2.
+
 ## Gates и исключения
 
-- G0 — согласование проектной архитектуры перед разработкой. WORK-01…05 проверяют источники и инфраструктуру POC.
-- G1 — QA-001 внутри WORK-05, минимум три разных дня реальных проверок; после него извлечение фактов WORK-06. Больший reasoning не отменяет ожидание фактических данных.
-- G2 — WORK-09. Только после его приёмки начинаются WORK-10…19 и полноценный UI.
+- G0-OFFLINE admits only listed local/synthetic checkpoints without external ingestion requests. G0-LIVE(source) requires a separate exact host/path decision before network access; no source is approved. See ADR-006.
+- G1 ? full WORK-05/QA-001: approved sources for all four banks and scheduled fetch checks on at least three different days within one week. Manual import does not count.
+- G2 ? full WORK-09 on real documents and gold/holdout using original ACCEPTANCE_CRITERIA metrics. Synthetic harness is not acceptance. WORK-10?19 still require accepted G2.
 - WORK-17 ждёт выбора LLM/provider пользователем. Остальные независимые блоки продолжаются с Fake; production real AI и его финальный аудит требуют завершённого WORK-17.
 - G3/G4 — security, legal decisions активных потоков, E2E/restore/load. WORK-20/22 — независимый аудит Astra; WORK-21 — исправления Luna.
 

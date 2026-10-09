@@ -1,14 +1,25 @@
 # WORK-02 — Окружение, репозиторий и базовая БД
 
-Исполнитель: **GPT-6 Luna**. Reasoning по умолчанию: **Medium**. Status: **IN_PROGRESS** — INF-001 завершён; INF-002 и DB-001 не выполнялись. Отчёт INF-001: [docs/reports/INF-001.md](../../reports/INF-001.md).
+Status: **IN_PROGRESS** ? INF-001 complete; INF-002/DB-001 admitted under G0-OFFLINE; PostgreSQL runtime integration awaits Docker daemon. ADR-006 is approved with changes; no source has G0-LIVE.
 
 Почему этот уровень: Работа по готовой структуре и схеме; при изменении миграционного контракта повысить до High.
+Full offline setup/schema acceptance is local; source policy is required only for subsequent live retrieval.
 
-Dependencies: [WORK-01](WORK-01.md)
 
-Gates входящих этапов: G0. Порядок внутри блока обязателен. G1 принимается после WORK-05, G2 после WORK-09. Пользователь поручил выполнить INF-001, несмотря на статус WORK-01; работа ограничена стартовым каркасом и не одобряет сбор банковских источников.
+
+
+Dependencies: Offline checkpoint dependencies: none. WORK-01 is not a dependency of WORK-02.
+Offline checkpoint gate: G0-OFFLINE. Full acceptance retains original AC and applicable live/G1/G2 requirements.
+
+## Execution mode under ADR-006
+
+**Mode:** offline checkpoint under G0-OFFLINE; all live work requires exact source G0-LIVE and original acceptance gates.
+
+Offline work uses local data or explicitly synthetic fixtures only. External ingestion requests are forbidden, including redirects, subresources, parser workers, and browser renderers. Synthetic provenance is isolated from real manifests and publication. A checkpoint marked DONE does not make this WORK DONE or satisfy G1/G2. Preserve every original acceptance criterion.
 
 [Правила reasoning](../REASONING_GUIDE.md). [Готовый prompt](../work_prompts/WORK-02.md).
+
+
 
 ## Общие условия
 

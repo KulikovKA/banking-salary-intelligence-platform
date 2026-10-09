@@ -1,5 +1,7 @@
 # Исполнительское задание WORK-07
 
+**Mode:** `offline` for the checkpoint listed in WORK_INDEX under G0-OFFLINE. No external ingestion requests in any component, including redirects, subresources, parser/browser, and workers. Local and explicitly synthetic fixtures only; synthetic corpus is isolated from real data and publication. Live/acceptance requires G0-LIVE(source) and original gates. Checkpoint DONE is not WORK DONE.
+
 Модель-исполнитель: **GPT-6 Luna**. Настройка reasoning: **Extra High**. Выставить настройку перед запуском; текст задания её не переключает.
 
 Выполни объединённое задание **Полнотекстовый поиск и детерминированные сравнения** в проекте Banking Salary Intelligence Platform. Работа с кодом разрешена только после отдельной команды начать реализацию; текущая редакция плана не является такой командой.

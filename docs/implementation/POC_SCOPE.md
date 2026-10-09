@@ -2,6 +2,12 @@
 
 Цель: доказать доступность и достаточность официальных данных, их воспроизводимое извлечение и возможность честного сравнения с открываемыми оригиналами до вложений в полный сайт.
 
+## Execution modes and evidence
+
+Offline POC development is admitted under G0-OFFLINE using explicitly marked synthetic fixtures. Offline/test/CI forbids external ingestion requests, including redirects, subresources, parser workers, and browser workers. The synthetic corpus is isolated in a test namespace/storage/database; production manifests and publication reject synthetic provenance. Synthetic tariff values are never bank facts.
+
+G0-LIVE(source) is required before any automated request to an exact host/path. SRC-001 records the decision on acquisition, storage, and reuse before retrieval. Retrieved content then receives a separate content/evidence review. Manual import requires a separate provenance/storage/reuse decision and never counts toward G1. An offline checkpoint does not complete its WORK block or pass G1/G2.
+
 ## Входит
 
 - Четыре банка, официальный approved source manifest с provenance и отдельным решением допустимости сбора.

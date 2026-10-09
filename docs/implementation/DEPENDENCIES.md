@@ -1,82 +1,44 @@
-# Зависимости объединённых блоков
+# Dependency graph and execution modes
 
-Рёбра вычислены из зависимостей всех исходных этапов. Каждый старый ID входит ровно в один WORK. Внутри блоков сохранён топологический порядок.
+Top-level `deps` in WORK_INDEX describe full WORK acceptance. `offline_checkpoint.deps` describe only the admitted offline checkpoint. A completed checkpoint does not complete the WORK block or satisfy G1/G2. All original task IDs remain in TASK_INDEX.
+
+## Offline graph (G0-OFFLINE)
 
 ```mermaid
 flowchart TD
-  WORK_01["WORK-01: High"]
-  WORK_02["WORK-02: Medium"]
-  WORK_01 --> WORK_02
-  WORK_03["WORK-03: Extra High"]
-  WORK_02 --> WORK_03
-  WORK_04["WORK-04: High"]
-  WORK_02 --> WORK_04
-  WORK_03 --> WORK_04
-  WORK_05["WORK-05: High"]
-  WORK_01 --> WORK_05
-  WORK_04 --> WORK_05
-  WORK_06["WORK-06: Extra High"]
-  WORK_04 --> WORK_06
-  WORK_05 --> WORK_06
-  WORK_07["WORK-07: Extra High"]
-  WORK_04 --> WORK_07
-  WORK_06 --> WORK_07
-  WORK_08["WORK-08: High"]
-  WORK_04 --> WORK_08
-  WORK_06 --> WORK_08
-  WORK_07 --> WORK_08
-  WORK_09["WORK-09: High"]
-  WORK_05 --> WORK_09
-  WORK_08 --> WORK_09
-  WORK_10["WORK-10: High"]
-  WORK_06 --> WORK_10
-  WORK_08 --> WORK_10
-  WORK_09 --> WORK_10
-  WORK_11["WORK-11: Extra High"]
-  WORK_03 --> WORK_11
-  WORK_08 --> WORK_11
-  WORK_10 --> WORK_11
-  WORK_12["WORK-12: High"]
-  WORK_03 --> WORK_12
-  WORK_06 --> WORK_12
-  WORK_10 --> WORK_12
-  WORK_11 --> WORK_12
-  WORK_13["WORK-13: Medium"]
-  WORK_07 --> WORK_13
-  WORK_08 --> WORK_13
-  WORK_11 --> WORK_13
-  WORK_12 --> WORK_13
-  WORK_14["WORK-14: Medium"]
-  WORK_12 --> WORK_14
-  WORK_15["WORK-15: Extra High"]
-  WORK_11 --> WORK_15
-  WORK_13 --> WORK_15
-  WORK_14 --> WORK_15
-  WORK_16["WORK-16: High"]
-  WORK_01 --> WORK_16
-  WORK_14 --> WORK_16
-  WORK_17["WORK-17: High"]
-  WORK_09 --> WORK_17
-  WORK_11 --> WORK_17
-  WORK_16 --> WORK_17
-  WORK_18["WORK-18: High"]
-  WORK_03 --> WORK_18
-  WORK_14 --> WORK_18
-  WORK_15 --> WORK_18
-  WORK_16 --> WORK_18
-  WORK_19["WORK-19: High"]
-  WORK_13 --> WORK_19
-  WORK_18 --> WORK_19
-  WORK_20["WORK-20: —"]
-  WORK_15 --> WORK_20
-  WORK_16 --> WORK_20
-  WORK_19 --> WORK_20
-  WORK_21["WORK-21: Extra High"]
-  WORK_20 --> WORK_21
-  WORK_22["WORK-22: —"]
-  WORK_21 --> WORK_22
+  W02[WORK-02 offline: INF-001, INF-002, DB-001]
+  W03[WORK-03 offline: STO-001, NET-001, JOB-001]
+  W04[WORK-04 offline: HTML-001, PDF-001, DB-002, TXT-001, VER-001]
+  W05[WORK-05 offline: adapter scaffolds and QA-001 harness]
+  W06[WORK-06 offline: schema/facts/review/publication on synthetic corpus]
+  W07[WORK-07 offline: search/comparison on synthetic corpus]
+  W08[WORK-08 offline: Fake LLM/API/UI on synthetic corpus]
+  W09[WORK-09 offline: evaluation harness only]
+  W02 --> W03 --> W04
+  W04 --> W05
+  W04 --> W06 --> W07 --> W08 --> W09
+  W06 --> W08
 ```
 
-G0 обязателен перед разработкой; G1 после WORK-05, G2 после WORK-09. WORK-17 дополнительно зависит от решения пользователя о provider; для реального AI его успешная evaluation обязательна перед WORK-20. С Fake этот блок можно оставить BLOCKED с явным ограничением release.
+Each checkpoint requires G0-OFFLINE. Offline/test/CI has no external ingestion requests, including redirects, subresources, parser, or browser renderer. Fake transport is allowed. Preserve full acceptance dependencies, except WORK-01 is removed from WORK-02; offline graph alone does not complete any WORK block.
 
-[Внутренняя детализация графа](DETAILED_DEPENDENCIES.md), [правила reasoning](REASONING_GUIDE.md).
+## Live and acceptance graph
+
+```mermaid
+flowchart LR
+  SRC[SRC-001: per-source policy decision] --> LIVE[G0-LIVE exact host/path]
+  LIVE --> FETCH[Allowed retrieval]
+  FETCH --> CONTENT[Content acceptance and immutable evidence]
+  CONTENT --> ING[WORK-05 real adapter checks]
+  ING --> G1[G1: all 4 banks, 3 distinct days within 1 week]
+  G1 --> FACT[WORK-06 real-corpus validation/publication]
+  FACT --> POC[WORK-07/08 real-corpus checks]
+  POC --> G2[WORK-09 G2 report and user acceptance]
+  G2 --> LATER[WORK-10 through WORK-19]
+```
+
+G0-LIVE is per source and is not approved for any bank source as of 2026-10-10. G1 requires an approved source and scheduled-fetch evidence for all four banks on at least three different days within one week. Manual import does not count. G2 requires real documents, human-reviewed gold/tune/holdout, and all original thresholds. Reports or checkpoints cannot self-accept G1/G2; user acceptance is required.
+
+WORK-16 is not a prerequisite for source retrieval: SRC-001 records the source-specific decision on acquisition, storage, and reuse before bytes are fetched. WORK-16 remains the broader production legal/privacy/retention review and gates production capabilities.
+
+[WORK_INDEX](WORK_INDEX.json) | [TASK_INDEX](TASK_INDEX.json) | [ADR-006](../architecture/ADR/006-g0-offline-and-live-ingestion.md)

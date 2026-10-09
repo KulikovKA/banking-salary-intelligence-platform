@@ -40,3 +40,14 @@ External LLM по умолчанию выключен. В разрешённый
 Proposed: чаты 180 дней или до удаления; operational logs 30 дней; security/audit 365 дней; оригиналы и evidence до отдельной утверждённой archive policy. Это продуктовые настройки, не законные универсальные сроки. Удаление чата убирает messages, context, answer results и персональный cache; logs не содержат текста. Backups истекают через 30 дней; журнал deletion tombstones повторно применяется после restore до открытия доступа. Tombstone содержит opaque UUID и срок, без удалённого текста.
 
 Admin доступен технический аудит, но не чужая переписка. Базовые банковские документы общие для сотрудников. Приватные договоры вне MVP. Их будущий ввод потребует organization ACL на documents→chunks→facts→search→answers и cache partitioning, а не только role check на download.
+
+
+## G0-OFFLINE / G0-LIVE ingestion boundary (ADR-006)
+
+Offline/test/CI mode has no external ingestion egress. This covers FetchGateway, worker dispatch, redirects, HTML subresources, parser subprocesses, and browser renderers. Fake transport is permitted only in tests. Ambiguous configuration fails closed.
+
+FetchGateway is the sole ingestion network boundary. Before every request and redirect it checks an active source-specific policy for the exact scheme/host/path and allowed redirect targets. It verifies TLS and actual peer IP, rejects private/loopback/link-local/metadata and local IPv6 destinations, and never disables certificate verification. Unknown, expired, revoked, or mismatched policy fails before network I/O. Workers recheck policy at dispatch; queued work does not preserve revoked permission.
+
+G0-LIVE is not granted to any bank source. SRC-001 records responsible approval, official relationship, applicable terms/robots, acquisition/storage/reuse permission, scope, frequency, and expiry before retrieval. Retrieved bytes then undergo separate content acceptance and immutable hash/provenance/evidence checks. Manual originals require separate provenance and storage/reuse decisions; manual import is never scheduled-fetch evidence.
+
+Synthetic corpus is isolated by namespace and storage/database from real originals and publication. Production source manifests and publication reject synthetic provenance. Synthetic approved/test records cannot be queried as real bank facts.

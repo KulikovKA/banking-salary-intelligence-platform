@@ -2,11 +2,20 @@
 
 > Объединено в [WORK-06 — Тарифные факты, проверка и публикация](../work_packages/WORK-06.md). Это внутренний этап общего задания, не отдельный запуск. Исполнитель: GPT-6 Luna. Reasoning: **Extra High** (`xhigh`).
 
+
+## ADR-006 execution mode
+
+**Mode:** `offline` under G0-OFFLINE for local/synthetic work, with no external ingestion egress; live/acceptance requires source-specific G0-LIVE and original gates.
+
+A completed offline checkpoint is evidence for that checkpoint only; it does not complete the WORK block or accept G1/G2. Synthetic evidence cannot be published as real bank facts.
+
+Offline mode follows TASK_INDEX.offline_deps; the card's full deps remain for live/acceptance and do not block the synthetic checkpoint. Do not claim its original live acceptance criteria passed.
+
 ## Карточка
 
 Phase: **A2**. Epic: **Факты**. Status: **TODO**.
 Priority: **Critical**. Estimated Complexity: **L** (без точных сроков).
-Assigned Model: **GPT-6 Luna — Reasoning**. Gate prerequisites: **G0**.
+Gate prerequisites: **G0-OFFLINE for the checkpoint; real-corpus acceptance retains original gates**. Verify dependencies and evidence; a TODO record is not proof of completion.
 
 ## Назначение
 

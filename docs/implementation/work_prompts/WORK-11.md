@@ -1,5 +1,7 @@
 # Исполнительское задание WORK-11
 
+**Mode:** `live/acceptance` after accepted G2 and all incoming gates. Use a source only with active G0-LIVE(source). Never bypass TLS, SSRF, or source policy. Fake/local tests do not count as real acceptance.
+
 Модель-исполнитель: **GPT-6 Luna**. Настройка reasoning: **Extra High**. Выставить настройку перед запуском; текст задания её не переключает.
 
 Выполни объединённое задание **Личная история, память и надёжное выполнение вопросов** в проекте Banking Salary Intelligence Platform. Работа с кодом разрешена только после отдельной команды начать реализацию; текущая редакция плана не является такой командой.

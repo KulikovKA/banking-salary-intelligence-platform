@@ -4,11 +4,21 @@
 
 Почему этот уровень: Нужно различить официальность, применимость и достаточность условий; правовое решение остаётся у ответственного.
 
-Dependencies: Нет технических зависимостей.
 
-Gates входящих этапов: G0. Порядок внутри блока обязателен. G1 принимается после WORK-05, G2 после WORK-09. Код приложения не реализовывался. Архитектура v1.1, scope и вне-Git локальное хранилище приняты владельцем. Автосбор каждого источника остаётся BLOCKED до подтверждения банковских правил; цель 24 часа предварительная и не является разрешением.
 
 [Правила reasoning](../REASONING_GUIDE.md). [Готовый prompt](../work_prompts/WORK-01.md).
+
+Dependencies: Source retrieval is blocked; no source-specific G0-LIVE exists.
+Offline checkpoint gate: G0-OFFLINE. Full acceptance retains original AC and applicable live/G1/G2 requirements.
+
+## Execution mode under ADR-006
+
+**Mode:** live/acceptance for source manifest decisions; current source status remains BLOCKED and no target request is permitted without G0-LIVE(source).
+
+Offline work uses local data or explicitly synthetic fixtures only. External ingestion requests are forbidden, including redirects, subresources, parser workers, and browser renderers. Synthetic provenance is isolated from real manifests and publication. A checkpoint marked DONE does not make this WORK DONE or satisfy G1/G2. Preserve every original acceptance criterion.
+
+
+
 
 ## Общие условия
 

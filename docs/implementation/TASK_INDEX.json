@@ -11,32 +11,34 @@
     ],
     "contract": "SourceAcceptanceManifest по docs/research/SOURCES.md; одна запись на URL, policy decision и coverage на банк",
     "steps": [
-      "Проверить стартовые URLs по официальным страницам и записать final URL/redirect chain",
-      "Найти для каждого банка product page, тарифный PDF и правила/условия, различить manual/news/tariff",
-      "Записать robots.txt, terms URL, ограничения частоты и решение ответственного; не объявлять robots разрешением",
-      "Сохранить matrix банк×метрика×регион×пакет с unknown; приложить SHA-256 доступных оригиналов в разрешённое fixture storage"
+      "Before any automated request, record per exact host/path the official relationship, redirects, robots/terms, responsible approval, permitted retrieval, storage/reuse rights, purpose, rate and expiry/revocation in SourceAcceptanceManifest",
+      "Do not perform target GET until that exact source has an explicit active G0-LIVE decision; unknown or missing policy means BLOCKED",
+      "After an allowed retrieval, record actual final URL/redirects, HTTP/MIME/size/SHA-256, dates, document type, bank/region/segment/package applicability and content acceptance; keep rejected content unpublished",
+      "Maintain bank?metric?region?package coverage with unknown values; manual-import evidence is separate and never counts as scheduled fetch"
     ],
-    "errors": "403/CAPTCHA/неясные права → blocked source и причина; сторонний mirror исключить; не заменять тариф справочником API",
-    "tests": "Manual review of available official references/tariffs; verify target GET, redirect, MIME and hash for accessible originals. Do not accept prices/dates from search index. If automation permission is unclear, keep source BLOCKED and require manual import.",
+    "errors": "403/CAPTCHA/TLS validation failure/unknown rights means BLOCKED without bypass; third-party mirror excluded; manual import requires separate provenance and storage/reuse decision; manual import never counts as automated fetch.",
+    "tests": "Review manifest policy and content evidence separately; verify TLS, target GET only for source with active G0-LIVE; verify redirects, MIME and hash; no prices/dates from search snippets.",
     "accept": "Четыре банковские строки с доказательствами официальности и решениями policy; пробелы покрытия перечислены, ни один непроверенный URL не approved",
     "priority": "Critical",
     "complexity": "L",
-    "gate": "G0",
+    "gate": "G0-LIVE(source) for retrieval; G0-OFFLINE for manifest/schema work",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "BLOCKED",
-    "status_reason": "Bank-side permissions/terms/rate limits and current employer tariff originals are unconfirmed; project decisions do not replace bank permission.",
+    "status_reason": "No source has G0-LIVE; current employer tariff originals and required policy decisions remain unresolved.",
     "work_package": "WORK-01",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "INF-001",
     "title": "Изолированный репозиторий и воспроизводимые инструменты",
     "phase": "A1",
     "epic": "Основа",
-    "deps": [
-      "SRC-001"
-    ],
+    "deps": [],
     "files": [
       "README.md",
       ".gitignore",
@@ -59,12 +61,22 @@
     "accept": "Clean setup воспроизводится из README; нет изменений вне проекта; зависимости pinned",
     "priority": "Critical",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "DONE",
     "work_package": "WORK-02",
     "reasoning": "Medium",
-    "reasoning_effort": "medium"
+    "reasoning_effort": "medium",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "status_reason": "Completed local setup has no dependency on blocked source-policy approval; offline admission is governed by ADR-006.",
+    "offline_deps": [],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "INF-002",
@@ -92,12 +104,24 @@
     "accept": "Ошибки конфигурации обнаруживаются до обработки запросов; example env не содержит секретов",
     "priority": "High",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
-    "status": "TODO",
+    "status": "IN_PROGRESS",
     "work_package": "WORK-02",
     "reasoning": "Medium",
-    "reasoning_effort": "medium"
+    "reasoning_effort": "medium",
+    "status_reason": "Offline implementation admitted under approved ADR-006/G0-OFFLINE while WORK-01 remains BLOCKED. No live bank source access. PostgreSQL integration remains pending because Docker daemon is unavailable.",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "INF-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "DB-001",
@@ -125,12 +149,24 @@
     "accept": "Schema соответствует контракту, seed четырёх bank codes идемпотентен, migration SQL reviewed",
     "priority": "Critical",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
-    "status": "TODO",
+    "status": "IN_PROGRESS",
     "work_package": "WORK-02",
     "reasoning": "Medium",
-    "reasoning_effort": "medium"
+    "reasoning_effort": "medium",
+    "status_reason": "Offline implementation admitted under approved ADR-006/G0-OFFLINE while WORK-01 remains BLOCKED. No live bank source access. PostgreSQL integration remains pending because Docker daemon is unavailable.",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "INF-002"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "STO-001",
@@ -157,12 +193,23 @@
     "accept": "Оригинал никогда не перезаписывается; race даёт один blob; ни один committed ref не указывает на partial file",
     "priority": "Critical",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-03",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "DB-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "NET-001",
@@ -188,12 +235,23 @@
     "accept": "Ни один forbidden destination не получает запрос; observation сохранены; repeat304 не дублирует version",
     "priority": "Critical",
     "complexity": "L",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-03",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "STO-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "JOB-001",
@@ -220,12 +278,23 @@
     "accept": "Повтор запуска не создаёт duplicate jobs; истёкшая lease восстанавливается; all transitions проверены",
     "priority": "Critical",
     "complexity": "L",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-03",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "NET-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "HTML-001",
@@ -251,12 +320,23 @@
     "accept": "Оформление не меняет canonical meaning; значимая сноска и отрицание сохранены; HTML не имеет PDF page",
     "priority": "High",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-04",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "NET-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "PDF-001",
@@ -282,12 +362,23 @@
     "accept": "Каждая извлечённая страница связана с оригиналом; нет выдуманных page labels; выбранная лицензия отражена",
     "priority": "Critical",
     "complexity": "L",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-04",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "STO-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "DB-002",
@@ -313,12 +404,23 @@
     "accept": "Upgrade сохраняет catalog/blobs, family/version/extraction semantics разделены",
     "priority": "High",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-04",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "DB-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "TXT-001",
@@ -346,12 +448,25 @@
     "accept": "Quote offsets разрешаются в exact text; все pages accounted; неоднозначности видимы downstream",
     "priority": "Critical",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-04",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "DB-002",
+      "HTML-001",
+      "PDF-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "VER-001",
@@ -377,12 +492,24 @@
     "accept": "Все три причины изменения различимы; старые ответы смогут открыть прежний extraction",
     "priority": "High",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-04",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "JOB-001",
+      "TXT-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "ING-001",
@@ -409,12 +536,23 @@
     "accept": "Сбер использует единый pipeline; минимум один настоящий tariff/conditions original получен; покрытие и все нераспознанные поля отражены",
     "priority": "Critical",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE for adapter scaffolding; G0-LIVE(source) for network requests; G1 for acceptance",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-05",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "G0-LIVE(source) required before target network access; real-document acceptance requires content evidence."
+    },
+    "offline_deps": [
+      "VER-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "ING-002",
@@ -441,12 +579,23 @@
     "accept": "ВТБ использует единый pipeline; минимум один настоящий tariff/conditions original получен; покрытие и все нераспознанные поля отражены",
     "priority": "Critical",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE for adapter scaffolding; G0-LIVE(source) for network requests; G1 for acceptance",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-05",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "G0-LIVE(source) required before target network access; real-document acceptance requires content evidence."
+    },
+    "offline_deps": [
+      "VER-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "ING-003",
@@ -473,12 +622,23 @@
     "accept": "Альфа-Банк использует единый pipeline; минимум один настоящий tariff/conditions original получен; покрытие и все нераспознанные поля отражены",
     "priority": "Critical",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE for adapter scaffolding; G0-LIVE(source) for network requests; G1 for acceptance",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-05",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "G0-LIVE(source) required before target network access; real-document acceptance requires content evidence."
+    },
+    "offline_deps": [
+      "VER-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "ING-004",
@@ -505,12 +665,23 @@
     "accept": "Кубань Кредит использует единый pipeline; минимум один настоящий tariff/conditions original получен; покрытие и все нераспознанные поля отражены",
     "priority": "Critical",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE for adapter scaffolding; G0-LIVE(source) for network requests; G1 for acceptance",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-05",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "G0-LIVE(source) required before target network access; real-document acceptance requires content evidence."
+    },
+    "offline_deps": [
+      "VER-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "QA-001",
@@ -539,12 +710,26 @@
     "accept": "Собраны реальные доказательства G1 или точный NO-GO без выдуманного успеха; решение пользователя записано",
     "priority": "Critical",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-LIVE(source) + G1; offline harness is G0-OFFLINE only",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-05",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Scheduled fetch evidence from all four banks over at least three different days within one week; manual import never substitutes."
+    },
+    "offline_deps": [
+      "ING-001",
+      "ING-002",
+      "ING-003",
+      "ING-004"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "DB-003",
@@ -570,12 +755,23 @@
     "accept": "Schema допускает историю и conflict, запрещает dangling evidence и повтор кандидата",
     "priority": "Critical",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-06",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "DB-002"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "FACT-001",
@@ -602,12 +798,23 @@
     "accept": "Нормализация воспроизводима и не добавляет недостающих дат/чисел",
     "priority": "Critical",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-06",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "DB-003"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "FACT-002",
@@ -635,12 +842,23 @@
     "accept": "Каждый candidate объясним quote+rule version; missing fields не выдуманы; gold metrics рассчитаны",
     "priority": "Critical",
     "complexity": "L",
-    "gate": "G1",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-06",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "FACT-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "FACT-003",
@@ -666,12 +884,23 @@
     "accept": "Нельзя одобрить некорректное evidence; решения append-only; disputed candidate не появляется в published queries",
     "priority": "Critical",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-06",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "FACT-002"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "FACT-004",
@@ -698,12 +927,24 @@
     "accept": "Snapshot selection воспроизводим; old versions доступны; conflicted/stale данные не становятся безусловным winner",
     "priority": "Critical",
     "complexity": "L",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-06",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "FACT-003",
+      "VER-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "SRCH-001",
@@ -731,12 +972,24 @@
     "accept": "Результаты открывают правильную версию; SQL injection невозможен через query string; metrics report сохранён",
     "priority": "High",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-07",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "FACT-004",
+      "TXT-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "CMP-001",
@@ -762,12 +1015,23 @@
     "accept": "Несовместимые предложения никогда не дают численного преимущества; missing inputs перечислены",
     "priority": "Critical",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-07",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "FACT-004"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "CMP-002",
@@ -793,12 +1057,23 @@
     "accept": "100% golden arithmetic/status; ни одно преимущество без доказательств обоих банков",
     "priority": "Critical",
     "complexity": "L",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-07",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "CMP-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "LLM-001",
@@ -824,12 +1099,23 @@
     "accept": "Offline suite работает без секретов; замена provider не требует изменения comparison/parser",
     "priority": "High",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-08",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "FACT-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "AI-001",
@@ -857,12 +1143,25 @@
     "accept": "Инструменты читают только разрешённые данные; POC intent не требует real API",
     "priority": "High",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-08",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "CMP-002",
+      "LLM-001",
+      "SRCH-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "AI-002",
@@ -888,12 +1187,23 @@
     "accept": "Все существенные предложения отображают проверенные claims; unknown не ноль; поддельное утверждение не выходит",
     "priority": "Critical",
     "complexity": "L",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-08",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "AI-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "DOC-001",
@@ -920,12 +1230,23 @@
     "accept": "Открывается именно цитированная версия целиком; PDF page основана на physical_page",
     "priority": "Critical",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-08",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "VER-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "API-001",
@@ -954,12 +1275,24 @@
     "accept": "Один реальный question→источники сценарий проходит с Fake без network API",
     "priority": "Critical",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-08",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "AI-002",
+      "DOC-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "UI-001",
@@ -987,12 +1320,23 @@
     "accept": "POC пользователь видит таблицу и открывает полный доказательный документ; real API не требуется",
     "priority": "High",
     "complexity": "M",
-    "gate": "G0",
+    "gate": "G0-OFFLINE (offline checkpoint); existing acceptance gates still apply to real corpus",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-08",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Requires exact task/source approval and applicable gates; see ADR-006"
+    },
+    "offline_deps": [
+      "API-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "QA-002",
@@ -1021,12 +1365,23 @@
     "accept": "Доказано ядро или честно зафиксирован NO-GO; полный MVP начинается только после G2",
     "priority": "Critical",
     "complexity": "L",
-    "gate": "G1",
+    "gate": "G0-OFFLINE for harness; G1 + real documents/gold/holdout for G2",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "TODO",
     "work_package": "WORK-09",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "G0-OFFLINE: synthetic/local only, no external ingestion requests",
+      "live_acceptance": "Run existing thresholds on real corpus; synthetic data cannot replace gold/holdout or count toward G2."
+    },
+    "offline_deps": [
+      "UI-001"
+    ],
+    "dependency_modes": {
+      "offline": "offline_deps",
+      "live_acceptance": "deps"
+    }
   },
   {
     "id": "DB-004",
@@ -1059,7 +1414,11 @@
     "status": "TODO",
     "work_package": "WORK-10",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "AUTH-001",
@@ -1091,7 +1450,11 @@
     "status": "TODO",
     "work_package": "WORK-10",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "AUTH-002",
@@ -1123,7 +1486,11 @@
     "status": "TODO",
     "work_package": "WORK-10",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "AUTH-003",
@@ -1156,7 +1523,11 @@
     "status": "TODO",
     "work_package": "WORK-10",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "LLM-002",
@@ -1190,7 +1561,11 @@
     "status": "TODO",
     "work_package": "WORK-11",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "CHAT-001",
@@ -1223,7 +1598,11 @@
     "status": "TODO",
     "work_package": "WORK-11",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "CHAT-002",
@@ -1254,7 +1633,11 @@
     "status": "TODO",
     "work_package": "WORK-11",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "AI-003",
@@ -1289,7 +1672,11 @@
     "status": "TODO",
     "work_package": "WORK-11",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "DB-005",
@@ -1321,7 +1708,11 @@
     "status": "TODO",
     "work_package": "WORK-12",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "CHG-001",
@@ -1353,7 +1744,11 @@
     "status": "TODO",
     "work_package": "WORK-12",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "NTF-001",
@@ -1386,7 +1781,11 @@
     "status": "TODO",
     "work_package": "WORK-12",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "JOB-002",
@@ -1419,7 +1818,11 @@
     "status": "TODO",
     "work_package": "WORK-12",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "API-002",
@@ -1456,7 +1859,11 @@
     "status": "TODO",
     "work_package": "WORK-12",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "UI-002",
@@ -1490,7 +1897,11 @@
     "status": "TODO",
     "work_package": "WORK-13",
     "reasoning": "Medium",
-    "reasoning_effort": "medium"
+    "reasoning_effort": "medium",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "UI-003",
@@ -1523,7 +1934,11 @@
     "status": "TODO",
     "work_package": "WORK-13",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "UI-004",
@@ -1558,7 +1973,11 @@
     "status": "TODO",
     "work_package": "WORK-13",
     "reasoning": "Medium",
-    "reasoning_effort": "medium"
+    "reasoning_effort": "medium",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "UI-005",
@@ -1592,7 +2011,11 @@
     "status": "TODO",
     "work_package": "WORK-13",
     "reasoning": "Medium",
-    "reasoning_effort": "medium"
+    "reasoning_effort": "medium",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "UI-006",
@@ -1624,7 +2047,11 @@
     "status": "TODO",
     "work_package": "WORK-13",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "OPS-001",
@@ -1656,7 +2083,11 @@
     "status": "TODO",
     "work_package": "WORK-14",
     "reasoning": "Medium",
-    "reasoning_effort": "medium"
+    "reasoning_effort": "medium",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "SEC-001",
@@ -1688,7 +2119,11 @@
     "status": "TODO",
     "work_package": "WORK-15",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "SEC-002",
@@ -1721,7 +2156,11 @@
     "status": "TODO",
     "work_package": "WORK-15",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "SEC-003",
@@ -1754,7 +2193,11 @@
     "status": "TODO",
     "work_package": "WORK-16",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "LLM-003",
@@ -1788,7 +2231,11 @@
     "status": "TODO",
     "work_package": "WORK-17",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "OPS-002",
@@ -1821,7 +2268,11 @@
     "status": "TODO",
     "work_package": "WORK-18",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "OPS-003",
@@ -1857,7 +2308,11 @@
     "status": "TODO",
     "work_package": "WORK-18",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "QA-003",
@@ -1892,7 +2347,11 @@
     "status": "TODO",
     "work_package": "WORK-19",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "LOAD-001",
@@ -1923,7 +2382,11 @@
     "status": "TODO",
     "work_package": "WORK-19",
     "reasoning": "High",
-    "reasoning_effort": "high"
+    "reasoning_effort": "high",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "REV-001",
@@ -1956,7 +2419,11 @@
     "status": "TODO",
     "work_package": "WORK-20",
     "reasoning": "—",
-    "reasoning_effort": null
+    "reasoning_effort": null,
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "REV-002",
@@ -1987,7 +2454,11 @@
     "status": "TODO",
     "work_package": "WORK-21",
     "reasoning": "Extra High",
-    "reasoning_effort": "xhigh"
+    "reasoning_effort": "xhigh",
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   },
   {
     "id": "REV-003",
@@ -2018,6 +2489,10 @@
     "status": "TODO",
     "work_package": "WORK-22",
     "reasoning": "—",
-    "reasoning_effort": null
+    "reasoning_effort": null,
+    "execution_modes": {
+      "offline": "Only local design/tests that do not ingest external sources; does not satisfy acceptance",
+      "live_acceptance": "Requires existing gates, G2 where specified, and approved legal/source policy"
+    }
   }
 ]

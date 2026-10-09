@@ -4,11 +4,21 @@
 
 Почему этот уровень: Страницы, сноски, canonical hashes и история извлечения должны оставаться согласованными.
 
-Dependencies: [WORK-02](WORK-02.md), [WORK-03](WORK-03.md)
 
-Gates входящих этапов: G0. Порядок внутри блока обязателен. G1 принимается после WORK-05, G2 после WORK-09. Реализация пока не начата; текущее поручение пользователя меняет только план.
 
 [Правила reasoning](../REASONING_GUIDE.md). [Готовый prompt](../work_prompts/WORK-04.md).
+
+Dependencies: Offline checkpoint dependencies: WORK-02 and WORK-03 offline checkpoints.
+Offline checkpoint gate: G0-OFFLINE. Full acceptance retains original AC and applicable live/G1/G2 requirements.
+
+## Execution mode under ADR-006
+
+**Mode:** offline checkpoint under G0-OFFLINE; all live work requires exact source G0-LIVE and original acceptance gates.
+
+Offline work uses local data or explicitly synthetic fixtures only. External ingestion requests are forbidden, including redirects, subresources, parser workers, and browser renderers. Synthetic provenance is isolated from real manifests and publication. A checkpoint marked DONE does not make this WORK DONE or satisfy G1/G2. Preserve every original acceptance criterion.
+
+
+
 
 ## Общие условия
 

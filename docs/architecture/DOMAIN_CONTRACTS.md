@@ -108,3 +108,10 @@ Budget defaults: максимум 2 provider calls/question (intent + explanatio
 Счётчик резервирует верхнюю оценку атомарно до вызова, reconciles actual usage после ответа. При отсутствии provider usage применяется консервативная оценка и признак estimated; деньги считаются только при утверждённой price config, иначе cost unknown. Crash после отправки запроса не освобождает резерв автоматически: неизвестное потребление сохраняется как estimated до reconciliation/конца бюджетного окна, чтобы retry не обошёл cap. Неотправленный запрос можно освободить при доказанном transport state. Идентичный public evidence explanation может кэшироваться по query/scenario/corpus/prompt/model; персональные messages в shared cache не входят.
 
 Daily windows считаются по явно настроенной Europe/Moscow, usage timestamps хранятся в UTC. Изменение model/prompt/corpus или revocation evidence инвалидирует cache. Обязательные limitations определяются backend и не могут быть удалены LLM ради более выгодного представления одного банка.
+
+
+## Source policy and corpus provenance (ADR-006)
+
+A source-policy decision precedes retrieval and is scoped to exact scheme/host/path plus explicitly allowed redirect targets. It records the responsible decision, official relationship, applicable terms/robots, permission for acquisition, storage and reuse, purpose, rate/expiry, and revocation state. FetchGateway checks the active decision before every request; missing/unknown/expired/revoked policy is BLOCKED. Retrieval permission and content acceptance are separate events. Content acceptance records actual final URL, redirects, MIME/size/hash, document family, dates, and applicability evidence.
+
+Manual import has its own provenance and storage/reuse approval and cannot count as automated retrieval or G1 scheduled-fetch evidence. `corpus_kind=synthetic|real` (or an equivalent enforced namespace boundary) is immutable provenance: synthetic fixtures are isolated from real publication, and real fact approval rejects synthetic provenance. No fake tariff is represented as a bank fact.

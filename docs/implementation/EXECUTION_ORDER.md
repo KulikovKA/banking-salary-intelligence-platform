@@ -1,6 +1,12 @@
-# Порядок запуска объединённых заданий
+# Execution order for grouped work
 
-Один WORK-prompt — одно поручение. Запускать после разрешения разработки. Исходные ID — внутренние этапы, не отдельные очереди работ.
+One WORK prompt is one assignment. WORK-02 through WORK-09 may run only their listed offline checkpoint under G0-OFFLINE; live/acceptance work waits for source-specific G0-LIVE and original gates. See [ADR-006](../architecture/ADR/006-g0-offline-and-live-ingestion.md).
+
+**Offline order:** WORK-02 -> WORK-03 -> WORK-04. After WORK-04, WORK-05 adapter scaffolds and QA harness can run alongside WORK-06 synthetic implementation. WORK-07 depends on offline WORK-04/06; WORK-08 depends on 04/06/07; WORK-09 evaluation harness depends on WORK-08. These checkpoints do not complete the full blocks.
+
+**Live/acceptance path:** Continue WORK-01/SRC-001 as a separate blocked branch. After a source receives approval, retrieve and content-review its documents, then gather real scheduled observations. Full WORK-05/G1 requires all four banks and three distinct days within one week. Real-corpus checks in WORK-06 through WORK-09 and G2 use accepted real documents. Do not start WORK-10 through WORK-19 before user acceptance of G2.
+
+**Modes:** WORK-01 is `live/acceptance` for retrieval (manifest design may be offline); WORK-02 through WORK-09 are `offline` for admitted checkpoints and `live/acceptance` only for explicitly deferred work; WORK-10 through WORK-19 are `live/acceptance` after G2; WORK-20 through WORK-22 are `live/acceptance` audit/fix verification. Each prompt states its mode.
 
 1. **WORK-01 — Источники и границы покрытия**. GPT-6 Luna, **High**. [Передаваемый prompt](work_prompts/WORK-01.md), [состав и приёмка](work_packages/WORK-01.md).
 2. **WORK-02 — Окружение, репозиторий и базовая БД**. GPT-6 Luna, **Medium**. [Передаваемый prompt](work_prompts/WORK-02.md), [состав и приёмка](work_packages/WORK-02.md).

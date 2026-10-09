@@ -3,16 +3,16 @@
     "id": "WORK-01",
     "title": "Источники и границы покрытия",
     "reasoning": "High",
-    "reason": "??????????? ?????????????? ???????? ?????????; ???????? ???????????? ?? ????????????? bank-side terms/permission/rate limits; ??????? employer tariff originals ?? ????????.",
+    "reason": "Bank-side permission, applicable terms/rate limits, and current employer tariff originals are unconfirmed.",
     "members": [
       "SRC-001"
     ],
     "status": "BLOCKED",
-    "status_reason": "G0 source acceptance blocked: no bank-side automated collection permission and no complete current employer tariff corpus.",
+    "status_reason": "New Kuban Credit documents are classified, but two PDFs are disallowed by robots and not locally archived; bank-side automated collection permission, site/path terms, rate limits, and current tariff originals remain unresolved.",
     "owner": "GPT-6 Luna",
     "deps": [],
     "gates": [
-      "G0"
+      "G0-LIVE(source)"
     ]
   },
   {
@@ -27,12 +27,27 @@
     ],
     "status": "IN_PROGRESS",
     "owner": "GPT-6 Luna",
-    "deps": [
-      "WORK-01"
-    ],
+    "deps": [],
     "gates": [
-      "G0"
-    ]
+      "G0-OFFLINE"
+    ],
+    "status_reason": "INF-001 is complete; INF-002 and DB-001 are admitted under G0-OFFLINE. PostgreSQL runtime integration remains pending because Docker daemon is unavailable. No source has G0-LIVE.",
+    "offline_checkpoint": {
+      "task_ids": [
+        "INF-001",
+        "INF-002",
+        "DB-001"
+      ],
+      "deps": [],
+      "required_gates": [
+        "G0-OFFLINE"
+      ],
+      "status": "IN_PROGRESS",
+      "evidence": [
+        "docs/reports/WORK-02.md"
+      ]
+    },
+    "checkpoint_note": "Checkpoint completion does not complete this WORK block or satisfy its live/acceptance gates."
   },
   {
     "id": "WORK-03",
@@ -50,8 +65,24 @@
       "WORK-02"
     ],
     "gates": [
-      "G0"
-    ]
+      "G0-OFFLINE"
+    ],
+    "offline_checkpoint": {
+      "task_ids": [
+        "STO-001",
+        "NET-001",
+        "JOB-001"
+      ],
+      "deps": [
+        "WORK-02"
+      ],
+      "required_gates": [
+        "G0-OFFLINE"
+      ],
+      "status": "TODO",
+      "evidence": []
+    },
+    "checkpoint_note": "Checkpoint completion does not complete this WORK block or satisfy its live/acceptance gates."
   },
   {
     "id": "WORK-04",
@@ -72,8 +103,27 @@
       "WORK-03"
     ],
     "gates": [
-      "G0"
-    ]
+      "G0-OFFLINE"
+    ],
+    "offline_checkpoint": {
+      "task_ids": [
+        "HTML-001",
+        "PDF-001",
+        "DB-002",
+        "TXT-001",
+        "VER-001"
+      ],
+      "deps": [
+        "WORK-02",
+        "WORK-03"
+      ],
+      "required_gates": [
+        "G0-OFFLINE"
+      ],
+      "status": "TODO",
+      "evidence": []
+    },
+    "checkpoint_note": "Checkpoint completion does not complete this WORK block or satisfy its live/acceptance gates."
   },
   {
     "id": "WORK-05",
@@ -94,7 +144,28 @@
       "WORK-04"
     ],
     "gates": [
-      "G0"
+      "G0-OFFLINE"
+    ],
+    "offline_checkpoint": {
+      "task_ids": [
+        "ING-001",
+        "ING-002",
+        "ING-003",
+        "ING-004",
+        "QA-001"
+      ],
+      "deps": [
+        "WORK-04"
+      ],
+      "required_gates": [
+        "G0-OFFLINE"
+      ],
+      "status": "TODO",
+      "evidence": []
+    },
+    "checkpoint_note": "Checkpoint completion does not complete this WORK block or satisfy its live/acceptance gates.",
+    "produces_gates": [
+      "G1 (report/evidence only; user acceptance required)"
     ]
   },
   {
@@ -116,9 +187,26 @@
       "WORK-05"
     ],
     "gates": [
-      "G0",
-      "G1"
-    ]
+      "G0-OFFLINE"
+    ],
+    "offline_checkpoint": {
+      "task_ids": [
+        "DB-003",
+        "FACT-001",
+        "FACT-002",
+        "FACT-003",
+        "FACT-004"
+      ],
+      "deps": [
+        "WORK-04"
+      ],
+      "required_gates": [
+        "G0-OFFLINE"
+      ],
+      "status": "TODO",
+      "evidence": []
+    },
+    "checkpoint_note": "Checkpoint completion does not complete this WORK block or satisfy its live/acceptance gates."
   },
   {
     "id": "WORK-07",
@@ -137,8 +225,25 @@
       "WORK-06"
     ],
     "gates": [
-      "G0"
-    ]
+      "G0-OFFLINE"
+    ],
+    "offline_checkpoint": {
+      "task_ids": [
+        "SRCH-001",
+        "CMP-001",
+        "CMP-002"
+      ],
+      "deps": [
+        "WORK-04",
+        "WORK-06"
+      ],
+      "required_gates": [
+        "G0-OFFLINE"
+      ],
+      "status": "TODO",
+      "evidence": []
+    },
+    "checkpoint_note": "Checkpoint completion does not complete this WORK block or satisfy its live/acceptance gates."
   },
   {
     "id": "WORK-08",
@@ -161,8 +266,29 @@
       "WORK-07"
     ],
     "gates": [
-      "G0"
-    ]
+      "G0-OFFLINE"
+    ],
+    "offline_checkpoint": {
+      "task_ids": [
+        "LLM-001",
+        "AI-001",
+        "AI-002",
+        "DOC-001",
+        "API-001",
+        "UI-001"
+      ],
+      "deps": [
+        "WORK-04",
+        "WORK-06",
+        "WORK-07"
+      ],
+      "required_gates": [
+        "G0-OFFLINE"
+      ],
+      "status": "TODO",
+      "evidence": []
+    },
+    "checkpoint_note": "Checkpoint completion does not complete this WORK block or satisfy its live/acceptance gates."
   },
   {
     "id": "WORK-09",
@@ -179,7 +305,24 @@
       "WORK-08"
     ],
     "gates": [
-      "G1"
+      "G0-OFFLINE"
+    ],
+    "offline_checkpoint": {
+      "task_ids": [
+        "QA-002"
+      ],
+      "deps": [
+        "WORK-08"
+      ],
+      "required_gates": [
+        "G0-OFFLINE"
+      ],
+      "status": "TODO",
+      "evidence": []
+    },
+    "checkpoint_note": "Checkpoint completion does not complete this WORK block or satisfy its live/acceptance gates.",
+    "produces_gates": [
+      "G2 (report/evidence only; user acceptance required)"
     ]
   },
   {

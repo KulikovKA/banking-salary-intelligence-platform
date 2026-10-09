@@ -1,5 +1,7 @@
 # Исполнительское задание WORK-01
 
+**Mode:** `live/acceptance` for any bank request. No source currently has G0-LIVE. Offline manifest/schema work is allowed; do not issue target GET without explicit source-specific approval.
+
 Модель-исполнитель: **GPT-6 Luna**. Настройка reasoning: **High**. Выставить настройку перед запуском; текст задания её не переключает.
 
 Выполни объединённое задание **Источники и границы покрытия** в проекте Banking Salary Intelligence Platform. Работа с кодом разрешена только после отдельной команды начать реализацию; текущая редакция плана не является такой командой.
