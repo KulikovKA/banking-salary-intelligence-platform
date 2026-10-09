@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "manifest_status": "research_only_blocked",
+  "checked_at": "2026-10-09T22:07:10+03:00",
+  "notice": "Discovery candidates only. Not an approved fetch list. No original files fetched or stored; no source is approved.",
+  "banks": [
+    {
+      "bank_code": "sber",
+      "display_name": "Сбер",
+      "official_domain_evidence": "SberAPI documentation is hosted at developers.sber.ru. sberbusiness.live requires owner confirmation as an official bank-controlled domain.",
+      "policy": {
+        "decision": "pending",
+        "reviewer": null,
+        "reason": "G0 and source policy decision not recorded.",
+        "robots_url": "https://www.sberbank.ru/robots.txt",
+        "robots_checked_at": null,
+        "robots_result": "tls_trust_error_from_research_environment",
+        "terms_url": null,
+        "terms_checked_at": null,
+        "rate_seconds": null
+      },
+      "coverage": {
+        "region": "RU-KDA",
+        "package": "unknown",
+        "metrics": {
+          "payroll_credit_fee": "unknown",
+          "external_bank_transfer_fee": "unknown",
+          "account_monthly_fee": "unknown",
+          "employee_card_fee": "unknown",
+          "cash_withdrawal_limit": "unknown",
+          "transfer_limit": "unknown",
+          "crediting_time": "unknown",
+          "employee_privilege": "unknown",
+          "premium_eligibility": "unknown",
+          "integration_1c": "unknown",
+          "integration_api": "unknown"
+        }
+      }
+    },
+    {
+      "bank_code": "vtb",
+      "display_name": "ВТБ",
+      "official_domain_evidence": "Product page is on vtb.ru and identifies VTB Bank (PJSC).",
+      "policy": {
+        "decision": "pending",
+        "reviewer": null,
+        "reason": "G0 and source policy decision not recorded.",
+        "robots_url": "https://www.vtb.ru/robots.txt",
+        "robots_checked_at": null,
+        "robots_result": "timeout_from_web_research_tool",
+        "terms_url": null,
+        "terms_checked_at": null,
+        "rate_seconds": null
+      },
+      "coverage": {
+        "region": "RU-KDA",
+        "package": "unknown",
+        "metrics": {
+          "payroll_credit_fee": "unknown",
+          "external_bank_transfer_fee": "unknown",
+          "account_monthly_fee": "unknown",
+          "employee_card_fee": "unknown",
+          "cash_withdrawal_limit": "unknown",
+          "transfer_limit": "unknown",
+          "crediting_time": "unknown",
+          "employee_privilege": "unknown",
+          "premium_eligibility": "unknown",
+          "integration_1c": "unknown",
+          "integration_api": "unknown"
+        }
+      }
+    },
+    {
+      "bank_code": "alfa",
+      "display_name": "Альфа-Банк",
+      "official_domain_evidence": "Product page is on alfabank.ru and identifies Alfa-Bank.",
+      "policy": {
+        "decision": "pending",
+        "reviewer": null,
+        "reason": "G0 and source policy decision not recorded.",
+        "robots_url": "https://alfabank.ru/robots.txt",
+        "robots_checked_at": null,
+        "robots_result": "timeout_from_web_research_tool",
+        "terms_url": null,
+        "terms_checked_at": null,
+        "rate_seconds": null
+      },
+      "coverage": {
+        "region": "RU-KDA",
+        "package": "unknown",
+        "metrics": {
+          "payroll_credit_fee": "unknown",
+          "external_bank_transfer_fee": "unknown",
+          "account_monthly_fee": "unknown",
+          "employee_card_fee": "unknown",
+          "cash_withdrawal_limit": "unknown",
+          "transfer_limit": "unknown",
+          "crediting_time": "unknown",
+          "employee_privilege": "unknown",
+          "premium_eligibility": "unknown",
+          "integration_1c": "unknown",
+          "integration_api": "unknown"
+        }
+      }
+    },
+    {
+      "bank_code": "kuban_credit",
+      "display_name": "Кубань Кредит",
+      "official_domain_evidence": "kb.kk.bank PDFs show the bank name and describe its business banking product. Relationship of kb.kk.bank to kk.bank and the candidate main-site product path remains unverified.",
+      "policy": {
+        "decision": "pending",
+        "reviewer": null,
+        "reason": "G0 and source policy decision not recorded; official domain relationship requires confirmation.",
+        "robots_url": "https://kk.bank/robots.txt",
+        "robots_checked_at": null,
+        "robots_result": "unavailable_from_web_research_tool",
+        "terms_url": null,
+        "terms_checked_at": null,
+        "rate_seconds": null
+      },
+      "coverage": {
+        "region": "RU-KDA",
+        "package": "unknown",
+        "metrics": {
+          "payroll_credit_fee": "unknown",
+          "external_bank_transfer_fee": "unknown",
+          "account_monthly_fee": "unknown",
+          "employee_card_fee": "unknown",
+          "cash_withdrawal_limit": "unknown",
+          "transfer_limit": "unknown",
+          "crediting_time": "unknown",
+          "employee_privilege": "unknown",
+          "premium_eligibility": "unknown",
+          "integration_1c": "unknown",
+          "integration_api": "unknown"
+        }
+      }
+    }
+  ],
+  "sources": [
+    {
+      "bank_code": "sber",
+      "url": "https://developers.sber.ru/docs/ru/sber-api/scenarios/salary/salary-project/overview",
+      "final_url": null,
+      "redirect_chain": [],
+      "discovery_url": "https://developers.sber.ru/docs/ru/sber-api/scenarios/salary/salary-project/overview",
+      "kind": "product_integration_documentation",
+      "classification": "manual_or_api_documentation_not_tariff",
+      "status": "candidate_unverified_by_target_get",
+      "http_status": null,
+      "mime_type": null,
+      "sha256": null,
+      "published_at": null,
+      "effective_date": null,
+      "scope": "unknown",
+      "checked_at": null,
+      "note": "Search discovery only; API documentation does not replace employer tariff."
+    },
+    {
+      "bank_code": "sber",
+      "url": "https://sberbusiness.live/publications/zarplatnii-proekt-chto-eto-takoe-kak-vibrat-i-podklyuchit",
+      "final_url": "https://sberbusiness.live/publications/zarplatnii-proekt-chto-eto-takoe-kak-vibrat-i-podklyuchit",
+      "redirect_chain": [],
+      "discovery_url": "https://sberbusiness.live/publications/zarplatnii-proekt-chto-eto-takoe-kak-vibrat-i-podklyuchit",
+      "kind": "product_article",
+      "classification": "news_or_manual_not_tariff_original",
+      "status": "candidate_domain_ownership_pending",
+      "http_status": 200,
+      "mime_type": "text/html; charset=utf-8",
+      "sha256": null,
+      "published_at": null,
+      "effective_date": null,
+      "scope": "unknown",
+      "checked_at": "2026-10-09T22:07:10+03:00",
+      "note": "One direct GET returned 200. Host ownership needs reviewer confirmation; article is not a tariff original."
+    },
+    {
+      "bank_code": "vtb",
+      "url": "https://www.vtb.ru/malyj-biznes/zarplatniy-proekt/",
+      "final_url": null,
+      "redirect_chain": [],
+      "discovery_url": "https://www.vtb.ru/malyj-biznes/zarplatniy-proekt/",
+      "kind": "product_page",
+      "classification": "product_and_document_index",
+      "status": "candidate_search_discovery_target_get_pending",
+      "http_status": null,
+      "mime_type": null,
+      "sha256": null,
+      "published_at": null,
+      "effective_date": null,
+      "scope": "unknown",
+      "checked_at": null,
+      "note": "Search result identifies conditions effective 2026-09-01, but original file URL, direct response, scope, and exact terms remain to verify."
+    },
+    {
+      "bank_code": "alfa",
+      "url": "https://alfabank.ru/sme/salaryproject/",
+      "final_url": null,
+      "redirect_chain": [],
+      "discovery_url": "https://alfabank.ru/sme/salaryproject/",
+      "kind": "product_page",
+      "classification": "product_and_document_index",
+      "status": "candidate_search_discovery_target_get_pending",
+      "http_status": null,
+      "mime_type": null,
+      "sha256": null,
+      "published_at": null,
+      "effective_date": null,
+      "scope": "unknown",
+      "checked_at": null,
+      "note": "Search result exposed rules/document links, including archival rules effective 2024-04-19; direct original GET and current tariff still pending."
+    },
+    {
+      "bank_code": "kuban_credit",
+      "url": "https://kb.kk.bank/docs/Questions_answers.pdf",
+      "final_url": null,
+      "redirect_chain": [],
+      "discovery_url": "https://kb.kk.bank/docs/Questions_answers.pdf",
+      "kind": "pdf",
+      "classification": "faq_not_tariff",
+      "status": "candidate_domain_relationship_and_target_get_pending",
+      "http_status": null,
+      "mime_type": null,
+      "sha256": null,
+      "published_at": null,
+      "effective_date": null,
+      "scope": "unknown",
+      "checked_at": null,
+      "note": "Search index identifies bank and discusses salary project, but PDF bytes were not fetched or stored."
+    },
+    {
+      "bank_code": "kuban_credit",
+      "url": "https://kb.kk.bank/docs/Manual.pdf",
+      "final_url": null,
+      "redirect_chain": [],
+      "discovery_url": "https://kb.kk.bank/docs/Manual.pdf",
+      "kind": "pdf",
+      "classification": "product_manual_not_tariff_or_conditions_original",
+      "status": "candidate_domain_relationship_and_target_get_pending",
+      "http_status": null,
+      "mime_type": null,
+      "sha256": null,
+      "published_at": null,
+      "effective_date": null,
+      "scope": "unknown",
+      "checked_at": null,
+      "note": "Search index says current rules/documents are available inside authenticated business banking; no authenticated access attempted."
+    }
+  ]
+}

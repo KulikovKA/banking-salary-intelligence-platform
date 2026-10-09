@@ -1,0 +1,443 @@
+[
+  {
+    "id": "WORK-01",
+    "title": "Источники и границы покрытия",
+    "reasoning": "High",
+    "reason": "Нужно различить официальность, применимость и достаточность условий; правовое решение остаётся у ответственного.",
+    "members": [
+      "SRC-001"
+    ],
+    "status": "BLOCKED",
+    "owner": "GPT-6 Luna",
+    "deps": [],
+    "gates": [
+      "G0"
+    ]
+  },
+  {
+    "id": "WORK-02",
+    "title": "Окружение, репозиторий и базовая БД",
+    "reasoning": "Medium",
+    "reason": "Работа по готовой структуре и схеме; при изменении миграционного контракта повысить до High.",
+    "members": [
+      "INF-001",
+      "INF-002",
+      "DB-001"
+    ],
+    "status": "IN_PROGRESS",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-01"
+    ],
+    "gates": [
+      "G0"
+    ]
+  },
+  {
+    "id": "WORK-03",
+    "title": "Архив, безопасная загрузка и фоновые задания",
+    "reasoning": "Extra High",
+    "reason": "Согласованность файлов и БД, SSRF, гонки leases и восстановление после сбоя.",
+    "members": [
+      "STO-001",
+      "NET-001",
+      "JOB-001"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-02"
+    ],
+    "gates": [
+      "G0"
+    ]
+  },
+  {
+    "id": "WORK-04",
+    "title": "HTML/PDF, структура документов и версии",
+    "reasoning": "High",
+    "reason": "Страницы, сноски, canonical hashes и история извлечения должны оставаться согласованными.",
+    "members": [
+      "HTML-001",
+      "PDF-001",
+      "DB-002",
+      "TXT-001",
+      "VER-001"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-02",
+      "WORK-03"
+    ],
+    "gates": [
+      "G0"
+    ]
+  },
+  {
+    "id": "WORK-05",
+    "title": "Четыре банковских адаптера и проверка доступности G1",
+    "reasoning": "High",
+    "reason": "Разные сайты и форматы; оценка полноты не сводится к HTTP 200. Многодневную проверку нельзя заменить рассуждением.",
+    "members": [
+      "ING-001",
+      "ING-002",
+      "ING-003",
+      "ING-004",
+      "QA-001"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-01",
+      "WORK-04"
+    ],
+    "gates": [
+      "G0"
+    ]
+  },
+  {
+    "id": "WORK-06",
+    "title": "Тарифные факты, проверка и публикация",
+    "reasoning": "Extra High",
+    "reason": "Основной риск неверных тарифов: даты, scope, provenance, конфликты и атомарность публикации.",
+    "members": [
+      "DB-003",
+      "FACT-001",
+      "FACT-002",
+      "FACT-003",
+      "FACT-004"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-04",
+      "WORK-05"
+    ],
+    "gates": [
+      "G0",
+      "G1"
+    ]
+  },
+  {
+    "id": "WORK-07",
+    "title": "Полнотекстовый поиск и детерминированные сравнения",
+    "reasoning": "Extra High",
+    "reason": "Проверка сопоставимости, Decimal, условия, диапазоны, доказательства обеих сторон.",
+    "members": [
+      "SRCH-001",
+      "CMP-001",
+      "CMP-002"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-04",
+      "WORK-06"
+    ],
+    "gates": [
+      "G0"
+    ]
+  },
+  {
+    "id": "WORK-08",
+    "title": "Ассистент POC, Fake LLM, API и минимальный экран",
+    "reasoning": "High",
+    "reason": "Вертикальный сценарий вопрос→проверенный claim→полный оригинал. Для AI-002 отдельно назначен Extra High.",
+    "members": [
+      "LLM-001",
+      "AI-001",
+      "AI-002",
+      "DOC-001",
+      "API-001",
+      "UI-001"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-04",
+      "WORK-06",
+      "WORK-07"
+    ],
+    "gates": [
+      "G0"
+    ]
+  },
+  {
+    "id": "WORK-09",
+    "title": "Оценка ядра и приёмка POC G2",
+    "reasoning": "High",
+    "reason": "Анализ качества, покрытия и ошибок holdout; нельзя принять красивые ответы при нехватке источников.",
+    "members": [
+      "QA-002"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-05",
+      "WORK-08"
+    ],
+    "gates": [
+      "G1"
+    ]
+  },
+  {
+    "id": "WORK-10",
+    "title": "Пользователи, приглашения, сессии и права доступа",
+    "reasoning": "High",
+    "reason": "Безопасность сессий и владения объектами; сложные обходы доступа проверяются позже на Extra High.",
+    "members": [
+      "DB-004",
+      "AUTH-001",
+      "AUTH-002",
+      "AUTH-003"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-06",
+      "WORK-08",
+      "WORK-09"
+    ],
+    "gates": [
+      "G2"
+    ]
+  },
+  {
+    "id": "WORK-11",
+    "title": "Личная история, память и надёжное выполнение вопросов",
+    "reasoning": "Extra High",
+    "reason": "Гонки удаления/ответа, snapshot consistency, budgets и повторные запросы.",
+    "members": [
+      "LLM-002",
+      "CHAT-001",
+      "CHAT-002",
+      "AI-003"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-03",
+      "WORK-08",
+      "WORK-10"
+    ],
+    "gates": [
+      "G2"
+    ]
+  },
+  {
+    "id": "WORK-12",
+    "title": "Мониторинг изменений, уведомления и полный API",
+    "reasoning": "High",
+    "reason": "Транзакционные события, future activation, дедупликация и согласованность REST контрактов.",
+    "members": [
+      "DB-005",
+      "CHG-001",
+      "NTF-001",
+      "JOB-002",
+      "API-002"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-03",
+      "WORK-06",
+      "WORK-10",
+      "WORK-11"
+    ],
+    "gates": [
+      "G2"
+    ]
+  },
+  {
+    "id": "WORK-13",
+    "title": "Полный пользовательский и административный интерфейс",
+    "reasoning": "Medium",
+    "reason": "UI по готовым API и состояниям; сложные asynchronous/review участки отдельно High.",
+    "members": [
+      "UI-002",
+      "UI-003",
+      "UI-004",
+      "UI-005",
+      "UI-006"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-07",
+      "WORK-08",
+      "WORK-11",
+      "WORK-12"
+    ],
+    "gates": [
+      "G2"
+    ]
+  },
+  {
+    "id": "WORK-14",
+    "title": "Логи, метрики и эксплуатационный аудит",
+    "reasoning": "Medium",
+    "reason": "Фиксированный набор метрик и событий; секреты и пользовательский текст в логах запрещены.",
+    "members": [
+      "OPS-001"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-12"
+    ],
+    "gates": [
+      "G2"
+    ]
+  },
+  {
+    "id": "WORK-15",
+    "title": "Проверка авторизации, SSRF и prompt injection",
+    "reasoning": "Extra High",
+    "reason": "Нужны adversarial сценарии, анализ обходов и проверка отсутствия запрещённых эффектов.",
+    "members": [
+      "SEC-001",
+      "SEC-002"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-11",
+      "WORK-13",
+      "WORK-14"
+    ],
+    "gates": [
+      "G2"
+    ]
+  },
+  {
+    "id": "WORK-16",
+    "title": "ПД, лицензии и удаление данных",
+    "reasoning": "High",
+    "reason": "Согласование политики, retention и удаления после restore; reasoning не заменяет ответственного по правовым решениям.",
+    "members": [
+      "SEC-003"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-01",
+      "WORK-14"
+    ],
+    "gates": [
+      "G2"
+    ]
+  },
+  {
+    "id": "WORK-17",
+    "title": "Подключение выбранного LLM API",
+    "reasoning": "High",
+    "reason": "Сетевые ошибки, structured output, usage и реальная evaluation; выбор провайдера остаётся за пользователем.",
+    "members": [
+      "LLM-003"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-09",
+      "WORK-11",
+      "WORK-16"
+    ],
+    "gates": [
+      "G2 + решение пользователя о provider"
+    ]
+  },
+  {
+    "id": "WORK-18",
+    "title": "Backup, восстановление и production-развёртывание",
+    "reasoning": "High",
+    "reason": "Согласованность DB/blob backup, миграции и проверенный rollback; сбои целостности расследовать на Extra High.",
+    "members": [
+      "OPS-002",
+      "OPS-003"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-03",
+      "WORK-14",
+      "WORK-15",
+      "WORK-16"
+    ],
+    "gates": [
+      "G2"
+    ]
+  },
+  {
+    "id": "WORK-19",
+    "title": "Сквозная приёмка и нагрузка 30 пользователей",
+    "reasoning": "High",
+    "reason": "Проверка взаимодействия модулей и измерение узких мест; недоказанные показатели не считать pass.",
+    "members": [
+      "QA-003",
+      "LOAD-001"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-13",
+      "WORK-18"
+    ],
+    "gates": [
+      "G2"
+    ]
+  },
+  {
+    "id": "WORK-20",
+    "title": "Независимый финальный аудит",
+    "reasoning": "—",
+    "reason": "Исполнитель Astra по исходному распределению ролей; Luna не проводит собственный независимый аудит.",
+    "members": [
+      "REV-001"
+    ],
+    "status": "TODO",
+    "owner": "Astra",
+    "deps": [
+      "WORK-15",
+      "WORK-16",
+      "WORK-19"
+    ],
+    "gates": [
+      "G3 + G4"
+    ]
+  },
+  {
+    "id": "WORK-21",
+    "title": "Исправления по замечаниям аудита",
+    "reasoning": "Extra High",
+    "reason": "По умолчанию охватывает Critical/High defects и межмодульные причины; локальные исправления без изменения поведения можно снижать отдельно.",
+    "members": [
+      "REV-002"
+    ],
+    "status": "TODO",
+    "owner": "GPT-6 Luna",
+    "deps": [
+      "WORK-20"
+    ],
+    "gates": [
+      "G3 + G4"
+    ]
+  },
+  {
+    "id": "WORK-22",
+    "title": "Независимая повторная проверка и итоговый статус",
+    "reasoning": "—",
+    "reason": "Исполнитель Astra; подтверждает исправления и готовность независимо от Luna.",
+    "members": [
+      "REV-003"
+    ],
+    "status": "TODO",
+    "owner": "Astra",
+    "deps": [
+      "WORK-21"
+    ],
+    "gates": [
+      "G3 + G4"
+    ]
+  }
+]
