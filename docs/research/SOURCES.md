@@ -1,6 +1,6 @@
 # Проверка внешних оснований — 09.10.2026
 
-Это предварительное исследование для проектирования, не завершённый аудит банковских тарифов, не source registry production и не доказательство стабильной работы адаптеров. Поисковый индекс и разовое открытие через web-инструмент не заменяют fetch с целевого российского host. Никакие банковские цены из поиска не перенесены в seed.
+Эта заметка — исследовательский реестр, не юридическое заключение, не утверждение о тарифах и не production source registry. Поисковый индекс не заменяет target GET. Не публиковать тарифные значения без проверенных оригинала, даты действия, сегмента, пакета и области применения.
 
 ## Библиотеки и БД
 
@@ -8,29 +8,31 @@
 |---|---|---|
 | [PostgreSQL FTS indexes](https://www.postgresql.org/docs/16/textsearch-indexes.html) | Документация рекомендует GIN для text search | Предложен GIN, без отдельного поискового сервиса |
 | [PostgreSQL text search controls](https://www.postgresql.org/docs/current/textsearch-controls.html) | tsvector, websearch_to_tsquery, ranking | Query parameterization, русская конфигурация и измерение recall |
-| [PostgreSQL SELECT](https://www.postgresql.org/docs/current/sql-select.html) | row locks и SKIP LOCKED | Предложен job leasing через короткие транзакции; fencing проектируется отдельно |
-| [PyMuPDF licensing](https://pymupdf.io/licensing), [FAQ](https://pymupdf.readthedocs.io/en/latest/faq/index.html) | AGPL / commercial licensing | До включения получить решение по лицензии; не трактовать internal use как автоматическое освобождение |
-| [pdfplumber repository](https://github.com/jsvine/pdfplumber) | Python PDF extraction и доступный исходный проект | Проверить качество на корпусе; proposed baseline при нерешённой лицензии PyMuPDF |
+| [PostgreSQL SELECT](https://www.postgresql.org/docs/current/sql-select.html) | Row locks и SKIP LOCKED | Предложен job leasing через короткие транзакции; fencing проектируется отдельно |
+| [PyMuPDF licensing](https://pymupdf.io/licensing), [FAQ](https://pymupdf.readthedocs.io/en/latest/faq/index.html) | AGPL / commercial licensing | До включения получить решение по лицензии |
+| [pdfplumber repository](https://github.com/jsvine/pdfplumber) | Python PDF extraction | Проверить качество на корпусе; proposed baseline при нерешённой лицензии PyMuPDF |
 
-Выбор модульного монолита, sizing, интервалы, quotas и критерии качества — инженерные предложения этого проекта, а не утверждения из указанных источников. Не выбраны и не исследованы финальные LLM модели/поставщики.
+Выбор модульного монолита, sizing, quotas и критерии качества — инженерные предложения, а не утверждения из указанных источников. Интервал проверки банковских документов 24 часа — предварительная цель проекта, не rate limit банка.
 
-## Банковские источники: стартовая карта
+## Банковские источники: техническая инвентаризация
 
-| Банк | Найденный ресурс | Наблюдение и следующий шаг |
-|---|---|---|
-| Сбер | [SberAPI: зарплатный проект](https://developers.sber.ru/docs/ru/sber-api/scenarios/salary/salary-project/overview) | Официальная документация найдена в поиске. Подходит для проверки интеграционных возможностей; НЕ заменяет тарифы работодателя. Найти product/tariff documents и область действия в SRC-001/ING-001 |
-| ВТБ | [Зарплатный проект для малого бизнеса](https://www.vtb.ru/malyj-biznes/zarplatniy-proekt/) | Прямое открытие web tool завершилось internal error. Это не доказательство недоступности банка. Требуется проверка целевым FetchGateway и сбор PDF links |
-| Альфа-Банк | [Зарплатный проект](https://alfabank.ru/sme/salaryproject/), [API salary](https://developers.alfabank.ru/products/alfa-api/documentation/articles/salary/salary) | Индекс показывает страницу и ссылки на документы; прямое открытие product page дало 502 в инструменте. Доступ и полноту документов проверить в POC |
-| Кубань Кредит | [FAQ ДБО](https://kb.kk.bank/docs/Questions_answers.pdf), [руководство](https://kb.kk.bank/docs/Manual.pdf) | Официальные поддоменные PDF найдены, но это руководства, а не достаточный тарифный корпус. Candidate product path `https://kk.bank/business/solutions/zp-project/` не открылся инструментом, не считать подтверждённым URL |
+Владелец проекта принял архитектуру v1.1, охват Сбер/ВТБ/Альфа-Банк/Кубань Кредит, регион RU-KDA, приоритет МСБ и локальное хранение originals вне Git. Это разрешает подготовку POC и ручной разбор, но не подтверждает разрешение банка на автоматический сбор. CAPTCHA, авторизация, anti-bot и явные ограничения не обходятся. Неясная допустимость автоматизации означает BLOCKED для конкретного URL. Полные записи см. в [SourceAcceptanceManifest](../../tests/fixtures/manifests/sources.json) и отчёте [SRC-001](../reports/SRC-001.md).
 
-Поиск также вернул похожую страницу Кубань Кредит на постороннем домене. Она исключена: совпадение текста/логотипа не подтверждает официальный источник. Домены kb.kkbank.ru и kb.kk.bank нельзя молча считать взаимозаменяемыми: подтвердить связь и redirect chain при source policy review.
+| Банк | Официальность / URL | Документы | Robots / terms и решение | Coverage RU-KDA / МСБ |
+|---|---|---|---|---|
+| Сбер | [SberAPI salary overview](https://developers.sber.ru/docs/ru/sber-api/scenarios/salary/salary-project/overview) на официальной документационной площадке. [SberBusiness article](https://sberbusiness.live/publications/zarplatnii-proekt-chto-eto-takoe-kak-vibrat-i-podklyuchit) ранее дал 200 без redirect, но контроль домена банком не доказан. | API docs — интеграция, не работодательский тариф; статья — не договор. Exact current tariff URL не найден. | sberbank.ru/robots.txt: TLS trust error. sberbusiness.live/robots.txt: HTTP 200; User-agent:* разрешает /publications/, запрещает /upload/. Terms/ownership не подтверждены. Автосбор BLOCKED. | Все 11 metrics и package — unknown; тариф работодателя не найден. |
+| ВТБ | [Страница зарплатного проекта МСБ](https://www.vtb.ru/malyj-biznes/zarplatniy-proekt/) на www.vtb.ru, страница идентифицирует Банк ВТБ (ПАО). | Поисковый индекс перечисляет условия обслуживания с 01.09.2026 (1 MB), но прямой PDF URL и bytes не получены. | Target GET остановлен локальной TLS validation; web open timeout. vtb.ru/robots.txt — TLS/Web timeout. Применимые terms для salary page не найдены; developer.vtb.ru agreement относится к другому хосту. Автосбор BLOCKED. | Общие claims о бесплатных услугах/зачислении не подтверждают package или регион. Все 11 metrics — unknown. |
+| Альфа-Банк | [Страница зарплатного проекта МСБ](https://alfabank.ru/sme/salaryproject/) на alfabank.ru. | Страница индексируется с документами; AЗОН указано с 22.06.2026, правила 19.04.2024 помещены в архив. Exact PDF URLs/bytes не получены. | Target GET остановлен TLS validation; web open internal error. alfabank.ru/robots.txt — TLS/Web timeout. Applicable terms не найдены. Автосбор BLOCKED. | Страница упоминает 1С/бесплатное открытие/перевод, но scope требует оригинала. Все 11 metrics — unknown. |
+| Кубань Кредит | [FAQ PDF](https://kb.kk.bank/docs/Questions_answers.pdf) получен напрямую без redirect; PDF связывает host с официальным [kk.bank](https://kk.bank) и называет КБ «Кубань Кредит» ООО. | FAQ на 32 страницы описывает ДБО, документы и сроки карт — не тариф. Indexed [tariff album](https://vip.kk.bank/upload/iblock/25d/xhld81z4qxd9tmjlt9blm352fas17m0r.pdf) включает зарплатные карты сотрудников, но не полный тариф работодателя. FAQ сохранён вне Git; SHA-256 есть в manifest. | kb.kk.bank/robots.txt — 404; kk.bank, vip.kk.bank, promo.kk.bank robots недоступны из среды. Terms не установлены. start.kk.bank agreement относится к сервису ООО «ИСУ», не к сайту банка. Автосбор BLOCKED. | FAQ не тариф; employee-card tariffs не доказывают employer fee/package. Все 11 metrics — unknown. |
 
-Source acceptance manifest будущей реализации: bank, url, final_url, parent/discovery URL, official-domain evidence, checked_at, http result, MIME, sha256, publication/effective dates with evidence, region/segment, robots/terms decision, parser result, retry result, reviewer. В этой стадии такого корпуса ещё нет; SRC-001 не DONE.
+### Покрытие
 
-## Правовые основания и пределы проверки
+Для каждого из четырёх банков все 11 показателей остаются unknown для RU-KDA и приоритетного сегмента МСБ: payroll_credit_fee, external_bank_transfer_fee, account_monthly_fee, employee_card_fee, cash_withdrawal_limit, transfer_limit, crediting_time, employee_privilege, premium_eligibility, integration_1c, integration_api. Package также unknown. Неизвестное значение не заменяется нулём или федеральным scope.
 
-Найдено опубликование изменений №23-ФЗ от 28.02.2025: [КонсультантПлюс, текст закона](https://www.consultant.ru/document/cons_doc_LAW_499984/), [статья 1](https://base.garant.ru/411574151/1cafb24d049dcd1e7707a22d98e9858f/), [дата вступления в силу](https://www.consultant.ru/document/cons_doc_LAW_499984/b62da3aeb315547b6915beadea02920bd7dd4c41/). Эти материалы подтверждают изменение правил локализации с 01.07.2025; они не заменяют проверку актуальной полной редакции закона для конкретного оператора.
+### Оригиналы и policy
 
-Попытка открыть [официальную публикацию](https://publication.pravo.gov.ru/document/0001202502280034) завершилась timeout. [Страница РКН по трансграничной передаче](https://pd.rkn.gov.ru/cross-border-transmission/) также не прочитана инструментом. Старые найденные региональные памятки РКН содержат исторические исключения и не использованы как актуальное правовое заключение.
+Сохранён только публичный справочный FAQ Кубань Кредит: %LOCALAPPDATA%\BankingSalaryIntelligence\originals\kuban_credit\Questions_answers.pdf, SHA-256 08ced4b035c1a6b396a5d7143e1c635ac8ea20ed09c1f0726b60549df391a144. PDF metadata date 06.02.2025 не считается датой действия. Тарифные originals банков не получены/не одобрены, поэтому их значения не занесены.
 
-Поэтому: правомерность автоматического сбора с каждого банка, обработки ПД и передачи конкретному внешнему LLM НЕ объявлена проверенной. SEC-003/SRC-001 требуют актуальные условия и решение ответственного до запуска соответствующих потоков. Проектирование и mock tests могут идти без передачи ПД и без выбора API.
+Ни доступность страницы, ни robots Allow, ни отсутствие robots-файла не означают разрешение на automated retrieval/storage/reuse. Остаются правовые вопросы: bank-specific разрешение на автоматизацию и архив, применимые terms и лимиты для каждого host/path, лицензии/copyright на originals и извлечённые данные. Юридическое решение — отдельно у ответственного/юриста; решение владельца POC не заменяет разрешение банка. Интервал 24 часа не включать в scheduler до подтверждения применимых ограничений. Для blocked URL возможен ручной импорт официального документа.
+
+Не исследованы и не выбраны LLM модели/поставщики. Будущие ПД, локализация, трансграничная передача, retention и передача внешнему LLM требуют отдельной правовой проверки.

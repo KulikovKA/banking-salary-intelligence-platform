@@ -17,13 +17,14 @@
       "Сохранить matrix банк×метрика×регион×пакет с unknown; приложить SHA-256 доступных оригиналов в разрешённое fixture storage"
     ],
     "errors": "403/CAPTCHA/неясные права → blocked source и причина; сторонний mirror исключить; не заменять тариф справочником API",
-    "tests": "Ручная сверка минимум одного tariff/conditions документа на каждый банк; проверить URL и даты, повторить GET с целевого host; документы с неизвестной датой пометить",
+    "tests": "Manual review of available official references/tariffs; verify target GET, redirect, MIME and hash for accessible originals. Do not accept prices/dates from search index. If automation permission is unclear, keep source BLOCKED and require manual import.",
     "accept": "Четыре банковские строки с доказательствами официальности и решениями policy; пробелы покрытия перечислены, ни один непроверенный URL не approved",
     "priority": "Critical",
     "complexity": "L",
     "gate": "G0",
     "owner": "GPT-6 Luna — Reasoning",
     "status": "BLOCKED",
+    "status_reason": "Bank-side permissions/terms/rate limits and current employer tariff originals are unconfirmed; project decisions do not replace bank permission.",
     "work_package": "WORK-01",
     "reasoning": "High",
     "reasoning_effort": "high"

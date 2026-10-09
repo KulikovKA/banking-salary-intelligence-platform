@@ -1,26 +1,70 @@
 {
   "schema_version": 1,
-  "manifest_status": "research_only_blocked",
-  "checked_at": "2026-10-09T22:07:10+03:00",
-  "notice": "Discovery candidates only. Not an approved fetch list. No original files fetched or stored; no source is approved.",
+  "manifest_name": "SourceAcceptanceManifest",
+  "manifest_status": "partial_blocked",
+  "checked_at": "2026-10-09T22:39:31+03:00",
+  "project_decisions": {
+    "architecture": "v1.1 accepted as baseline",
+    "banks": [
+      "sber",
+      "vtb",
+      "alfa",
+      "kuban_credit"
+    ],
+    "region": "RU-KDA",
+    "priority_segment": "SME",
+    "original_storage": "local outside public access and Git",
+    "collection_rule": "Do not bypass CAPTCHA, authentication, anti-bot protection, or explicit limits. If automated collection permission is unconfirmed, block that source and offer manual import of an official document. Project owner approval is not bank permission.",
+    "poll_interval_target_hours": 24,
+    "poll_interval_note": "Preliminary target only; does not override site-specific robots, terms, rate limits, or bank permission."
+  },
+  "source_status_definitions": {
+    "approved": "Accepted for the limited purpose stated in the source record; does not imply permission for automated collection unless explicitly stated.",
+    "pending": "Candidate requires direct URL, source relationship, document date, applicability, or manual review confirmation.",
+    "blocked": "Automated collection is blocked because permission or limits are unknown, or target retrieval could not be verified. Manual import of an official document is the fallback."
+  },
+  "approval_summary": {
+    "approved": [
+      "kuban_faq_dbo (manual/reference archive only; not a tariff; automated collection blocked)"
+    ],
+    "pending": [
+      "sber_sberapi_salary_overview",
+      "sber_sberbusiness_article"
+    ],
+    "blocked": [
+      "vtb_salary_product_page",
+      "alfa_salary_product_page",
+      "kuban_manual_dbo",
+      "kuban_salary_card_tariff_album",
+      "kuban_smb_rko_tariffs"
+    ]
+  },
   "banks": [
     {
       "bank_code": "sber",
       "display_name": "Сбер",
-      "official_domain_evidence": "SberAPI documentation is hosted at developers.sber.ru. sberbusiness.live requires owner confirmation as an official bank-controlled domain.",
+      "official_domain_evidence": "developers.sber.ru is the official SberAPI documentation host. sberbusiness.live has a branded article and robots file, but bank control of this domain was not independently confirmed.",
       "policy": {
-        "decision": "pending",
-        "reviewer": null,
-        "reason": "G0 and source policy decision not recorded.",
-        "robots_url": "https://www.sberbank.ru/robots.txt",
-        "robots_checked_at": null,
-        "robots_result": "tls_trust_error_from_research_environment",
-        "terms_url": null,
-        "terms_checked_at": null,
-        "rate_seconds": null
+        "decision": "blocked",
+        "decision_scope": "automated_collection",
+        "reviewer": "Project owner decision recorded 2026-10-09; not bank permission",
+        "reason": "Bank-side permission for automated retrieval and storage is unconfirmed; robots for sberbank.ru could not be read.",
+        "robots": {
+          "url": "https://www.sberbank.ru/robots.txt",
+          "checked_at": "2026-10-09T22:39:31+03:00",
+          "result": "Local TLS certificate validation failed; web probe unavailable",
+          "directives": null
+        },
+        "terms": {
+          "url": null,
+          "result": "No applicable public terms for salary/product pages confirmed."
+        },
+        "target_interval_hours": 24,
+        "approved_rate_seconds": null
       },
       "coverage": {
         "region": "RU-KDA",
+        "segment": "SME",
         "package": "unknown",
         "metrics": {
           "payroll_credit_fee": "unknown",
@@ -34,26 +78,39 @@
           "premium_eligibility": "unknown",
           "integration_1c": "unknown",
           "integration_api": "unknown"
-        }
+        },
+        "observed_public_claims": [
+          "SberAPI describes integration, not employer fees.",
+          "SberBusiness publication is informational, not a tariff; domain ownership remains pending."
+        ]
       }
     },
     {
       "bank_code": "vtb",
       "display_name": "ВТБ",
-      "official_domain_evidence": "Product page is on vtb.ru and identifies VTB Bank (PJSC).",
+      "official_domain_evidence": "The salary product page is on www.vtb.ru and indexed content identifies Банк ВТБ (ПАО). Local direct GET failed before HTTP due TLS validation.",
       "policy": {
-        "decision": "pending",
-        "reviewer": null,
-        "reason": "G0 and source policy decision not recorded.",
-        "robots_url": "https://www.vtb.ru/robots.txt",
-        "robots_checked_at": null,
-        "robots_result": "timeout_from_web_research_tool",
-        "terms_url": null,
-        "terms_checked_at": null,
-        "rate_seconds": null
+        "decision": "blocked",
+        "decision_scope": "automated_collection",
+        "reviewer": "Project owner decision recorded 2026-10-09; not bank permission",
+        "reason": "Current robots directives and applicable terms were not verified. Automation stays blocked until bank-side permissibility and path limits are confirmed.",
+        "robots": {
+          "url": "https://www.vtb.ru/robots.txt",
+          "checked_at": "2026-10-09T22:39:31+03:00",
+          "result": "Local TLS validation failed; web probe timed out",
+          "directives": null
+        },
+        "terms": {
+          "url": null,
+          "result": "No applicable terms for www.vtb.ru salary page confirmed.",
+          "note": "A discovered agreement for developer.vtb.ru applies to another host."
+        },
+        "target_interval_hours": 24,
+        "approved_rate_seconds": null
       },
       "coverage": {
         "region": "RU-KDA",
+        "segment": "SME",
         "package": "unknown",
         "metrics": {
           "payroll_credit_fee": "unknown",
@@ -67,26 +124,38 @@
           "premium_eligibility": "unknown",
           "integration_1c": "unknown",
           "integration_api": "unknown"
-        }
+        },
+        "observed_public_claims": [
+          "Page index lists salary conditions effective 2026-09-01, but bytes and direct URL were not verified.",
+          "General free-service claims depend on stated conditions and card/account scope."
+        ]
       }
     },
     {
       "bank_code": "alfa",
       "display_name": "Альфа-Банк",
-      "official_domain_evidence": "Product page is on alfabank.ru and identifies Alfa-Bank.",
+      "official_domain_evidence": "The SME salary page is on alfabank.ru and indexed with Alfa-Bank product/document content. Local direct GET failed TLS validation; web-open returned an internal error.",
       "policy": {
-        "decision": "pending",
-        "reviewer": null,
-        "reason": "G0 and source policy decision not recorded.",
-        "robots_url": "https://alfabank.ru/robots.txt",
-        "robots_checked_at": null,
-        "robots_result": "timeout_from_web_research_tool",
-        "terms_url": null,
-        "terms_checked_at": null,
-        "rate_seconds": null
+        "decision": "blocked",
+        "decision_scope": "automated_collection",
+        "reviewer": "Project owner decision recorded 2026-10-09; not bank permission",
+        "reason": "Applicable robots and site terms were not verified. Automation stays blocked until bank-side permissibility and path limits are confirmed.",
+        "robots": {
+          "url": "https://alfabank.ru/robots.txt",
+          "checked_at": "2026-10-09T22:39:31+03:00",
+          "result": "Local TLS validation failed; web probe timed out",
+          "directives": null
+        },
+        "terms": {
+          "url": null,
+          "result": "No applicable general terms for the salary pages confirmed."
+        },
+        "target_interval_hours": 24,
+        "approved_rate_seconds": null
       },
       "coverage": {
         "region": "RU-KDA",
+        "segment": "SME",
         "package": "unknown",
         "metrics": {
           "payroll_credit_fee": "unknown",
@@ -100,26 +169,45 @@
           "premium_eligibility": "unknown",
           "integration_1c": "unknown",
           "integration_api": "unknown"
-        }
+        },
+        "observed_public_claims": [
+          "SME page mentions project opening/online payroll, 1C, delivery, and crediting from one minute; applicability and full conditions require the original.",
+          "Rules effective 2024-04-19 are shown as archived."
+        ]
       }
     },
     {
       "bank_code": "kuban_credit",
       "display_name": "Кубань Кредит",
-      "official_domain_evidence": "kb.kk.bank PDFs show the bank name and describe its business banking product. Relationship of kb.kk.bank to kk.bank and the candidate main-site product path remains unverified.",
+      "official_domain_evidence": "The fetched FAQ identifies КБ «Кубань Кредит» ООО and says kb.kk.bank is reachable from the Bank's official https://kk.bank site. Relation is confirmed for this FAQ. Exact live links for vip.kk.bank and promo.kk.bank were not obtained.",
       "policy": {
-        "decision": "pending",
-        "reviewer": null,
-        "reason": "G0 and source policy decision not recorded; official domain relationship requires confirmation.",
-        "robots_url": "https://kk.bank/robots.txt",
-        "robots_checked_at": null,
-        "robots_result": "unavailable_from_web_research_tool",
-        "terms_url": null,
-        "terms_checked_at": null,
-        "rate_seconds": null
+        "decision": "blocked",
+        "decision_scope": "automated_collection",
+        "reviewer": "Project owner decision recorded 2026-10-09; not bank permission",
+        "reason": "No site-use terms or permitted automation rate confirmed. Missing/inaccessible robots is not authorization.",
+        "robots": {
+          "url": "https://kk.bank/robots.txt",
+          "checked_at": "2026-10-09T22:39:31+03:00",
+          "result": "Local TLS ended unexpectedly; web probe unavailable",
+          "directives": null
+        },
+        "document_host_robots": {
+          "url": "https://kb.kk.bank/robots.txt",
+          "checked_at": "2026-10-09T22:39:31+03:00",
+          "result": "Direct GET returned HTTP 404; no robots file at this path",
+          "directives": null
+        },
+        "terms": {
+          "url": null,
+          "result": "No applicable terms for kk.bank, kb.kk.bank, vip.kk.bank, or promo.kk.bank confirmed.",
+          "note": "start.kk.bank agreement names ООО «ИСУ» and is unrelated."
+        },
+        "target_interval_hours": 24,
+        "approved_rate_seconds": null
       },
       "coverage": {
         "region": "RU-KDA",
+        "segment": "SME",
         "package": "unknown",
         "metrics": {
           "payroll_credit_fee": "unknown",
@@ -133,118 +221,216 @@
           "premium_eligibility": "unknown",
           "integration_1c": "unknown",
           "integration_api": "unknown"
-        }
+        },
+        "observed_public_claims": [
+          "FAQ describes required documents, connection steps, and card issuance up to 10 days; it is not a tariff.",
+          "Indexed tariff album has employee salary-card tariffs but not a complete employer tariff or regional package."
+        ]
       }
     }
   ],
   "sources": [
     {
+      "source_id": "sber_sberapi_salary_overview",
       "bank_code": "sber",
       "url": "https://developers.sber.ru/docs/ru/sber-api/scenarios/salary/salary-project/overview",
       "final_url": null,
       "redirect_chain": [],
-      "discovery_url": "https://developers.sber.ru/docs/ru/sber-api/scenarios/salary/salary-project/overview",
-      "kind": "product_integration_documentation",
-      "classification": "manual_or_api_documentation_not_tariff",
-      "status": "candidate_unverified_by_target_get",
+      "kind": "integration_documentation",
+      "classification": "official_api_documentation_not_employer_tariff",
+      "status": "pending",
+      "policy_decision": "blocked_for_automated_collection",
       "http_status": null,
-      "mime_type": null,
+      "mime_type": "text/html per web open",
       "sha256": null,
       "published_at": null,
       "effective_date": null,
-      "scope": "unknown",
-      "checked_at": null,
-      "note": "Search discovery only; API documentation does not replace employer tariff."
+      "scope": "integration only; tariff scope unknown",
+      "checked_at": "2026-10-09T22:39:31+03:00",
+      "note": "Local direct fetch failed TLS EOF. Do not use as price evidence."
     },
     {
+      "source_id": "sber_sberbusiness_article",
       "bank_code": "sber",
       "url": "https://sberbusiness.live/publications/zarplatnii-proekt-chto-eto-takoe-kak-vibrat-i-podklyuchit",
       "final_url": "https://sberbusiness.live/publications/zarplatnii-proekt-chto-eto-takoe-kak-vibrat-i-podklyuchit",
       "redirect_chain": [],
-      "discovery_url": "https://sberbusiness.live/publications/zarplatnii-proekt-chto-eto-takoe-kak-vibrat-i-podklyuchit",
       "kind": "product_article",
-      "classification": "news_or_manual_not_tariff_original",
-      "status": "candidate_domain_ownership_pending",
+      "classification": "informational_article_not_tariff",
+      "status": "pending",
+      "policy_decision": "blocked_for_automated_collection",
       "http_status": 200,
       "mime_type": "text/html; charset=utf-8",
       "sha256": null,
-      "published_at": null,
-      "effective_date": null,
       "scope": "unknown",
-      "checked_at": "2026-10-09T22:07:10+03:00",
-      "note": "One direct GET returned 200. Host ownership needs reviewer confirmation; article is not a tariff original."
+      "checked_at": "2026-10-09T22:39:31+03:00",
+      "note": "Earlier direct GET 200/no redirect. robots User-agent:* allows /publications and disallows /upload; domain ownership and terms remain unresolved."
     },
     {
+      "source_id": "vtb_salary_product_page",
       "bank_code": "vtb",
       "url": "https://www.vtb.ru/malyj-biznes/zarplatniy-proekt/",
       "final_url": null,
       "redirect_chain": [],
-      "discovery_url": "https://www.vtb.ru/malyj-biznes/zarplatniy-proekt/",
       "kind": "product_page",
-      "classification": "product_and_document_index",
-      "status": "candidate_search_discovery_target_get_pending",
+      "classification": "SME_product_and_document_index",
+      "status": "blocked",
+      "policy_decision": "blocked_for_automated_collection",
       "http_status": null,
       "mime_type": null,
       "sha256": null,
-      "published_at": null,
-      "effective_date": null,
-      "scope": "unknown",
-      "checked_at": null,
-      "note": "Search result identifies conditions effective 2026-09-01, but original file URL, direct response, scope, and exact terms remain to verify."
+      "scope": "SME page; geographic applicability unknown",
+      "checked_at": "2026-10-09T22:39:31+03:00",
+      "note": "Local TLS validation failed; web-open timed out. Manual official-document import required."
     },
     {
+      "source_id": "alfa_salary_product_page",
       "bank_code": "alfa",
       "url": "https://alfabank.ru/sme/salaryproject/",
       "final_url": null,
       "redirect_chain": [],
-      "discovery_url": "https://alfabank.ru/sme/salaryproject/",
       "kind": "product_page",
-      "classification": "product_and_document_index",
-      "status": "candidate_search_discovery_target_get_pending",
+      "classification": "SME_product_and_document_index",
+      "status": "blocked",
+      "policy_decision": "blocked_for_automated_collection",
       "http_status": null,
       "mime_type": null,
       "sha256": null,
-      "published_at": null,
-      "effective_date": null,
-      "scope": "unknown",
-      "checked_at": null,
-      "note": "Search result exposed rules/document links, including archival rules effective 2024-04-19; direct original GET and current tariff still pending."
+      "scope": "SME; exact RU-KDA applicability unknown",
+      "checked_at": "2026-10-09T22:39:31+03:00",
+      "note": "Local TLS validation failed and web open returned internal error. Manual official-document import required."
     },
     {
+      "source_id": "kuban_faq_dbo",
       "bank_code": "kuban_credit",
       "url": "https://kb.kk.bank/docs/Questions_answers.pdf",
-      "final_url": null,
+      "final_url": "https://kb.kk.bank/docs/Questions_answers.pdf",
       "redirect_chain": [],
-      "discovery_url": "https://kb.kk.bank/docs/Questions_answers.pdf",
-      "kind": "pdf",
-      "classification": "faq_not_tariff",
-      "status": "candidate_domain_relationship_and_target_get_pending",
-      "http_status": null,
-      "mime_type": null,
-      "sha256": null,
-      "published_at": null,
-      "effective_date": null,
-      "scope": "unknown",
-      "checked_at": null,
-      "note": "Search index identifies bank and discusses salary project, but PDF bytes were not fetched or stored."
+      "kind": "faq",
+      "classification": "verified_reference_not_tariff",
+      "status": "approved",
+      "policy_decision": "approved_for_manual_reference_archive_only; blocked_for_automated_collection",
+      "http_status": 200,
+      "mime_type": "application/pdf",
+      "content_length": 2300172,
+      "sha256": "08ced4b035c1a6b396a5d7143e1c635ac8ea20ed09c1f0726b60549df391a144",
+      "local_original": "%LOCALAPPDATA%\\BankingSalaryIntelligence\\originals\\kuban_credit\\Questions_answers.pdf",
+      "document_metadata_date": "2025-02-06; PDF creation/modification date, not effective date",
+      "scope": "Kuban Credit Business/SME help; not tariff",
+      "checked_at": "2026-10-09T22:39:31+03:00",
+      "note": "Target GET 200, no redirects, PDF MIME/magic verified. Text identifies КБ «Кубань Кредит» ООО and links kb.kk.bank from https://kk.bank. Local 32-page reference original checked: required docs, connection process, card issuance up to 10 days. Terms remain unresolved; no automation approval."
     },
     {
+      "source_id": "kuban_manual_dbo",
       "bank_code": "kuban_credit",
       "url": "https://kb.kk.bank/docs/Manual.pdf",
       "final_url": null,
       "redirect_chain": [],
-      "discovery_url": "https://kb.kk.bank/docs/Manual.pdf",
-      "kind": "pdf",
-      "classification": "product_manual_not_tariff_or_conditions_original",
-      "status": "candidate_domain_relationship_and_target_get_pending",
+      "kind": "product_manual",
+      "classification": "manual_not_tariff",
+      "status": "blocked",
+      "policy_decision": "blocked_for_automated_collection",
       "http_status": null,
       "mime_type": null,
       "sha256": null,
-      "published_at": null,
+      "scope": "SME system manual; not employer tariff",
+      "checked_at": "2026-10-09T22:39:31+03:00",
+      "note": "Target GET ended with local TLS EOF. No login attempted. Manual import is fallback."
+    },
+    {
+      "source_id": "kuban_salary_card_tariff_album",
+      "bank_code": "kuban_credit",
+      "url": "https://vip.kk.bank/upload/iblock/25d/xhld81z4qxd9tmjlt9blm352fas17m0r.pdf",
+      "final_url": null,
+      "redirect_chain": [],
+      "kind": "employee_salary_card_tariff",
+      "classification": "indexed_tariff_album_salary_card_chapter_not_employer_fee",
+      "status": "blocked",
+      "policy_decision": "blocked_for_automated_collection",
+      "http_status": null,
+      "mime_type": "application/pdf in search index only",
+      "sha256": null,
+      "effective_date": "Search index says published about 6 months before 2026-10-09; exact document date unknown",
+      "scope": "Employee-card tariffs; employer fee/region/package unknown",
+      "checked_at": "2026-10-09T22:39:31+03:00",
+      "note": "Direct target GET ended with local TLS EOF; vip host robots/terms unavailable. Do not accept values."
+    },
+    {
+      "source_id": "kuban_smb_rko_tariffs",
+      "bank_code": "kuban_credit",
+      "url": "https://promo.kk.bank/upload/iblock/830/r33xmlf3vu18x8iei2um9gyzriwgz9cg.pdf",
+      "final_url": null,
+      "redirect_chain": [],
+      "kind": "SME_RKO_tariff",
+      "classification": "general_RKO_not_complete_salary_project_tariff",
+      "status": "blocked",
+      "policy_decision": "blocked_for_automated_collection",
+      "http_status": null,
+      "mime_type": "application/pdf in search index only",
+      "sha256": null,
       "effective_date": null,
-      "scope": "unknown",
-      "checked_at": null,
-      "note": "Search index says current rules/documents are available inside authenticated business banking; no authenticated access attempted."
+      "scope": "SME RKO; exact salary-payment applicability unknown",
+      "checked_at": "2026-10-09T22:39:31+03:00",
+      "note": "Target GET failed local TLS EOF; promo host robots/terms unavailable. Not used for facts."
+    }
+  ],
+  "coverage_summary": {
+    "region": "RU-KDA",
+    "segment": "SME",
+    "metrics": [
+      "payroll_credit_fee",
+      "external_bank_transfer_fee",
+      "account_monthly_fee",
+      "employee_card_fee",
+      "cash_withdrawal_limit",
+      "transfer_limit",
+      "crediting_time",
+      "employee_privilege",
+      "premium_eligibility",
+      "integration_1c",
+      "integration_api"
+    ],
+    "result": "No accepted tariff value in any bank x metric cell. Keep all 44 cells unknown until current originals establish package, employer/employee scope, effective date, and regional applicability."
+  },
+  "unresolved_legal_questions": [
+    "Whether each bank permits automated retrieval and local archive storage under the terms and document-specific conditions that apply to each host/path.",
+    "Applicable path-specific request limits and whether 24-hour rechecks are allowed; no bank-side permission inferred.",
+    "Copyright/licensing conditions for retaining originals and reusing extracted facts.",
+    "Future personal-data processing, localization/transfer, and retention review before external LLM use."
+  ],
+  "originals_storage": "Only the FAQ reference original is stored at its local path above. No bank original is tracked in Git.",
+  "discovery_leads": [
+    {
+      "bank_code": "sber",
+      "discovery_url": "https://www.sberbank.ru/",
+      "kind": "employer_salary_tariff",
+      "status": "pending",
+      "effective_date": null,
+      "note": "No exact current public tariff/conditions URL found; request manual import of an official document."
+    },
+    {
+      "bank_code": "vtb",
+      "discovery_url": "https://www.vtb.ru/malyj-biznes/zarplatniy-proekt/",
+      "kind": "salary_project_conditions",
+      "status": "pending",
+      "effective_date": "2026-09-01 per search index only",
+      "note": "Indexed title: ??????? ???????????? ???????? ?? ??????????? ????????? ???????? ??????? ?? ????? ?????????? ???. Exact URL, bytes, scope and package unverified."
+    },
+    {
+      "bank_code": "alfa",
+      "discovery_url": "https://alfabank.ru/sme/salaryproject/",
+      "kind": "salary_project_rules_and_contract",
+      "status": "pending",
+      "effective_date": "A??? regulation and money-transfer agreement indexed from 2026-06-22; exact direct URLs unverified",
+      "note": "Current documents are leads only; direct URL, redirects, bytes and tariff applicability require verification."
+    },
+    {
+      "bank_code": "alfa",
+      "discovery_url": "https://alfabank.ru/sme/salaryproject/",
+      "kind": "salary_transfer_rules",
+      "status": "pending",
+      "effective_date": "2024-04-19 per index; page places under archive",
+      "note": "Historical lead; do not use as current terms or tariff."
     }
   ]
 }

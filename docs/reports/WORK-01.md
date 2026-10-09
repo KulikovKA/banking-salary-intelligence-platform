@@ -1,25 +1,36 @@
-# WORK-01 — Источники и границы покрытия
+# Отчёт WORK-01 — источники и границы покрытия
 
-**Статус:** BLOCKED. **Дата checkpoint:** 2026-10-09. **Внутренний этап:** SRC-001.
+**Дата:** 2026-10-09. **Статус:** BLOCKED. **Внутренний этап:** SRC-001, частично выполнен.
 
-Публичные URL-кандидаты собраны по четырём банкам и внесены в discovery-only manifest. Ни один URL не получил approved policy decision. Покрытие 11 метрик для RU-KDA, пакет и географическая применимость остаются `unknown` по каждому банку. Тарифные originals не скачивались и не сохранялись; SHA-256 не заявлены.
+Базовая архитектура v1.1, scope и место вне-Git для originals приняты владельцем. Проведена техническая инвентаризация доменов, продуктовых страниц, PDF-кандидатов, robots и terms. Получен и хеширован один справочный FAQ Кубань Кредит. Тарифный original работодателя для каждого банка и право автоматической проверки не подтверждены, поэтому G0/source acceptance не пройден.
 
-Работа остановлена до решения назначенного владельца G0/source policy: подтверждения разрешённых доменов и URL, проверки robots/terms, установки request rate и выбора разрешённого хранилища originals. Актуальные тарифы и условия не сверены по оригиналам, поэтому SRC-001 и WORK-01 не DONE.
+## Checkpoints
 
-Подробные URL, результаты запросов, разбор по банкам, критерии приёмки, проверки и следующий владелец описаны в [отчёте SRC-001](SRC-001.md) и [source feasibility](source-feasibility.md). Машиночитаемые наблюдения без разрешённых seed URL находятся в [`tests/fixtures/manifests/sources.json`](../../tests/fixtures/manifests/sources.json).
+1. **SRC-001.01 — частично.** Final URL и redirect chain проверены для статьи sberbusiness.live и Kuban FAQ (без redirect); product pages Сбера/ВТБ/Альфы и tariff/manual PDFs target GET не подтвердили.
+2. **SRC-001.02 — частично.** Найдены SberAPI; ВТБ conditions с 01.09.2026 в search index; Альфа product/documents, включая архивные правила 19.04.2024; Kuban FAQ и salary-card tariff album. Нет полного актуального employer tariff/conditions набора на банк.
+3. **SRC-001.03 — BLOCKED.** Проектные решения приняты, но bank-side permission, применимые site terms и rate limits не подтверждены для целевых хостов. 24 часа — предварительная цель. Robots unknown не трактуется как allow.
+4. **SRC-001.04 — частично.** Coverage matrix RU-KDA/МСБ содержит 44 unknown-клетки; один справочный original сохранён вне Git и SHA-256 внесён. Ценовые факты не seeded.
 
-## Files
+## Acceptance evidence
 
-- `docs/reports/WORK-01.md`
-- `docs/reports/SRC-001.md`
-- `docs/reports/source-feasibility.md`
-- `tests/fixtures/manifests/sources.json`
-- `docs/implementation/MASTER_PLAN.md`
-- `docs/implementation/WORK_INDEX.json`
-- `docs/implementation/TASK_INDEX.json`
-- `docs/implementation/work_packages/WORK-01.md`
-- `docs/implementation/tasks/SRC-001.md`
+Четыре банковские строки и source decision/gaps внесены; доступные target URLs и HTTP результаты записаны; непроверенные URL не объявлены approved. Но тарифный/conditions original employer-level минимум на банк не получен, coverage фактических тарифов неизвестно, а допустимость автоматического сбора не подтверждена. AC и DoD не выполнены; WORK-01/SRC-001 остаются BLOCKED.
 
-## Validation
+## Проверки и изменённые файлы
 
-JSON syntax and invariants were checked with Python: 4 banks, 6 candidate URLs, 11 metrics per bank, all policy decisions pending, all coverage values unknown, and synchronized BLOCKED statuses in WORK_INDEX/TASK_INDEX. No application tests were available or run. Full AC evidence and failed/skipped checks are in [SRC-001](SRC-001.md).
+Команды GET/robots, MIME/hash и PDF content verification описаны в SRC-001.md. Автотесты не запускались; код приложения/тесты не менялись. Обновлены:
+
+- docs/research/SOURCES.md
+- docs/reports/source-feasibility.md
+- docs/reports/SRC-001.md
+- tests/fixtures/manifests/sources.json
+- docs/implementation/MASTER_PLAN.md, WORK_INDEX.json, TASK_INDEX.json
+- docs/implementation/work_packages/WORK-01.md и tasks/SRC-001.md
+- MASTER_PLAN.md
+
+Оригинал FAQ хранится вне Git.
+
+## Передача / блокеры
+
+**Требуют человека:** bank-specific разрешение/terms для автоматического получения и локального архива; site/path rate limits и допустимость интервала 24 часа; решение о правах/лицензиях; получение официальных текущих employer tariff/conditions документов со scope RU-KDA/МСБ и пакетами. Согласование владельца проекта не является разрешением банка.
+
+**Технически могу выполнить после снятия этих блокеров:** повторные GET без обхода защиты, final URL/redirect/MIME/date verification, скачивание разрешённых оригиналов во вне-Git каталог, SHA-256 и обновление coverage. G0, WORK-01 и SRC-001 не объявлять DONE.
