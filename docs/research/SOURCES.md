@@ -36,3 +36,17 @@
 Ни доступность страницы, ни robots Allow, ни отсутствие robots-файла не означают разрешение на automated retrieval/storage/reuse. Остаются правовые вопросы: bank-specific разрешение на автоматизацию и архив, применимые terms и лимиты для каждого host/path, лицензии/copyright на originals и извлечённые данные. Юридическое решение — отдельно у ответственного/юриста; решение владельца POC не заменяет разрешение банка. Интервал 24 часа не включать в scheduler до подтверждения применимых ограничений. Для blocked URL возможен ручной импорт официального документа.
 
 Не исследованы и не выбраны LLM модели/поставщики. Будущие ПД, локализация, трансграничная передача, retention и передача внешнему LLM требуют отдельной правовой проверки.
+
+## Дополнение к реестру — новые ссылки (2026-10-09)
+
+Полные URL, redirect/MIME/hash evidence и decisions находятся в [SourceAcceptanceManifest](../../tests/fixtures/manifests/sources.json). Это исследовательская запись, не разрешение на сбор.
+
+| Банк / URL | Классификация и наблюдение | Решение |
+|---|---|---|
+| [Кубань Кредит: salary-project page](https://kk.ru/business/solutions/zp-project/) | Локальный target GET: HTTP 200, final URL совпал, redirect chain пуст, HTML. Официальная страница перечисляет тариф от 01.06.2024 и отдельные условия обслуживания работодателя от 29.06.2026. | **Pending** для приёмки содержания; live collection **blocked** до применимых terms, bank-side permission и request limits. Robots не запрещает путь страницы. |
+| [Кубань Кредит: зарплатный тариф PDF](https://kk.ru/upload/iblock/3cf/2aukz7j463jptle27m62oo8frs1x862x.pdf) | Кандидат на employer salary-project tariff; web preview показывает действие с 01.06.2024. Local original bytes и SHA-256 отсутствуют. | **Blocked**: `kk.ru/robots.txt` HTTP 200 явно запрещает `/upload/*.pdf` и `/upload/iblock/*.pdf`; target GET намеренно не выполнялся. |
+| [Кубань Кредит: условия работодателя PDF](https://kk.ru/upload/iblock/973/96i8chqk1f794ldm6umaie424qnvoxhb.pdf) | Условия обслуживания работодателя, не самостоятельный тариф; web preview указывает вступление в силу 29.06.2026. Local original/hash отсутствует. | **Blocked** по тому же robots-запрету и неустановленному разрешению на сбор/хранение. |
+| [ВТБ: salary-project page](https://www.vtb.ru/malyj-biznes/zarplatniy-proekt/) | Точный URL повторно проверен локально; TLS certificate validation завершилась ошибкой до HTTP response. `vtb.ru/robots.txt` не проверен из-за TLS. | **Blocked** технически и по неустановленным source terms/policy; TLS не обходился. |
+| [Альфа-Банк: salary-project page](https://alfabank.ru/sme/salaryproject/) | Точный URL повторно проверен локально; TLS certificate validation завершилась ошибкой до HTTP response. `alfabank.ru/robots.txt` не проверен; TLS не обходился. | **Blocked** технически и по неустановленным source terms/policy. |
+
+Наличие страницы или ссылки на PDF не означает согласие банка на автоматическое извлечение, хранение или повторное использование документа. Для новых PDF Кубань Кредит сохранение оригинала и SHA-256 отложены; preview не считается original. Все показатели RU-KDA × банк остаются `unknown`.

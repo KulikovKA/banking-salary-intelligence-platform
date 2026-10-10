@@ -10,7 +10,7 @@ Docker Compose на одном Linux host: `proxy` (Caddy), `frontend` (Next.js 
 
 ## Config contract
 
-Validated Settings: APP_ENV, DATABASE_URL secret, STORAGE_ROOT, PUBLIC_BASE_URL, SESSION settings, SOURCE_MAX_BYTES=52428800, FETCH timeouts, WORKER_LEASE_SECONDS=180, HEARTBEAT_SECONDS=30, MAX_JOB_ATTEMPTS=3, SOURCE_STALE_HOURS=72, LLM_MODE=fake|provider, LLM_MODEL optional, LLM_API_BASE allowlisted, LLM_API_KEY secret, LLM_BUDGET settings, RETENTION days. В production обязательны TLS origin, secure cookies, auth enabled; fake identity запрещён, fake LLM разрешён только с видимой отметкой. Провайдерская модель не имеет default.
+Validated Settings: APP_ENV, DATABASE_URL secret, STORAGE_ROOT, PUBLIC_BASE_URL, SESSION settings, SOURCE_MAX_BYTES=52428800, FETCH timeouts, WORKER_LEASE_SECONDS=180, HEARTBEAT_SECONDS=30, MAX_JOB_ATTEMPTS=3, SOURCE_STALE_HOURS=72, LLM_MODE=fake|provider, LLM_MODEL optional, LLM_API_BASE по explicit LLM_ALLOWED_HOSTS, LLM_API_KEY secret, LLM_BUDGET settings, RETENTION days. В production обязательны TLS origin, secure cookies, auth enabled; fake identity запрещён, fake LLM разрешён только с видимой отметкой. Провайдерская модель не имеет default.
 
 ## Наблюдаемость
 

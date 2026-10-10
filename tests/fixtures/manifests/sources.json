@@ -2,7 +2,7 @@
   "schema_version": 1,
   "manifest_name": "SourceAcceptanceManifest",
   "manifest_status": "partial_blocked",
-  "checked_at": "2026-10-09T22:39:31+03:00",
+  "checked_at": "2026-10-09T23:55:00+03:00",
   "project_decisions": {
     "architecture": "v1.1 accepted as baseline",
     "banks": [
@@ -29,14 +29,17 @@
     ],
     "pending": [
       "sber_sberapi_salary_overview",
-      "sber_sberbusiness_article"
+      "sber_sberbusiness_article",
+      "kuban_salary_project_page"
     ],
     "blocked": [
       "vtb_salary_product_page",
       "alfa_salary_product_page",
       "kuban_manual_dbo",
       "kuban_salary_card_tariff_album",
-      "kuban_smb_rko_tariffs"
+      "kuban_smb_rko_tariffs",
+      "kuban_salary_project_tariffs_2024",
+      "kuban_employer_service_terms_2026"
     ]
   },
   "banks": [
@@ -179,17 +182,23 @@
     {
       "bank_code": "kuban_credit",
       "display_name": "Кубань Кредит",
-      "official_domain_evidence": "The fetched FAQ identifies КБ «Кубань Кредит» ООО and says kb.kk.bank is reachable from the Bank's official https://kk.bank site. Relation is confirmed for this FAQ. Exact live links for vip.kk.bank and promo.kk.bank were not obtained.",
+      "official_domain_evidence": "The fetched FAQ identifies КБ «Кубань Кредит» ООО and says kb.kk.bank is reachable from the Bank's official https://kk.bank site. Relation is confirmed for this FAQ. Exact live links for vip.kk.bank and promo.kk.bank were not obtained. The supplied salary-project page is on the same official kk.ru site; direct local GET returned 200 with final URL unchanged.",
       "policy": {
         "decision": "blocked",
         "decision_scope": "automated_collection",
         "reviewer": "Project owner decision recorded 2026-10-09; not bank permission",
-        "reason": "No site-use terms or permitted automation rate confirmed. Missing/inaccessible robots is not authorization.",
+        "reason": "No bank-side permission or applicable site-use terms/rate limits confirmed. The kk.ru robots file explicitly disallows the supplied /upload/*.pdf paths; product-page access alone is not authorization.",
         "robots": {
-          "url": "https://kk.bank/robots.txt",
-          "checked_at": "2026-10-09T22:39:31+03:00",
-          "result": "Local TLS ended unexpectedly; web probe unavailable",
-          "directives": null
+          "url": "https://kk.ru/robots.txt",
+          "checked_at": "2026-10-09T23:55:00+03:00",
+          "result": "Local GET HTTP 200; User-agent:* disallows /upload/*.pdf and /upload/iblock/*.pdf; product-page path is not covered by these disallows.",
+          "directives": {
+            "disallow": [
+              "/upload/*.pdf",
+              "/upload/iblock/*.pdf"
+            ],
+            "product_page_path": "/business/solutions/zp-project/ not matched"
+          }
         },
         "document_host_robots": {
           "url": "https://kb.kk.bank/robots.txt",
@@ -199,7 +208,7 @@
         },
         "terms": {
           "url": null,
-          "result": "No applicable terms for kk.bank, kb.kk.bank, vip.kk.bank, or promo.kk.bank confirmed.",
+          "result": "No applicable public terms for automated access/reuse on kk.ru confirmed.",
           "note": "start.kk.bank agreement names ООО «ИСУ» and is unrelated."
         },
         "target_interval_hours": 24,
@@ -224,7 +233,8 @@
         },
         "observed_public_claims": [
           "FAQ describes required documents, connection steps, and card issuance up to 10 days; it is not a tariff.",
-          "Indexed tariff album has employee salary-card tariffs but not a complete employer tariff or regional package."
+          "Indexed tariff album has employee salary-card tariffs but not a complete employer tariff or regional package.",
+          "Official kk.ru page lists a salary-project tariff dated 01.06.2024 and employer-service terms effective 29.06.2026; neither local original bytes nor current RU-KDA/SME tariff values are accepted."
         ]
       }
     }
@@ -280,8 +290,8 @@
       "mime_type": null,
       "sha256": null,
       "scope": "SME page; geographic applicability unknown",
-      "checked_at": "2026-10-09T22:39:31+03:00",
-      "note": "Local TLS validation failed; web-open timed out. Manual official-document import required."
+      "checked_at": "2026-10-09T23:55:00+03:00",
+      "note": "Local TLS validation failed; web-open timed out. Manual official-document import required. This exact user-supplied URL was rechecked locally; TLS certificate validation failed before an HTTP response, and robots.txt could not be verified. No TLS bypass was used."
     },
     {
       "source_id": "alfa_salary_product_page",
@@ -297,8 +307,8 @@
       "mime_type": null,
       "sha256": null,
       "scope": "SME; exact RU-KDA applicability unknown",
-      "checked_at": "2026-10-09T22:39:31+03:00",
-      "note": "Local TLS validation failed and web open returned internal error. Manual official-document import required."
+      "checked_at": "2026-10-09T23:55:00+03:00",
+      "note": "Local TLS validation failed and web open returned internal error. Manual official-document import required. This exact user-supplied URL was rechecked locally; TLS certificate validation failed before an HTTP response, and robots.txt could not be verified. No TLS bypass was used."
     },
     {
       "source_id": "kuban_faq_dbo",
@@ -372,6 +382,69 @@
       "scope": "SME RKO; exact salary-payment applicability unknown",
       "checked_at": "2026-10-09T22:39:31+03:00",
       "note": "Target GET failed local TLS EOF; promo host robots/terms unavailable. Not used for facts."
+    },
+    {
+      "source_id": "kuban_salary_project_page",
+      "bank_code": "kuban_credit",
+      "url": "https://kk.ru/business/solutions/zp-project/",
+      "final_url": "https://kk.ru/business/solutions/zp-project/",
+      "redirect_chain": [],
+      "kind": "salary_product_page_and_document_index",
+      "classification": "official_bank_salary_project_page_not_itself_a_tariff_document",
+      "status": "pending",
+      "policy_decision": "blocked_for_automated_collection_pending_terms_permission_and_rate_limits",
+      "http_status": 200,
+      "mime_type": "text/html",
+      "sha256": null,
+      "published_at": null,
+      "effective_date": null,
+      "scope": "Kuban Credit salary project; employer tariff applicability to SME/RU-KDA pending document review",
+      "checked_at": "2026-10-09T23:55:00+03:00",
+      "robots": {
+        "url": "https://kk.ru/robots.txt",
+        "result": "HTTP 200; supplied page path not disallowed; /upload/*.pdf is disallowed"
+      },
+      "note": "Local target GET returned HTTP 200; final URL unchanged. Official page lists tariff PDF effective 01.06.2024, employer-service conditions effective 29.06.2026, and an association form. Website terms/applicable automation permissions were not confirmed; page availability is not permission."
+    },
+    {
+      "source_id": "kuban_salary_project_tariffs_2024",
+      "bank_code": "kuban_credit",
+      "url": "https://kk.ru/upload/iblock/3cf/2aukz7j463jptle27m62oo8frs1x862x.pdf",
+      "final_url": null,
+      "redirect_chain": [],
+      "kind": "salary_project_tariff_pdf",
+      "classification": "salary_project_tariff_document_employer_price_scope_and_currentness_unverified",
+      "status": "blocked",
+      "policy_decision": "blocked_robots_disallows_pdf_path_and_automation_permission_unconfirmed",
+      "http_status": null,
+      "mime_type": "application/pdf in web preview; local bytes not retrieved",
+      "sha256": null,
+      "published_at": null,
+      "effective_date": "2024-06-01 per web preview; original bytes/date not locally verified",
+      "scope": "Kuban Credit salary-project tariff; employer/employee fee mapping, SME package, and RU-KDA applicability unverified",
+      "checked_at": "2026-10-09T23:55:00+03:00",
+      "local_original": null,
+      "note": "The official kk.ru product page links this exact URL as a salary-project tariff. kk.ru/robots.txt returns HTTP 200 and explicitly disallows /upload/*.pdf and /upload/iblock/*.pdf. Target GET was not attempted after confirming the applicable disallow; final URL and redirect chain are unverified. A web preview is not a local original; no SHA-256 or tariff values accepted."
+    },
+    {
+      "source_id": "kuban_employer_service_terms_2026",
+      "bank_code": "kuban_credit",
+      "url": "https://kk.ru/upload/iblock/973/96i8chqk1f794ldm6umaie424qnvoxhb.pdf",
+      "final_url": null,
+      "redirect_chain": [],
+      "kind": "employer_service_terms_pdf",
+      "classification": "employer_service_conditions_not_a_standalone_tariff",
+      "status": "blocked",
+      "policy_decision": "blocked_robots_disallows_pdf_path_and_automation_permission_unconfirmed",
+      "http_status": null,
+      "mime_type": "application/pdf in web preview; local bytes not retrieved",
+      "sha256": null,
+      "published_at": null,
+      "effective_date": "2026-06-29 per web preview; original bytes/date not locally verified",
+      "scope": "Employer service conditions; pricing must be read with applicable tariff and contract; RU-KDA/SME applicability pending",
+      "checked_at": "2026-10-09T23:55:00+03:00",
+      "local_original": null,
+      "note": "The official kk.ru product page links this exact URL as employer-service conditions. kk.ru/robots.txt explicitly disallows /upload/*.pdf and /upload/iblock/*.pdf. Target GET was not attempted after confirming the applicable disallow; final URL and redirect chain are unverified. Preview text classifies it as service terms, not a standalone tariff; no original bytes/hash or tariff claims accepted."
     }
   ],
   "coverage_summary": {
@@ -390,7 +463,7 @@
       "integration_1c",
       "integration_api"
     ],
-    "result": "No accepted tariff value in any bank x metric cell. Keep all 44 cells unknown until current originals establish package, employer/employee scope, effective date, and regional applicability."
+    "result": "No accepted tariff value in any of the 44 bank ? metric cells. Package remains unknown for every bank; preserve unknowns until verified originals establish payer, product/package, effective date, segment and RU-KDA applicability."
   },
   "unresolved_legal_questions": [
     "Whether each bank permits automated retrieval and local archive storage under the terms and document-specific conditions that apply to each host/path.",
@@ -432,5 +505,59 @@
       "effective_date": "2024-04-19 per index; page places under archive",
       "note": "Historical lead; do not use as current terms or tariff."
     }
+  ],
+  "host_policy_checks": [
+    {
+      "host": "kk.ru",
+      "bank_code": "kuban_credit",
+      "official_relationship": "official product page branded Bank Kuban Credit; supplied exact links are on same host",
+      "robots_url": "https://kk.ru/robots.txt",
+      "robots_http_status": 200,
+      "product_page_path": "/business/solutions/zp-project/",
+      "product_page_path_disallowed": false,
+      "pdf_paths_disallowed": [
+        "/upload/*.pdf",
+        "/upload/iblock/*.pdf"
+      ],
+      "terms": "No applicable automated-access/reuse terms confirmed",
+      "direct_page_get": {
+        "status": 200,
+        "final_url": "https://kk.ru/business/solutions/zp-project/",
+        "redirect_chain": [],
+        "mime_type": "text/html"
+      },
+      "pdf_target_get": "not attempted because robots disallows supplied paths",
+      "automation_decision": "blocked"
+    },
+    {
+      "host": "www.vtb.ru",
+      "bank_code": "vtb",
+      "robots_url": "https://www.vtb.ru/robots.txt",
+      "robots_result": "TLS certificate validation failed locally; no bypass",
+      "salary_page_url": "https://www.vtb.ru/malyj-biznes/zarplatniy-proekt/",
+      "salary_page_result": "TLS certificate validation failed before HTTP response",
+      "automation_decision": "blocked"
+    },
+    {
+      "host": "alfabank.ru",
+      "bank_code": "alfa",
+      "robots_url": "https://alfabank.ru/robots.txt",
+      "robots_result": "TLS certificate validation failed locally; no bypass",
+      "salary_page_url": "https://alfabank.ru/sme/salaryproject/",
+      "salary_page_result": "TLS certificate validation failed before HTTP response",
+      "automation_decision": "blocked"
+    }
+  ],
+  "technical_blockers": [
+    "VTB and Alfa direct page/robots probes fail local TLS certificate validation before HTTP; no bypass performed.",
+    "Kuban Credit tariff and service-terms PDFs are explicitly disallowed by kk.ru robots.txt; target GETs were intentionally not attempted, so local originals and SHA-256 are unavailable.",
+    "Sber current exact employer-tariff URL and accepted original remain unresolved.",
+    "Local PostgreSQL integration environment unavailable in this workspace because Docker daemon is not running."
+  ],
+  "legal_and_organizational_blockers": [
+    "Bank-side permission and applicable terms for automated retrieval, local archival storage, and reuse must be established per host/path; project-owner approval is not bank permission.",
+    "Path-specific request limits and permissibility of the preliminary 24-hour target require confirmation before scheduler enablement.",
+    "Human/legal review of document copyright/licensing and permitted reuse of extracted tariff facts remains outstanding.",
+    "Current official employer tariff/conditions and SME/RU-KDA/package applicability still need human or bank-provided confirmation for all four banks."
   ]
 }
