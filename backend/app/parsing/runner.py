@@ -19,6 +19,8 @@ from __future__ import annotations
 
 import math
 import os
+import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -158,6 +160,10 @@ def run_bounded_parse(
     if request.kind not in {"pdf", "xlsx", "html"}:
         raise InvalidParseRequest("unsupported parser kind")
     _validate_limits(timeout_seconds, memory_limit_bytes, max_output_bytes)
+    if os.name != "nt" and not sys.platform.startswith("linux"):
+        raise BoundedParseResourceError(
+            "hard resource limits are supported only on Linux and Windows"
+        )
     try:
         path = Path(original_path).expanduser().resolve(strict=True)
     except (OSError, RuntimeError, TypeError, ValueError) as exc:
@@ -173,12 +179,16 @@ def run_bounded_parse(
         worker_path = Path(temp_dir) / "worker.py"
         result_path = Path(temp_dir) / "result.json"
         worker_path.write_text(_WORKER_BOOTSTRAP, encoding="utf-8")
+        worker_original_path = path
+        if request.kind == "xlsx" and path.suffix.lower() != ".xlsx":
+            worker_original_path = Path(temp_dir) / "original.xlsx"
+            shutil.copyfile(path, worker_original_path)
         worker_args = [
             sys.executable,
             "-I",
             str(worker_path),
             request.kind,
-            str(path),
+            str(worker_original_path),
             str(result_path),
             str(max_output_bytes),
             str(memory_limit_bytes),
@@ -274,20 +284,29 @@ def _minimal_environment() -> dict[str, str]:
 
 
 def _terminate_process(process: subprocess.Popen[bytes], job_handle: int | None) -> None:
-    if job_handle is not None:
-        _close_windows_handle(job_handle)
-    if process.poll() is None:
+    if os.name == "posix":
+        # Kill the whole isolated process group even if its leader already exited.
         try:
-            process.kill()
+            kill_group = getattr(os, "killpg", None)
+            if kill_group is None:
+                if process.poll() is None:
+                    process.kill()
+            else:
+                kill_group(process.pid, getattr(signal, "SIGKILL", 9))
         except OSError:
-            pass
-    if os.name == "posix" and process.poll() is None:
-        try:
-            killpg_name = "killpg"
-            killpg = getattr(os, killpg_name)
-            killpg(process.pid, 9)
-        except OSError:
-            pass
+            if process.poll() is None:
+                try:
+                    process.kill()
+                except OSError:
+                    pass
+    else:
+        if job_handle is not None:
+            _close_windows_handle(job_handle)
+        if process.poll() is None:
+            try:
+                process.kill()
+            except OSError:
+                pass
     try:
         process.communicate(timeout=5)
     except subprocess.TimeoutExpired:
