@@ -8,9 +8,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
+from app.corpus import models as corpus_models  # noqa: F401
 from app.db.base import Base
 from app.db.migration_scope import include_object
+from app.llm import models as llm_models  # noqa: F401
 from app.registry import models  # noqa: F401
+from app.tariffs import models as tariff_models  # noqa: F401
 
 config = context.config
 if config.config_file_name is not None:
