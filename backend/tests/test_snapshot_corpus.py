@@ -374,3 +374,32 @@ def test_freeze_rejects_missing_reviewed_publication_in_service_and_database(cor
             session.execute(update(Snapshot).where(Snapshot.id == ids["snapshot"]).values(
                 state="frozen", frozen_at=datetime.now(UTC), manifest_sha256="f" * 64,
             ))
+
+
+def test_unapproved_redirect_provenance_cannot_be_admitted(corpus_db):
+    service, factory, _, ids, _, manifest = corpus_db
+    target = "https://example.com/unapproved.pdf"
+    with factory.begin() as session:
+        fetch = session.get(SourceFetch, ids["fetch"])
+        fetch.final_url = target
+        fetch.redirect_chain = [target]
+    redirected = manifest.model_copy(update={"documents": (
+        manifest.documents[0].model_copy(update={"final_url": target}),
+    )})
+    with pytest.raises(CorpusError, match="PERMISSION_REVOKED"):
+        service.validate(redirected)
+
+
+def test_frozen_read_rejects_changed_original_pointer(corpus_db):
+    service, factory, store, ids, _, manifest = corpus_db
+    service.add_version(manifest, 0)
+    _publish_fixture(factory, ids)
+    service.freeze(manifest)
+    replacement = store.put([b"different synthetic original"], "pdf", "synthetic")
+    with factory.begin() as session:
+        blob = Blob(**asdict(replacement), verified_at=datetime.now(UTC))
+        session.add(blob)
+        session.flush()
+        session.get(SourceVersion, ids["version"]).blob_id = blob.id
+    with pytest.raises(CorpusError, match="SNAPSHOT_MEMBER_INVALID"):
+        service.read_member(manifest.snapshot_id, manifest.documents[0].source_version_id)
