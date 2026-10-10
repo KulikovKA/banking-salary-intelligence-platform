@@ -1,6 +1,7 @@
 """Opt-in PostgreSQL integration only; never substitute SQLite or bank network."""
 
 import os
+from dataclasses import asdict
 from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
@@ -104,6 +105,11 @@ def catalog(tmp_path):
 
 def test_fetch_versions_quarantine_dedup_and_last_good(catalog):
     service, factory, source_id, state, store = catalog
+    # Another committed test run may use a separate archive root in the same DB.
+    foreign_store = LocalBlobStore(store.root.parent / "unrelated-archive")
+    foreign = foreign_store.put([b"%PDF-1.7 unrelated-source"], "pdf", "synthetic")
+    with factory.begin() as session:
+        session.add(Blob(**asdict(foreign), verified_at=datetime.now(UTC)))
     first = service.fetch_source(source_id)
     assert first.result == "success", first.error_code
     with factory() as session:
@@ -139,7 +145,13 @@ def test_fetch_versions_quarantine_dedup_and_last_good(catalog):
     assert failed.error_code == "HTTP_FORBIDDEN"
     assert service.current_content(source_id) == (first.version_id, True)
     with factory() as session:
-        keys = set(session.scalars(select(Blob.storage_key).where(Blob.corpus_kind == "synthetic")))
+        keys = set(
+            session.scalars(
+                select(Blob.storage_key)
+                .join(SourceVersion, SourceVersion.blob_id == Blob.id)
+                .where(SourceVersion.source_id == source_id)
+            )
+        )
     assert not store.reconcile(keys)["missing"]
 
 
@@ -254,3 +266,37 @@ def test_schema_matches_migration(catalog):
             session.scalar(text("select version_num from alembic_version"))
             == "0002_source_recovery"
         )
+
+
+def test_content_acceptance_rechecks_hash_and_preserves_last_accepted(catalog):
+    service, factory, source_id, state, store = catalog
+    first = service.fetch_source(source_id)
+    service.accept_content(first.version_id, reviewer="tester", applicability={"scope": "test"})
+    state["body"] = b"%PDF-1.7 synthetic-next-edition"
+    second = service.fetch_source(source_id)
+    with factory() as session:
+        version = session.get(SourceVersion, second.version_id)
+        blob = session.get(Blob, version.blob_id)
+        path = store.verify(service._receipt(blob))
+    path.write_bytes(b"%PDF-1.7 simulated-storage-corruption")
+    with pytest.raises(IngestionError, match="STORAGE_HASH_MISMATCH"):
+        service.accept_content(
+            second.version_id, reviewer="tester", applicability={"scope": "test"}
+        )
+    with factory() as session:
+        assert session.get(SourceVersion, second.version_id).content_state == "quarantine"
+    assert service.current_content(source_id)[0] == first.version_id
+
+
+def test_content_acceptance_cannot_overwrite_previous_review(catalog):
+    service, factory, source_id, _, _ = catalog
+    outcome = service.fetch_source(source_id)
+    service.accept_content(outcome.version_id, reviewer="tester", applicability={"scope": "test"})
+    with pytest.raises(IngestionError, match="CONTENT_ACCEPTANCE_INVALID"):
+        service.accept_content(
+            outcome.version_id, reviewer="someone else", applicability={"scope": "changed"}
+        )
+    with factory() as session:
+        version = session.get(SourceVersion, outcome.version_id)
+        assert version.accepted_by == "tester"
+        assert version.metadata_json["applicability"] == {"scope": "test"}

@@ -187,17 +187,18 @@
         "decision": "blocked",
         "decision_scope": "automated_collection",
         "reviewer": "Project owner decision recorded 2026-10-09; not bank permission",
-        "reason": "No bank-side permission or applicable site-use terms/rate limits confirmed. The kk.ru robots file explicitly disallows the supplied /upload/*.pdf paths; product-page access alone is not authorization.",
+        "reason": "Applicable acquisition/storage/reuse terms and source-specific approval remain unconfirmed. The earlier cross-group robots disallow conclusion is superseded by the 2026-10-10 investigation.",
         "robots": {
           "url": "https://kk.ru/robots.txt",
-          "checked_at": "2026-10-09T23:55:00+03:00",
-          "result": "Local GET HTTP 200; User-agent:* disallows /upload/*.pdf and /upload/iblock/*.pdf; product-page path is not covered by these disallows.",
+          "checked_at": "2026-10-10T17:04:29.852657+00:00",
+          "result": "Research evidence 2026-10-10: HTTP 200; PDF disallows belong to Yandex, not User-agent:*. Both exact candidate PDF paths are allowed for the stable BankSalaryResearch/0.1 identity. No fresh network request in this E2E review. Robots allowance is not acquisition/storage/reuse approval.",
           "directives": {
-            "disallow": [
-              "/upload/*.pdf",
-              "/upload/iblock/*.pdf"
+            "user_agent": "BankSalaryResearch/0.1",
+            "matched_groups": [
+              "*"
             ],
-            "product_page_path": "/business/solutions/zp-project/ not matched"
+            "candidate_pdfs_allowed": true,
+            "pdf_disallow_group": "Yandex"
           }
         },
         "document_host_robots": {
@@ -402,7 +403,7 @@
       "checked_at": "2026-10-09T23:55:00+03:00",
       "robots": {
         "url": "https://kk.ru/robots.txt",
-        "result": "HTTP 200; supplied page path not disallowed; /upload/*.pdf is disallowed"
+        "result": "Research evidence 2026-10-10: HTTP 200; PDF disallows belong to Yandex, not User-agent:*. Both exact candidate PDF paths are allowed for the stable BankSalaryResearch/0.1 identity. No fresh network request in this E2E review. Robots allowance is not acquisition/storage/reuse approval."
       },
       "note": "Local target GET returned HTTP 200; final URL unchanged. Official page lists tariff PDF effective 01.06.2024, employer-service conditions effective 29.06.2026, and an association form. Website terms/applicable automation permissions were not confirmed; page availability is not permission."
     },
@@ -410,41 +411,43 @@
       "source_id": "kuban_salary_project_tariffs_2024",
       "bank_code": "kuban_credit",
       "url": "https://kk.ru/upload/iblock/3cf/2aukz7j463jptle27m62oo8frs1x862x.pdf",
-      "final_url": null,
+      "final_url": "https://kk.ru/upload/iblock/3cf/2aukz7j463jptle27m62oo8frs1x862x.pdf",
       "redirect_chain": [],
       "kind": "salary_project_tariff_pdf",
       "classification": "salary_project_tariff_document_employer_price_scope_and_currentness_unverified",
       "status": "blocked",
-      "policy_decision": "blocked_robots_disallows_pdf_path_and_automation_permission_unconfirmed",
-      "http_status": null,
-      "mime_type": "application/pdf in web preview; local bytes not retrieved",
-      "sha256": null,
+      "policy_decision": "blocked_acquisition_storage_reuse_basis_and_source_specific_approval_unconfirmed",
+      "http_status": 200,
+      "mime_type": "application/pdf",
+      "sha256": "db9c856a67767b6d1c290a48162d107fa6c99d8905b395d3b113ec1920b57bec",
       "published_at": null,
-      "effective_date": "2024-06-01 per web preview; original bytes/date not locally verified",
+      "effective_date": "2024-06-01",
       "scope": "Kuban Credit salary-project tariff; employer/employee fee mapping, SME package, and RU-KDA applicability unverified",
-      "checked_at": "2026-10-09T23:55:00+03:00",
-      "local_original": null,
-      "note": "The official kk.ru product page links this exact URL as a salary-project tariff. kk.ru/robots.txt returns HTTP 200 and explicitly disallows /upload/*.pdf and /upload/iblock/*.pdf. Target GET was not attempted after confirming the applicable disallow; final URL and redirect chain are unverified. A web preview is not a local original; no SHA-256 or tariff values accepted."
+      "checked_at": "2026-10-10T17:04:29.852657+00:00",
+      "local_original": "%LOCALAPPDATA%\\BankingSalaryIntelligence\\investigations\\2026-10-10\\kk-tariff.pdf",
+      "note": "The official product page links this exact URL. Original previously obtained during the 2026-10-10 investigation, outside the application corpus and Git; hash and size rechecked locally in this review. Robots group correction allows these PDFs for BankSalaryResearch/0.1. No new target GET, real import or content acceptance in this E2E. No verified acquisition/storage/reuse basis or separate manual grant; live and manual application use BLOCKED.",
+      "byte_size": 648631
     },
     {
       "source_id": "kuban_employer_service_terms_2026",
       "bank_code": "kuban_credit",
       "url": "https://kk.ru/upload/iblock/973/96i8chqk1f794ldm6umaie424qnvoxhb.pdf",
-      "final_url": null,
+      "final_url": "https://kk.ru/upload/iblock/973/96i8chqk1f794ldm6umaie424qnvoxhb.pdf",
       "redirect_chain": [],
       "kind": "employer_service_terms_pdf",
       "classification": "employer_service_conditions_not_a_standalone_tariff",
       "status": "blocked",
-      "policy_decision": "blocked_robots_disallows_pdf_path_and_automation_permission_unconfirmed",
-      "http_status": null,
-      "mime_type": "application/pdf in web preview; local bytes not retrieved",
-      "sha256": null,
+      "policy_decision": "blocked_acquisition_storage_reuse_basis_and_source_specific_approval_unconfirmed",
+      "http_status": 200,
+      "mime_type": "application/pdf",
+      "sha256": "4f935428de5678c4a4b176ff1f7c34e5ed0d635d30502a878d272fbac32e8ecb",
       "published_at": null,
-      "effective_date": "2026-06-29 per web preview; original bytes/date not locally verified",
+      "effective_date": "2026-06-29",
       "scope": "Employer service conditions; pricing must be read with applicable tariff and contract; RU-KDA/SME applicability pending",
-      "checked_at": "2026-10-09T23:55:00+03:00",
-      "local_original": null,
-      "note": "The official kk.ru product page links this exact URL as employer-service conditions. kk.ru/robots.txt explicitly disallows /upload/*.pdf and /upload/iblock/*.pdf. Target GET was not attempted after confirming the applicable disallow; final URL and redirect chain are unverified. Preview text classifies it as service terms, not a standalone tariff; no original bytes/hash or tariff claims accepted."
+      "checked_at": "2026-10-10T17:04:29.852657+00:00",
+      "local_original": "%LOCALAPPDATA%\\BankingSalaryIntelligence\\investigations\\2026-10-10\\kk-conditions.pdf",
+      "note": "The official product page links this exact URL. Original previously obtained during the 2026-10-10 investigation, outside the application corpus and Git; hash and size rechecked locally in this review. Robots group correction allows these PDFs for BankSalaryResearch/0.1. No new target GET, real import or content acceptance in this E2E. No verified acquisition/storage/reuse basis or separate manual grant; live and manual application use BLOCKED.",
+      "byte_size": 757961
     }
   ],
   "coverage_summary": {
@@ -471,7 +474,7 @@
     "Copyright/licensing conditions for retaining originals and reusing extracted facts.",
     "Future personal-data processing, localization/transfer, and retention review before external LLM use."
   ],
-  "originals_storage": "Only the FAQ reference original is stored at its local path above. No bank original is tracked in Git.",
+  "originals_storage": "FAQ reference archive and two research-only Kuban candidate PDFs are local outside Git. The latter are not approved application corpus and were not imported. Synthetic E2E uses a separate PostgreSQL test database and synthetic archive.",
   "discovery_leads": [
     {
       "bank_code": "sber",

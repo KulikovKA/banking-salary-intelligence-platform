@@ -41,6 +41,15 @@ jobs:
       - run: uv run alembic -c backend/alembic.ini upgrade head
       - run: uv run alembic -c backend/alembic.ini check
       - run: uv run pytest backend/tests tools/test_bank_tls_probe.py
+      - name: Synthetic document E2E (offline, committed PostgreSQL rows)
+        run: uv run python tools/source_recovery_e2e.py --output-root "$RUNNER_TEMP/source-recovery-e2e"
+        env:
+          PYTHONPATH: backend
+      - uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-source-recovery-e2e
+          path: ${{ runner.temp }}/source-recovery-e2e/*/result.json
+          if-no-files-found: error
 
   frontend:
     runs-on: ubuntu-latest
