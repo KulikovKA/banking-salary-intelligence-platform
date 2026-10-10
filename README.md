@@ -1,51 +1,65 @@
 # Banking Salary Intelligence Platform
 
-Стартовый каркас модульного монолита для анализа публичных зарплатных предложений банков. Здесь пока есть только проверка доступности API и стартовая страница; тарифная логика и сбор банковских данных не реализованы.
+Первая версия — AI-ассистент для доказательного сравнения зарплатных проектов Сбера,
+ВТБ, Альфа-Банка и Кубань Кредит на фиксированном наборе официальных документов.
+FastAPI + PostgreSQL + Next.js; основная LLM — `openai/gpt-oss-120b` через GroqCloud Free,
+Fake LLM — для тестов. Scheduler, регулярное скачивание, мониторинг и уведомления
+вне активного scope.
 
-## Требования
+Уже реализованы каталог, миграции `0001`/`0002`, policy-gated FetchGateway,
+LocalBlobStore, операторский fetch/import и synthetic E2E. API пока содержит `/health`,
+frontend — стартовую страницу. Парсинг содержания, тарифы, сравнение, поиск, LLM и auth
+предстоит реализовать. Реальный корпус четырёх банков ещё не принят;
+исторические G1/G2 не пройдены. Synthetic E2E не доказывает готовность продукта.
 
-- Python 3.11 (проверялось на 3.11.9)
-- [uv](https://docs.astral.sh/uv/) 0.12.24
-- Node.js 24 LTS и npm 11
+- [Карта документации](docs/README.md)
+- [План и готовые промпты Codex](docs/implementation/MASTER_PLAN.md)
+- [Snapshot-приёмка](docs/product/ACCEPTANCE_CRITERIA.md)
+- [Инструкции Codex](AGENTS.md)
+- [Получение и разрешённый импорт](docs/implementation/SOURCE_RECOVERY_USAGE.md)
+- [Последний source E2E и блокеры](docs/reports/SOURCE-RECOVERY-E2E-2026-10-10.md)
 
-Версии runtime и приложений ограничены в `pyproject.toml` и `frontend/package.json`; точные версии Python/JavaScript зависимостей зафиксированы в `uv.lock` и `frontend/package-lock.json`.
+## Локальный запуск
 
-## Установка
+Python 3.11 (поддерживаемый диапазон указан в pyproject.toml), Node 24/npm 11.
+Версии зависимостей зафиксированы в `uv.lock` и `frontend/package-lock.json`.
+Если uv отсутствует в PATH, используйте `.\.tools\uv\bin\uv.exe`.
 
 ```powershell
 uv sync --locked
 npm --prefix frontend ci
-```
-
-## Разработка
-
-Запустить API и интерфейс в отдельных терминалах:
-
-```powershell
+docker compose --profile local up -d db
+$env:DATABASE_URL = 'postgresql+psycopg://bsi:bsi_local_only@127.0.0.1:5432/bsi'
+uv run alembic -c backend/alembic.ini upgrade head
 uv run uvicorn app.main:app --app-dir backend --reload
+# В другом терминале:
 npm --prefix frontend run dev
 ```
 
-- API: <http://127.0.0.1:8000/health>
-- OpenAPI: <http://127.0.0.1:8000/docs>
-- Frontend: <http://localhost:3000>
+API: <http://127.0.0.1:8000/health>, OpenAPI: <http://127.0.0.1:8000/docs>,
+frontend: <http://localhost:3000>. `.env.example` — шаблон; приложение читает env
+процесса и не загружает `.env` автоматически. Секреты не коммитить.
+По умолчанию ingestion offline, LLM fake; provider adapter ещё не реализован.
 
 ## Проверки
 
 ```powershell
 uv run ruff check .
 uv run mypy backend/app
-uv run pytest
+uv run pytest backend/tests tools/test_bank_tls_probe.py
+python tools/validate_docs.py
 npm --prefix frontend run lint
 npm --prefix frontend run typecheck
-$env:NEXT_TELEMETRY_DISABLED = "1"
+$env:NEXT_TELEMETRY_DISABLED = '1'
 npm --prefix frontend run build
 ```
 
-Команды не требуют внешнего API, банковских credentials или базы данных. PostgreSQL integration suite появится вместе с DB-001; SQLite не используется как его замена.
+PostgreSQL integration включается через `TEST_DATABASE_URL` на отдельной test DB
+с применёнными миграциями; без неё 9 текущих integration tests пропускаются.
+Для alembic также задайте `DATABASE_URL`. Synthetic E2E требует `APP_ENV=test`,
+`INGESTION_MODE=offline`, `PYTHONPATH=backend` и DB `bsi_test` либо `bsi_e2e`:
+`python tools/source_recovery_e2e.py --output-root .local/source-e2e`.
+Проверки не требуют запросов к банкам или Groq.
 
-## Секреты
-
-Скопируйте `.env.example` в `.env` только для локальной конфигурации, не добавляйте `.env` в Git. Сейчас backend не читает секреты и не подключается к внешним системам.
-
-Лицензионные сведения прямых и транзитивных зависимостей: [inventory по lockfiles](docs/reports/license-inventory.md).
+[Лицензионный inventory](docs/reports/license-inventory.md) сохранён вместе с
+историческими [отчётами](docs/reports/) и [архивом проектирования](docs/archive/README.md).

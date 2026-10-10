@@ -1,6 +1,6 @@
 # WORK-01 — Источники и границы покрытия
 
-Исполнитель: **GPT-6 Luna**. Reasoning по умолчанию: **High**. Status: **BLOCKED** — источники и один справочный original инвентаризированы; bank-side permission/terms/rate limits автоматического сбора не подтверждены, полный employer tariff/conditions набор по четырём банкам не получен. Отчёты: [SRC-001](../../reports/SRC-001.md), [WORK-01](../../reports/WORK-01.md).
+Исполнитель: **GPT-6 Luna**. Reasoning по умолчанию: **High**. Status: **BLOCKED** — источники и один справочный original инвентаризированы; bank-side permission/terms/rate limits автоматического сбора не подтверждены, полный employer tariff/conditions набор по четырём банкам не получен. Отчёты: [SRC-001](../../../../reports/SRC-001.md), [WORK-01](../../../../reports/WORK-01.md).
 
 Почему этот уровень: Нужно различить официальность, применимость и достаточность условий; правовое решение остаётся у ответственного.
 

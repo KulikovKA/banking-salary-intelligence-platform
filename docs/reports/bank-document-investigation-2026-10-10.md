@@ -218,4 +218,4 @@ HTML допустим как original для того, что явно опуб�
 
 ## F. Ready-to-Use Task for Luna
 
-Полный самостоятельный prompt: [SOURCE-RECOVERY.md](../implementation/luna_prompts/SOURCE-RECOVERY.md). Он требует реализовать минимальные безопасные контракты offline, проверить исправление robots regression, настроить scoped CA, архивирование и manual import; live actions остаются source-specific. Он не требует выдавать блокирующую документацию за завершённый мониторинг.
+Полный самостоятельный prompt: [SOURCE-RECOVERY.md](../archive/pre-snapshot/implementation/luna_prompts/SOURCE-RECOVERY.md). Он требует реализовать минимальные безопасные контракты offline, проверить исправление robots regression, настроить scoped CA, архивирование и manual import; live actions остаются source-specific. Он не требует выдавать блокирующую документацию за завершённый мониторинг.

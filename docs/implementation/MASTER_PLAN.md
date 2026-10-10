@@ -1,63 +1,90 @@
-# MASTER PLAN — объединённые задания
+# MASTER PLAN — snapshot v1
 
-Обновлено 09.10.2026: WORK-01/SRC-001 остаётся BLOCKED после проверки новых URL Кубань Кредит, ВТБ и Альфа. Архитектура v1.1 принята как база. Два PDF Кубань Кредит запрещены robots и не сохранены; TLS мешает локальной проверке ВТБ/Альфа. Bank-side permission и актуальные employer tariff originals не подтверждены.
+Цель: работающий closed AI-ассистент по четырём банкам на фиксированном официальном
+корпусе. [Архитектура](../architecture/OVERVIEW.md),
+[приёмка S0–S3](../product/ACCEPTANCE_CRITERIA.md), [Codex](../../AGENTS.md).
+Машиночитаемый реестр: [TASKS.json](TASKS.json); executable prompts — таблица ниже.
+Никаких активных WORK/TASK/luna пакетов: они сохранены в архиве.
 
-## Текущий статус
+## Реализованная основа и blockers
 
-Updated 2026-10-10: WORK-01/SRC-001 remains BLOCKED. ADR-006 is approved with changes: listed WORK-02?09 checkpoints may proceed under G0-OFFLINE; G0-LIVE(source) is not approved for any bank. Bank permission and current employer tariff originals remain unconfirmed.
+Каталог/0001/0002, config, FetchGateway/TLS/robots/transport, immutable BlobStore,
+operator fetch/import/accept_content, discoveries ВТБ/Кубань Кредит, evidence DTO,
+synthetic PG E2E и CI уже существуют. Не переписывать их.
+Стартовый API/UI есть, бизнес-сервисы ещё нет. New tasks TODO — не утверждение,
+что уже работающие ingestion компоненты отсутствуют.
+Ни один новый real source grant этой итерацией не выдан. Официальный corpus
+четырёх банков не принят. Historical G1/G2 NOT PASSED. S1 BLOCKED,
+S2/S3 NOT EVALUATED; полный S0 ждёт реализации нового pipeline.
 
-## С чего начинать
+## Задачи и последовательность
 
-После разрешения реализации передавать модели **один WORK-prompt** из списка ниже, а не 62 разрозненных поручения. Первый — WORK-01 / Luna High. Внутри блока модель выполняет этапы по порядку и сохраняет checkpoints; не требуется новый чат/поручение для каждого старого ID.
+Номера — безопасный default последовательный порядок. Каждая карточка содержит
+конкретные owned paths, implementation, tests, AC, effort и ограничения.
+При исполнении без параллелизма выдавай один файл целиком и проверяй его отчёт.
 
-[Порядок и промпты](EXECUTION_ORDER.md) · [Уровни reasoning](REASONING_GUIDE.md) · [Граф](DEPENDENCIES.md) · [Пакет архитектуры](../README.md) · [POC](POC_SCOPE.md) · [MVP](MVP_SCOPE.md) · [Приёмка](../product/ACCEPTANCE_CRITERIA.md).
+| Prompt | Результат | Merged зависимости | Effort | Status |
+|---|---|---|---|---|
+| [SNAP-01](prompts/SNAP-01.md) | Зафиксировать исполняемые DTO и Protocol | — | high | TODO |
+| [SNAP-02](prompts/SNAP-02.md) | Добавить schema snapshot и тарифного pipeline | SNAP-01 | high | TODO |
+| [SNAP-03](prompts/SNAP-03.md) | Операторский corpus manifest и freeze service | SNAP-02 | high | TODO |
+| [SNAP-04](prompts/SNAP-04.md) | PDF parser с page/table evidence | SNAP-01 | high | TODO |
+| [SNAP-05](prompts/SNAP-05.md) | XLSX parser без вычисления формул | SNAP-01 | high | TODO |
+| [SNAP-06](prompts/SNAP-06.md) | HTML parser сохранённого original | SNAP-01 | medium | TODO |
+| [SNAP-07](prompts/SNAP-07.md) | Нормализация тарифов и registry метрик | SNAP-01 | high | TODO |
+| [SNAP-08](prompts/SNAP-08.md) | Последовательный parsing/extraction pipeline | SNAP-03, SNAP-04, SNAP-05, SNAP-06, SNAP-07 | high | TODO |
+| [SNAP-09](prompts/SNAP-09.md) | Evidence validation, manual review и publication | SNAP-08 | high | TODO |
+| [SNAP-10](prompts/SNAP-10.md) | PostgreSQL FTS по frozen corpus | SNAP-09 | medium | TODO |
+| [SNAP-11](prompts/SNAP-11.md) | Детерминированный Comparison Engine | SNAP-09 | high | TODO |
+| [SNAP-12](prompts/SNAP-12.md) | LLM Protocol, Fake и bounded renderer inputs | SNAP-01 | medium | TODO |
+| [SNAP-13](prompts/SNAP-13.md) | GroqCloud Free adapter и quotas | SNAP-02, SNAP-12 | high | TODO |
+| [SNAP-14](prompts/SNAP-14.md) | Evidence-first ассистент и renderer | SNAP-10, SNAP-11, SNAP-13 | high | TODO |
+| [SNAP-15](prompts/SNAP-15.md) | Приглашения, auth и server sessions | SNAP-02 | high | TODO |
+| [SNAP-16](prompts/SNAP-16.md) | FastAPI routers и composition root | SNAP-03, SNAP-09, SNAP-14, SNAP-15 | high | TODO |
+| [SNAP-17](prompts/SNAP-17.md) | Next.js закрытый интерфейс ассистента | SNAP-16 | medium | TODO |
+| [SNAP-18](prompts/SNAP-18.md) | Реальный corpus gold и оценка S1/S2/Groq | SNAP-03, SNAP-09, SNAP-11, SNAP-14 | high | TODO |
+| [SNAP-19](prompts/SNAP-19.md) | Сквозная приёмка и минимальная эксплуатация | SNAP-17, SNAP-18 | high | TODO |
 
-## Рабочие блоки
+Только TASKS.json и эта таблица отражают активные статусы. Интегратор обновляет
+их одним commit после принятого отчёта; валидатор проверяет совпадение и DAG.
+DONE модуля не означает S1/S2/S3 PASS. При data blocker module harness можно
+закончить, а real acceptance остаётся NOT EVALUATED/BLOCKED в report.
 
-| Блок | Объединённая задача | Исполнитель | Reasoning | Внутренние этапы | Зависимости | Статус |
-|---|---|---|---|---|---|---|
-| [WORK-01](work_packages/WORK-01.md) | Источники и границы покрытия | GPT-6 Luna | **High** | SRC-001 | — | **BLOCKED** — bank-side permission/terms/rate limits и employer tariff originals не подтверждены |
-| [WORK-02](work_packages/WORK-02.md) | Environment, repository, and base DB | GPT-6 Luna | **Medium** | INF-001, INF-002, DB-001 | None for offline checkpoint; WORK-01 removed from full WORK-02 dependency | **IN_PROGRESS** ? INF-001 complete; INF-002/DB-001 under G0-OFFLINE; PostgreSQL runtime awaits Docker daemon |
-| [WORK-03](work_packages/WORK-03.md) | Архив, безопасная загрузка и фоновые задания | GPT-6 Luna | **Extra High** | STO-001, NET-001, JOB-001 | WORK-02 | TODO |
-| [WORK-04](work_packages/WORK-04.md) | HTML/PDF, структура документов и версии | GPT-6 Luna | **High** | HTML-001, PDF-001, DB-002, TXT-001, VER-001 | WORK-02, WORK-03 | TODO |
-| [WORK-05](work_packages/WORK-05.md) | Четыре банковских адаптера и проверка доступности G1 | GPT-6 Luna | **High** | ING-001, ING-002, ING-003, ING-004, QA-001 | WORK-01, WORK-04 | TODO |
-| [WORK-06](work_packages/WORK-06.md) | Тарифные факты, проверка и публикация | GPT-6 Luna | **Extra High** | DB-003, FACT-001, FACT-002, FACT-003, FACT-004 | WORK-04, WORK-05 | TODO |
-| [WORK-07](work_packages/WORK-07.md) | Полнотекстовый поиск и детерминированные сравнения | GPT-6 Luna | **Extra High** | SRCH-001, CMP-001, CMP-002 | WORK-04, WORK-06 | TODO |
-| [WORK-08](work_packages/WORK-08.md) | Ассистент POC, Fake LLM, API и минимальный экран | GPT-6 Luna | **High → AI-002: Extra High** | LLM-001, AI-001, AI-002, DOC-001, API-001, UI-001 | WORK-04, WORK-06, WORK-07 | TODO |
-| [WORK-09](work_packages/WORK-09.md) | Оценка ядра и приёмка POC G2 | GPT-6 Luna | **High** | QA-002 | WORK-05, WORK-08 | TODO |
-| [WORK-10](work_packages/WORK-10.md) | Пользователи, приглашения, сессии и права доступа | GPT-6 Luna | **High** | DB-004, AUTH-001, AUTH-002, AUTH-003 | WORK-06, WORK-08, WORK-09 | TODO |
-| [WORK-11](work_packages/WORK-11.md) | Личная история, память и надёжное выполнение вопросов | GPT-6 Luna | **Extra High** | LLM-002, CHAT-001, CHAT-002, AI-003 | WORK-03, WORK-08, WORK-10 | TODO |
-| [WORK-12](work_packages/WORK-12.md) | Мониторинг изменений, уведомления и полный API | GPT-6 Luna | **High** | DB-005, CHG-001, NTF-001, JOB-002, API-002 | WORK-03, WORK-06, WORK-10, WORK-11 | TODO |
-| [WORK-13](work_packages/WORK-13.md) | Полный пользовательский и административный интерфейс | GPT-6 Luna | **Medium → UI-003/006: High** | UI-002, UI-003, UI-004, UI-005, UI-006 | WORK-07, WORK-08, WORK-11, WORK-12 | TODO |
-| [WORK-14](work_packages/WORK-14.md) | Логи, метрики и эксплуатационный аудит | GPT-6 Luna | **Medium** | OPS-001 | WORK-12 | TODO |
-| [WORK-15](work_packages/WORK-15.md) | Проверка авторизации, SSRF и prompt injection | GPT-6 Luna | **Extra High** | SEC-001, SEC-002 | WORK-11, WORK-13, WORK-14 | TODO |
-| [WORK-16](work_packages/WORK-16.md) | ПД, лицензии и удаление данных | GPT-6 Luna | **High** | SEC-003 | WORK-01, WORK-14 | TODO |
-| [WORK-17](work_packages/WORK-17.md) | Подключение выбранного LLM API | GPT-6 Luna | **High** | LLM-003 | WORK-09, WORK-11, WORK-16 | TODO |
-| [WORK-18](work_packages/WORK-18.md) | Backup, восстановление и production-развёртывание | GPT-6 Luna | **High** | OPS-002, OPS-003 | WORK-03, WORK-14, WORK-15, WORK-16 | TODO |
-| [WORK-19](work_packages/WORK-19.md) | Сквозная приёмка и нагрузка 30 пользователей | GPT-6 Luna | **High** | QA-003, LOAD-001 | WORK-13, WORK-18 | TODO |
-| [WORK-20](work_packages/WORK-20.md) | Независимый финальный аудит | Astra | **—** | REV-001 | WORK-15, WORK-16, WORK-19 | TODO |
-| [WORK-21](work_packages/WORK-21.md) | Исправления по замечаниям аудита | GPT-6 Luna | **Extra High** | REV-002 | WORK-20 | TODO |
-| [WORK-22](work_packages/WORK-22.md) | Независимая повторная проверка и итоговый статус | Astra | **—** | REV-003 | WORK-21 | TODO |
+## Параллельные волны без конфликтов
 
+1. SNAP-01 — первым, frozen public DTO/Protocol; downstream не редактируют contracts.
+2. После 01: SNAP-02 (schema), 04 (PDF), 05 (XLSX), 06 (HTML), 07 (normalization),
+   12 (Fake) по независимым paths. Shared dependencies: 04 первым коммитит
+   pyproject/uv.lock, затем 05; отдельные parser modules можно писать одновременно.
+3. После 02: SNAP-03 corpus/source readiness и SNAP-15 auth. После 02+12:
+   SNAP-13 Groq. Auth migration/lockfile merge после schema/parser merges;
+   config.py принадлежит 13, auth пользуется существующим Settings.
+4. SNAP-08 интегрирует parsers/corpus/normalize; затем 09 evidence.
+5. После 09 одновременно SNAP-10 search и 11 comparison. SNAP-14 assistant
+   после 10+11+13. Auth может выполняться всё это время.
+6. SNAP-16 API composition после 03+09+14+15; затем 17 Next.js. SNAP-18 eval
+   после 03+09+11+14 параллельно API/UI на отдельных paths. Source approval и
+   human labeling готовятся раньше; real eval ждёт допущенного real corpus.
+7. SNAP-19 финальная интеграция/restore/S0–S3 после 17+18.
 
-## Offline checkpoints and execution modes
+Один владелец на file tree, отдельные branches/worktrees, один integrator merge.
+Миграции 0003/0004 и Alembic env никогда не редактируются одновременно;
+downstream schema fixes — отдельная follow-up schema owner. Не обновлять task
+statuses/report индексы из разных worktrees одновременно. UI DTO владеет 16,
+UI consumes. CI/compose/README изменяет 19 в финальной волне.
 
-WORK-02?WORK-09 have separate `offline_checkpoint` records in WORK_INDEX with `task_ids`, `deps`, `required_gates`, `status`, and `evidence`. Offline graph: WORK-02 has no source dependency; WORK-03 depends on offline 02; WORK-04 on 02/03; WORK-05 and WORK-06 on 04; WORK-07 on 04/06; WORK-08 on 04/06/07; WORK-09 on 08. Each requires G0-OFFLINE. A DONE checkpoint does not complete its WORK block or accept G1/G2. Full acceptance dependencies remain, except WORK-01 is removed from WORK-02.
+## Что запускать сейчас
 
-Offline/test/CI forbids external ingestion requests. Synthetic data is isolated from real archives, manifests, and publication. WORK-05 adapter scaffolds and WORK-06?09 harness work may use Fake/synthetic fixtures; live acceptance waits for exact G0-LIVE(source) and original gates. WORK-01 remains BLOCKED. WORK-10?WORK-19 remain behind accepted G2.
+Полностью без предпосылок — **SNAP-01**. Одновременно можно собирать human
+source decisions/coverage по отчётам, не выдавая grants и не получая новые bytes
+до допуска. Остальные coding prompts начинают после соответствующих merges;
+04/05/06/07/12 доступны сразу после 01, 02 тоже. Уже работающий offline E2E
+можно запускать сейчас независимо от документации/данных. Snapshot changes
+не требуют сначала пройти historical G2 для разработки auth/API/UI.
 
-## Gates и исключения
+## Общее Definition of Done
 
-- G0-OFFLINE admits only listed local/synthetic checkpoints without external ingestion requests. G0-LIVE(source) requires a separate exact host/path decision before network access; no source is approved. See ADR-006.
-- G1 ? full WORK-05/QA-001: approved sources for all four banks and scheduled fetch checks on at least three different days within one week. Manual import does not count.
-- G2 ? full WORK-09 on real documents and gold/holdout using original ACCEPTANCE_CRITERIA metrics. Synthetic harness is not acceptance. WORK-10?19 still require accepted G2.
-- WORK-17 ждёт выбора LLM/provider пользователем. Остальные независимые блоки продолжаются с Fake; production real AI и его финальный аудит требуют завершённого WORK-17.
-- G3/G4 — security, legal decisions активных потоков, E2E/restore/load. WORK-20/22 — независимый аудит Astra; WORK-21 — исправления Luna.
-
-## Статусы и источники истины
-
-Актуальный порядок — EXECUTION_ORDER; единицы исполнения — WORK_INDEX.json и таблица этого плана. TASK_INDEX.json и `tasks/` содержат исходные 62 этапа, теперь с work_package/reasoning. Файлы `luna_prompts/` сохранены для точечного продолжения этапа, но основной запуск — `work_prompts/WORK-XX.md`.
-
-WORK DONE требует DONE всех входящих этапов, соответствующих AC и gates; BLOCKED содержит причину/владельца решения; незавершённые тесты не DONE. Синхронизировать статусы MASTER_PLAN, WORK_INDEX, TASK_INDEX и карточек. [DETAILED_BACKLOG](DETAILED_BACKLOG.md) и DETAILED_* — историческая детализация, не второй план исполнения.
-
-Каждый блок включает конкретные внутренние ТЗ с файлами, алгоритмами, ошибками и тестами. Укрупнение уменьшает число поручений, но не отменяет последовательность миграций, тесты и независимую приёмку. Дополнительных агентов и реализации текущим запросом не запускается.
+Scoped reviewable code, relevant lint/type/unit/real PG/contract checks, report
+с evidence и честными NOT RUN; existing regression checks green; no new infra.
+Preserve originals/permissions/reports. Groq integration default fake в CI,
+реальные provider/data gates только по настоящим run artifacts.

@@ -1,0 +1,412 @@
+{
+  "schema_version": 1,
+  "plan": "snapshot-v1",
+  "historical_gates": {
+    "G1": "NOT_PASSED",
+    "G2": "NOT_PASSED"
+  },
+  "tasks": [
+    {
+      "id": "SNAP-01",
+      "title": "Зафиксировать исполняемые DTO и Protocol",
+      "deps": [],
+      "status": "TODO",
+      "reasoning_effort": "high",
+      "owned_paths": [
+        "backend/app/contracts/**",
+        "backend/tests/test_snapshot_contracts.py"
+      ],
+      "outcome": "Versioned DTO для всего pipeline, Parser/LLM/read service Protocol; без бизнес-реализации и миграций.",
+      "implementation": "Перенеси DOMAIN_CONTRACTS/API_CONTRACTS в Pydantic extra=forbid. Discriminated unions Value/Locator; Decimal strings, scope/date/conditions constraints. Protocol parsers и async LLM не должны импортировать concrete implementations. Совместимость ExtractionEvidence сохраняй через adapter. Зафиксируй serialization fixtures и interfaces, которые используют downstream modules. Ответь на неясности nullable/unknown явным тестом, не добавлением default tariff.",
+      "acceptance": "Roundtrip всех DTO; reject float/NaN/Infinity для денежных входов, unknown fields, пустой specific scope, неверные offsets, duplicate bank codes, unsupported enums/AST. Typecheck Protocol с Fake stubs. Отдельные synthetic_a identities допустимы только test context; реальные DTO не принимают их.",
+      "parallelism": "Первый обязательный merge. Не менять config/main/registry/lockfiles. После merge contracts read-only для всех downstream.",
+      "prompt": "prompts/SNAP-01.md"
+    },
+    {
+      "id": "SNAP-02",
+      "title": "Добавить schema snapshot и тарифного pipeline",
+      "deps": [
+        "SNAP-01"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "high",
+      "owned_paths": [
+        "backend/app/corpus/models.py",
+        "backend/app/tariffs/models.py",
+        "backend/app/llm/models.py",
+        "backend/alembic/versions/0003_snapshot_core.py",
+        "backend/alembic/env.py",
+        "backend/tests/test_snapshot_db.py",
+        "backend/tests/test_db_contract.py"
+      ],
+      "outcome": "Добавочная 0003, ORM для extraction/chunks/snapshot/candidates/evidence/reviews/publication/usage без удаления legacy schema.",
+      "implementation": "Следуй DATABASE_DESIGN; foreign keys RESTRICT, uniqueness/hash/corpus/state CHECKs, frozen membership DB trigger, append-only payload/review protection. Register metadata imports. Models держи в отдельных модулях, registry не пересоздавай. llm_usage reservations готовит схему, сам provider ещё не реализуй. Решения identity в review оставь operator label + nullable user_id для SNAP-15. Создай factory fixtures отдельной PG DB.",
+      "acceptance": "На настоящем PG18 upgrade с 0002 и чистой DB, alembic check, повторный upgrade; forbidden frozen membership UPDATE/INSERT/DELETE, duplicate extraction/publication, FK invalid references. Existing 0001/0002 и ingestion tests green; test_db_contract расширяет точный ожидаемый набор.",
+      "parallelism": "Единственный владелец 0003/Alembic env. Можно параллельно с parser/normalization/Fake DTO modules после SNAP-01; shared contract не редактировать.",
+      "prompt": "prompts/SNAP-02.md"
+    },
+    {
+      "id": "SNAP-03",
+      "title": "Операторский corpus manifest и freeze service",
+      "deps": [
+        "SNAP-02"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "high",
+      "owned_paths": [
+        "backend/app/corpus/service.py",
+        "backend/app/corpus/cli.py",
+        "manifests/snapshot.schema.json",
+        "manifests/snapshot.example.json",
+        "backend/tests/test_snapshot_corpus.py",
+        "docs/reports/SNAP-03-source-status.md"
+      ],
+      "outcome": "Ручное формирование draft/frozen corpus из exact accepted versions; реестр coverage/blockers четырёх банков, без выдуманных approval.",
+      "implementation": "Переиспользуй IngestionService/FetchGateway/BlobStore. Manifest хранит references к реальным решениям, hashes, exact source/version/method/scope/date и missing banks, но не secrets. Synthetic example отдельно от real manifest. CLI dry-run validation, add accepted version и freeze после approved published facts/extractions; service read проверяет snapshot membership и revocation вместо legacy 72h stale. Freeze materialized membership только после готовности downstream records; ранние tests используют explicit fixtures. Для источников сначала прочти reports и tests/fixtures/manifests/sources.json, не импортируй исследовательские bytes без отдельного допуска. Real acquisition остаётся blocked до записи ответственного.",
+      "acceptance": "Empty/mixed corpus/fictitious admission/missing original/wrong hash/quarantine rejected; legacy fetch/manual idempotency остаётся; membership deterministic manifest hash, freeze retry без duplicate; revoked rights block read. Real S1 пока NO-GO с перечнем missing basis, synthetic freeze не проходит real gate.",
+      "parallelism": "Отдельный corpus owner; параллельно SNAP-04..07/12/15. Не менять existing grants/manifest задним числом; human source review может идти независимо от разработки.",
+      "prompt": "prompts/SNAP-03.md"
+    },
+    {
+      "id": "SNAP-04",
+      "title": "PDF parser с page/table evidence",
+      "deps": [
+        "SNAP-01"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "high",
+      "owned_paths": [
+        "backend/app/parsing/pdf.py",
+        "backend/tests/test_parsing_pdf.py",
+        "backend/tests/fixtures/parsing/pdf/**",
+        "pyproject.toml",
+        "uv.lock"
+      ],
+      "outcome": "Offline pdfplumber parser выдаёт immutable blocks с физическими страницами, таблицами/сносками и diagnostics.",
+      "implementation": "Добавь pdfplumber/pdfminer.six с лицензионным inventory delta в report. Используй Parser Protocol. Локальный verified original; сохранение headers/footnotes/relations, printed label отдельно от physical page. Scan-only -> needs_ocr, encrypted/corrupt/over quota -> typed status. Resource bounded subprocess совместно с pipeline runner позднее; сам parser не делает сеть. Никакого OCR/PyMuPDF/LLM extraction на этом этапе.",
+      "acceptance": "Generated multi-page PDF с текстом, таблицей, сноской; каждый quote воспроизводится по locator, parser version/hash стабилен; scan/encrypted/corrupt/page quota cases; не потеряны условия, неподтверждённые relations flagged. No egress test. Unit парсера не зависит от банковских originals.",
+      "parallelism": "PDF owner временно единственный владелец pyproject/uv.lock. Dependency commit merge первым; SNAP-05 ждёт этот merge только для dependency edits, остальную работу ведёт отдельно.",
+      "prompt": "prompts/SNAP-04.md"
+    },
+    {
+      "id": "SNAP-05",
+      "title": "XLSX parser без вычисления формул",
+      "deps": [
+        "SNAP-01"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "high",
+      "owned_paths": [
+        "backend/app/parsing/xlsx.py",
+        "backend/tests/test_parsing_xlsx.py",
+        "backend/tests/fixtures/parsing/xlsx/**",
+        "pyproject.toml",
+        "uv.lock"
+      ],
+      "outcome": "Листы, диапазоны ячеек, merged headers и footnotes превращаются в locatable blocks.",
+      "implementation": "Добавь openpyxl после dependency merge SNAP-04, сохрани existing check_format до parser. Не выполнять formulas/macros/external links; хранить formula и cached value отдельно, absent cache -> unknown/manual review. Ограничить sheets/cells/XML/text, отражать hidden sheets и mixed types в diagnostics. Decimal parsing не выполняет тарифную интерпретацию. Если общий parser contract недостаточен, предложи change владельцу SNAP-01, не меняй его параллельно.",
+      "acceptance": "Generated workbook с merged header, decimal comma, percent cell, footnote, hidden sheet, cached/missing formula value; точные sheet+cell locators и stable hash. ZIP bombs/external links rejected existing guard, bounded huge workbook и corrupt input.",
+      "parallelism": "Отдельные xlsx paths, параллельно PDF/HTML. Shared lockfiles edits только после SNAP-04 merge, не cherry-pick конфликтующие lockfiles.",
+      "prompt": "prompts/SNAP-05.md"
+    },
+    {
+      "id": "SNAP-06",
+      "title": "HTML parser сохранённого original",
+      "deps": [
+        "SNAP-01"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "medium",
+      "owned_paths": [
+        "backend/app/parsing/html.py",
+        "backend/tests/test_parsing_html.py",
+        "backend/tests/fixtures/parsing/html/**"
+      ],
+      "outcome": "Static headings/tables/paragraphs/footnotes и element paths без browser/fetch.",
+      "implementation": "Используй stdlib HTMLParser или аргументированно существующий dependency. Парси сохранённые bytes с recorded encoding, deterministic whitespace/text mapping. Исключи script/style/nav шум, сохрани заголовки, таблицы, captions и footnotes; malformed DOM -> diagnostics, динамический пустой контент -> unsupported. DOM element path детерминирован, нет fetch subresources и JS.",
+      "acceptance": "Fixture с nested tables, Cyrillic/entities, rowspan/colspan, сноской, script injection и внешней картинкой: правильные blocks/locators, quote offsets stable, network calls 0. Marketing statement не становится tariff fact.",
+      "parallelism": "Полностью отдельные html paths; можно одновременно SNAP-02/04/05/07/12. Не менять ingestion adapters/transport.",
+      "prompt": "prompts/SNAP-06.md"
+    },
+    {
+      "id": "SNAP-07",
+      "title": "Нормализация тарифов и registry метрик",
+      "deps": [
+        "SNAP-01"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "high",
+      "owned_paths": [
+        "backend/app/tariffs/normalize.py",
+        "backend/app/tariffs/metrics.py",
+        "backend/tests/test_tariff_normalization.py"
+      ],
+      "outcome": "Pure normalization raw candidate fields -> typed TariffCandidate или flags; без публикации.",
+      "implementation": "Реализуй registry DOMAIN_CONTRACTS и Decimal parsing RUB/%/period/basis/payer/operation. Сохрани условия, range/individual, any/specific/unknown; date normalization inclusive end -> exclusive с original wording. Restricted AST, no eval/SQL/Python. Не угадывать заголовок/сноску или scope/date; недостаточный evidence -> flag. Алгоритм не делает IO и не нуждается в реальных документах.",
+      "acceptance": "0.30%=0.30, decimal comma, conditional free vs unknown, from/up-to, individual, per batch vs per transfer, employer vs employee, future/unknown dates, invalid AST/units/range. Idempotent normalization; malformed values never become zero.",
+      "parallelism": "Отдельные tariff pure modules, параллельно schema/parsers/Fake/auth после контрактов. Не править ORM/migrations/contracts.",
+      "prompt": "prompts/SNAP-07.md"
+    },
+    {
+      "id": "SNAP-08",
+      "title": "Последовательный parsing/extraction pipeline",
+      "deps": [
+        "SNAP-03",
+        "SNAP-04",
+        "SNAP-05",
+        "SNAP-06",
+        "SNAP-07"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "high",
+      "owned_paths": [
+        "backend/app/parsing/runner.py",
+        "backend/app/parsing/service.py",
+        "backend/app/parsing/cli.py",
+        "backend/app/tariffs/extract.py",
+        "backend/tests/test_extraction_pipeline.py"
+      ],
+      "outcome": "Accepted original -> immutable extraction/chunks -> normalized pending candidates/evidence, повторный запуск безопасен.",
+      "implementation": "Свяжи parser modules и SNAP-02 models, store.verify до чтения. Bounded local subprocess/no network, ресурсы/timeouts на Windows/Linux с documented fallback. CLI обрабатывает конкретную version синхронно, без job queue. Rule-based extraction keyed by metric cues/tables; неопознанные структуры требуют operator mapping/review, не guessed facts. Persist immutable chunk text/hash/locator/relations, candidates всегда pending_review, deterministic extraction key. Partial parser output не publish. Сделай маленький операторский mapping JSON с references к chunk/cell для новых шаблонов, без UI designer subsystem.",
+      "acceptance": "Synthetic PDF/XLSX/HTML до candidate в PG; repeated run idempotent, новый parser version даёт новый extraction; crash/timeout не создаёт published fact, different corpus запрещён, offsets/hash совпадают. Merged headers/footnotes сохраняют support roles.",
+      "parallelism": "Один integrator pipeline после merge parsers; schema/parser internals read-only. Можно параллельно завершать Groq/auth, не shared migrations.",
+      "prompt": "prompts/SNAP-08.md"
+    },
+    {
+      "id": "SNAP-09",
+      "title": "Evidence validation, manual review и publication",
+      "deps": [
+        "SNAP-08"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "high",
+      "owned_paths": [
+        "backend/app/evidence/validation.py",
+        "backend/app/evidence/service.py",
+        "backend/app/evidence/cli.py",
+        "backend/tests/test_evidence_publication.py"
+      ],
+      "outcome": "Проверяемый validator и атомарный approved fact publication; ручной CLI review для v1.",
+      "implementation": "Дополнить, не заменить ExtractionEvidence. Проверяй original/extraction/text hashes, FK ancestry, substring offsets, actual locator, support value/unit/basis/period/conditions/scope/date. Technical quote match не доказывает смысл: manual reviewer обязан подтвердить semantic support. Uncertain footnote/unknown applicability не verified. Append-only review reason/identity, rejected/needs_review excluded; publish draft snapshot member с row locks/unique keys, synthetic->real reject. Revocation проверять на read/freeze; исправление в новой snapshot revision.",
+      "acceptance": "Real URL с неподдерживающей цитатой, подмена числа/единицы/сноски, wrong page/cell/hash/extraction/source, synthetic provenance, revoked grant -> reject. Concurrent publish один результат; raw candidate не searchable as fact. Valid approved unknown-date quote сохранена с limitation, не current winner.",
+      "parallelism": "Evidence owner без изменения нормализатора/ORM. Search/Comparison начинают после merge опубликованных read interfaces; auth/provider независимы.",
+      "prompt": "prompts/SNAP-09.md"
+    },
+    {
+      "id": "SNAP-10",
+      "title": "PostgreSQL FTS по frozen corpus",
+      "deps": [
+        "SNAP-09"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "medium",
+      "owned_paths": [
+        "backend/app/search/service.py",
+        "backend/tests/test_snapshot_search.py"
+      ],
+      "outcome": "Текстовый поиск с bank/metric filters и точными source/evidence locators.",
+      "implementation": "Используй existing snapshot read service и PG tsvector/GIN, русский плюс simple fallback; limit<=10, deterministic tie-break. Search только readable frozen members, исключает rejected/quarantine/revoked/synthetic в real namespace. Snippets не отделяй от обязательных условий. Для общего document поиска цитата допустима, но не тарифное утверждение без published fact. Нет embeddings/vector infra.",
+      "acceptance": "PG Cyrillic morphology, numbers/codes, per-bank filter, correct top10 relevance fixed fixtures; no cross-snapshot leakage; zero hits -> explicit absence_of_evidence. Query input parameterized и bounded. Recall@10 harness отдельно от fake scores.",
+      "parallelism": "Параллельно SNAP-11 после SNAP-09, отдельный search/service.py; не менять FTS schema без follow-up schema owner.",
+      "prompt": "prompts/SNAP-10.md"
+    },
+    {
+      "id": "SNAP-11",
+      "title": "Детерминированный Comparison Engine",
+      "deps": [
+        "SNAP-09"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "high",
+      "owned_paths": [
+        "backend/app/comparison/service.py",
+        "backend/app/comparison/calculations.py",
+        "backend/tests/test_comparison_golden.py"
+      ],
+      "outcome": "Rows/pairwise/claims с evidence; Decimal стоимость и честные insufficient/conflict.",
+      "implementation": "Фильтр snapshot+approved+policy+as_of+scope, AST три значения, registry из SNAP-07. Совместимость payer/operation/basis/unit/currency/period; constant/percentage/clamped, known components отдельно от total. Не выводить winner при unknown rounding/date/scope, overlapping ranges/conflicts/individual. Объяснимый claim operands/formula_version/scenario hash/evidence обеих сторон. Общий weighted score запрещён.",
+      "acceptance": ">=30 synthetic golden cases: 100000*0.30/100=300; caps/floors; per-transfer/per-batch; zero vs unknown; conflicting dates/scopes; missing inputs; future/outdated interval; partial costs; bank permutation symmetry. LLM никогда не используется в calculations; numeric roundtrip точен.",
+      "parallelism": "Параллельно search, полностью comparison paths; tariff metrics registry read-only. Real pair coverage оценивает SNAP-18, не синтетические golden tests.",
+      "prompt": "prompts/SNAP-11.md"
+    },
+    {
+      "id": "SNAP-12",
+      "title": "LLM Protocol, Fake и bounded renderer inputs",
+      "deps": [
+        "SNAP-01"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "medium",
+      "owned_paths": [
+        "backend/app/llm/base.py",
+        "backend/app/llm/fake.py",
+        "backend/tests/test_llm_contract.py"
+      ],
+      "outcome": "Тот же async provider interface для Fake/Groq с typed errors и сценариями injection/timeout/malformed.",
+      "implementation": "Implement SNAP-01 Protocol, structured intent/explain, no DB/storage/tools в provider. Fake deterministic fixtures, error injections и usage fields. Contract tests задают allowed claims/templates и schema validation. Fake не должен автоматически выдавать verified claim из fixture question без evidence. Не реализуй Groq/config/assistant в этом commit.",
+      "acceptance": "Success plus timeout/rate_limit/auth/unavailable/context_exceeded/invalid JSON/unknown claim/unsupported templates; deterministic repeat и no network. Typecheck concrete Fake satisfies Protocol.",
+      "parallelism": "Можно сразу после SNAP-01 одновременно со schema/parsers/normalize. Отдельные llm base/fake paths, не llm models.py SNAP-02.",
+      "prompt": "prompts/SNAP-12.md"
+    },
+    {
+      "id": "SNAP-13",
+      "title": "GroqCloud Free adapter и quotas",
+      "deps": [
+        "SNAP-02",
+        "SNAP-12"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "high",
+      "owned_paths": [
+        "backend/app/llm/groq.py",
+        "backend/app/llm/budget.py",
+        "backend/app/config.py",
+        ".env.example",
+        "backend/tests/test_llm_groq.py",
+        "backend/tests/test_llm_budget.py",
+        "backend/tests/test_config.py"
+      ],
+      "outcome": "Provider openai/gpt-oss-120b через Groq, HTTP mocks в CI, reservation limits и безопасный fallback errors.",
+      "implementation": "Проверить актуальные official Groq models/structured outputs/rate limits docs, указать ссылки/дату в report. HTTPS api.groq.com/openai/v1, reuse httpx2 client с allowlist/no redirect/timeout; добавить только нужные quota config. Существующий LLM_MODE=fake|provider и SecretStr сохраняй. Strict JSON schema + local validation, no tool use; reasoning traces не логировать. До 2 calls/question, input<=4000/output<=1000 tokens total, max20s/call/45s overall, один concurrent provider call глобально initial, per-user один. Лимиты аккаунта authoritative, configurable ceilings, atomic PG daily budget/window Europe/Moscow, rate counters и Retry-After. Не отправленный запрос освобождает reservation, ambiguous sent usage остаётся estimated. Retry максимум один transient ВНУТРИ общего call/token/deadline cap; 429 долгий -> fallback. Только opt-in smoke с ключом и разрешённым payload, не real corpus автоматически.",
+      "acceptance": "HTTP mock valid/invalid/429 retry-after/5xx/401/timeout/context, exhausted quota/concurrent reservations/unknown usage/crash; секрет canary отсутствует в logs, endpoint escape/redirect rejected, production validation green. Real model smoke NOT RUN если ключа/допуска нет; Fake success не объявляй Groq PASS.",
+      "parallelism": "Владеет config.py и .env.example временно; SNAP-15 не редактирует их параллельно. Нет dependency edits SDK по умолчанию, использовать existing transport library.",
+      "prompt": "prompts/SNAP-13.md"
+    },
+    {
+      "id": "SNAP-14",
+      "title": "Evidence-first ассистент и renderer",
+      "deps": [
+        "SNAP-10",
+        "SNAP-11",
+        "SNAP-13"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "high",
+      "owned_paths": [
+        "backend/app/assistant/service.py",
+        "backend/app/assistant/render.py",
+        "backend/app/assistant/privacy.py",
+        "backend/tests/test_assistant_answers.py"
+      ],
+      "outcome": "Question -> structured intent -> retrieval/comparison -> validated claims -> AnswerEnvelope, fallback без hallucination.",
+      "implementation": "Сначала validate snapshot/read access; bounded question/scenario, minimization/redaction, unclear sensitive free text -> local clarification. Intent не может запускать URLs/SQL/tools. Claims создаются backend; explain допускает только order/template IDs. Backend рендерит цифры/date/links/limitations; никаких непроверенных LLM statements. Не обрезать footnotes ради budget — исключать неполный claim. Deadline propagation, provider error deterministic fallback. Stateless v1; не добавлять chat persistence/agents.",
+      "acceptance": "Direct fee question, scenario comparison, missing scenario, documents lookup, outside scope; tampered numeric output/real URL wrong claim/injected footnote -> reject; no evidence -> insufficient; 429 -> fallback с теми же доказательствами. Canary PII не попадает в mock outgoing payload. Corpus/model/status видны в ответе.",
+      "parallelism": "Assistant-only modules; API/UI интеграторы ждут stable envelope. Не менять engine/provider/contracts самостоятельно.",
+      "prompt": "prompts/SNAP-14.md"
+    },
+    {
+      "id": "SNAP-15",
+      "title": "Приглашения, auth и server sessions",
+      "deps": [
+        "SNAP-02"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "high",
+      "owned_paths": [
+        "backend/app/auth/**",
+        "backend/alembic/versions/0004_auth.py",
+        "backend/alembic/env.py",
+        "backend/tests/test_auth_sessions.py",
+        "pyproject.toml",
+        "uv.lock"
+      ],
+      "outcome": "Admin bootstrap/invite login, Argon2id passwords, DB sessions, RBAC/CSRF dependencies.",
+      "implementation": "Следуй SECURITY, official password hashing docs проверить при реализации. Add argon2-cffi после parser dependency merges. Dedicated auth 0004 после 0003, integrate metadata sequentially. Один use invite/reset при row lock, rotation/expiry/revoke, last-admin guard, login rate limits, no email infrastructure. Expose FastAPI dependency/router factory для SNAP-16, не менять main.py. Production Settings сохраняй, auth local HTTP cookie и test identity контролируемо; config changes согласовать с SNAP-13 после его merge. Не сохранять chat data.",
+      "acceptance": "Actual PG invite race, hash-only tokens, password check/rotation/logout/idle+absolute expiry; admin vs analyst, session A/B, CSRF/Origin/session fixation, brute-force generic responses, last admin guard. Migration check и existing production config tests. Нет default production password.",
+      "parallelism": "Основной auth код параллельно pipeline/search/comparison/LLM; migration env/lockfiles edits после SNAP-02/04/05 merge, config.py не трогать до SNAP-13. Один владелец auth revision.",
+      "prompt": "prompts/SNAP-15.md"
+    },
+    {
+      "id": "SNAP-16",
+      "title": "FastAPI routers и composition root",
+      "deps": [
+        "SNAP-03",
+        "SNAP-09",
+        "SNAP-14",
+        "SNAP-15"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "high",
+      "owned_paths": [
+        "backend/app/api/**",
+        "backend/app/main.py",
+        "backend/tests/test_snapshot_api.py",
+        "frontend/lib/api-contracts.ts"
+      ],
+      "outcome": "Маршруты API_CONTRACTS, injected services/auth, OpenAPI и стабильный frontend client contract.",
+      "implementation": "Собери existing FastAPI app без переписывания ingestion. Каждый protected route проверяет session/role; unsafe requests CSRF. Download только член readable snapshot, verify original hash, attachment/nosniff, no arbitrary storage key/path. Admin review/freeze вызывают сервисы, не bypass validation. Bounded sync question/comparison, uniform typed error envelope. Stable generated/manual typed TS DTO без secrets. Health semantics остаётся liveness; no ingest upload/scheduler/job poll endpoints.",
+      "acceptance": "API fixtures real PG + Fake: health, login/logout/invite, protected reads, analyst denial admin mutation, wrong Origin, snapshot freeze conflict, source revoked download, traversal, unknown object, limits 429, insufficient/fallback envelope 200. OpenAPI/TS DTO match. Existing health tests green.",
+      "parallelism": "Единственный main.py/API composition owner. frontend/lib/api-contracts.ts merge перед UI; SNAP-17 не генерирует конкурирующие DTO.",
+      "prompt": "prompts/SNAP-16.md"
+    },
+    {
+      "id": "SNAP-17",
+      "title": "Next.js закрытый интерфейс ассистента",
+      "deps": [
+        "SNAP-16"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "medium",
+      "owned_paths": [
+        "frontend/app/**",
+        "frontend/components/**",
+        "frontend/lib/client.ts",
+        "frontend/next.config.ts",
+        "frontend/tests/**",
+        "frontend/package.json",
+        "frontend/package-lock.json"
+      ],
+      "outcome": "Login/invite, выбор snapshot/scenario, вопрос/сравнение/источники, admin review; рабочий end-to-end browser flow.",
+      "implementation": "Используй существующий Next.js scaffold и API contracts, same-origin proxy, HttpOnly cookie без provider key/token localStorage. Экран показывает corpus revision/date/missing banks/synthetic/fallback/unknown/individual/conflict. Source citation открывает protected attachment, snippets escaped. Scenario forms payer/region/segment/amount, не запрашивают payroll personal data. Минимальный admin candidates/review/freeze; no monitoring/dashboard уведомлений. Память диалога только текущий UI, logout очищает её. Добавь Playwright как dev dependency только для meaningful E2E.",
+      "acceptance": "Lint/tsc/build; browser login -> choose synthetic snapshot -> compare -> inspect citation -> logout; invited analyst cannot admin; fallback/429/missing-input/unknown/conflict states и malicious snippet XSS. Tests без bank/Groq network; API integration реальная, не только screenshot mocks.",
+      "parallelism": "Frontend owner, backend read-only. Можно предварительно оформить компоненты на frozen TS DTO после SNAP-16, full acceptance ждёт API. Не менять api-contracts.ts без согласования SNAP-16.",
+      "prompt": "prompts/SNAP-17.md"
+    },
+    {
+      "id": "SNAP-18",
+      "title": "Реальный corpus gold и оценка S1/S2/Groq",
+      "deps": [
+        "SNAP-03",
+        "SNAP-09",
+        "SNAP-11",
+        "SNAP-14"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "high",
+      "owned_paths": [
+        "evaluation/**",
+        "tools/evaluate_snapshot.py",
+        "docs/reports/SNAP-18-evaluation.md",
+        "docs/reports/evidence/snapshot-evaluation/**"
+      ],
+      "outcome": "Human-reviewed frozen gold/tune/holdout, coverage matrix и measured acceptance report без fabricated PASS.",
+      "implementation": "Real execution требует source-specific acquisition/storage/reuse/content approvals всех входящих originals, плюс provider processing decision для Groq run. Harness можно написать на synthetic заранее после contracts; real data не заменять. Зафиксируй набор по ACCEPTANCE_CRITERIA до final run, split document family, numerator/denominator/per-bank и all 6 pairs. Numeric extraction/evidence/conditions/retrieval/comparison метрики отдельно от coverage и LLM intent. >=20 real-model questions для S3 component, model/usage/date. Evaluation evidence хранить safe subset по разрешённой reuse policy; originals вне Git. Missing docs/key/human labels -> BLOCKED/NOT EVALUATED конкретной части, независимый harness всё равно завершить.",
+      "acceptance": "Harness fixture с заранее известными false positive/condition omission/retrieval miss -> правильные failing metrics; immutable gold hash и repeatability. S1/S2 thresholds без округления и synthetic подмены, coverage numeric >=1 и total >=2 per pair. Unsupported model claims=0 либо NO-GO report.",
+      "parallelism": "Evaluation owner отдельные paths; сбор разрешений/разметка могут идти с SNAP-03 независимо. Не корректировать product thresholds/реальные tariffs для прохождения.",
+      "prompt": "prompts/SNAP-18.md"
+    },
+    {
+      "id": "SNAP-19",
+      "title": "Сквозная приёмка и минимальная эксплуатация",
+      "deps": [
+        "SNAP-17",
+        "SNAP-18"
+      ],
+      "status": "TODO",
+      "reasoning_effort": "high",
+      "owned_paths": [
+        "docs/OPERATIONS.md",
+        "docs/reports/SNAP-19-release.md",
+        "tools/verify_snapshot_restore.py",
+        ".github/workflows/ci.yml",
+        "compose.yaml",
+        "README.md"
+      ],
+      "outcome": "Воспроизводимый запуск/restore и окончательный S0–S3 readiness verdict на exact commit/corpus.",
+      "implementation": "Собери уже готовые компоненты, не расширяй архитектуру. CI offline synthetic pipeline/auth/UI/PG/E2E/docs; real-model evaluation opt-in отдельно. PG dump+blob hash manifest restore только в новую dedicated DB/root; hashes/evidence pointers/auth доступ проверены перед открытием. 3 concurrent users и quotas/fallback, search/comparison p95/question deadline. Production env/cookie/ingress instructions, no fake identity. Final report перечисляет actual gates, limitations и конкретные blockers; ни G1/G2, ни S3 не помечать PASS без evidence. Обнови README о фактическом runnable продукте только если достигнут.",
+      "acceptance": "Все существующие и новые required checks, restore 100% linkage, explicit secret/log/XSS/access tests green, browser real-product smoke при данных/ключе. Partial technical PASS и real NO-GO разделены. Не удалять snapshots/данные тестов, не выполнять destructive downgrade.",
+      "parallelism": "Финальный integrator после всех merges, единственный владелец CI/compose/README на этом этапе. Общие файлы больше не правятся параллельно.",
+      "prompt": "prompts/SNAP-19.md"
+    }
+  ]
+}

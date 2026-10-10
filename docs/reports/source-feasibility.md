@@ -10,7 +10,7 @@
 - **Pending:** SberAPI (официальная интеграционная справка, не тариф); статья sberbusiness.live (принадлежность домена не подтверждена); точный URL employer-тарифа Сбера; прямой URL условий ВТБ, документов Альфа и их применимость/дата.
 - **Blocked:** автоматическая загрузка продуктовых страниц ВТБ/Альфа и PDF Кубань Кредит (руководство, альбом тарифов карт сотрудников, общий RKO тариф), а также URL с неустановленными правилами. Причины — bank-side permission/terms не подтверждены, robots/target GET не проверены или целевой TLS недоступен из этой среды. Для каждого такого источника предлагается ручной импорт официального документа, полученного оператором.
 
-Полный manifest: [tests/fixtures/manifests/sources.json](../../tests/fixtures/manifests/sources.json). Историческая карта обновлена в [docs/research/SOURCES.md](../research/SOURCES.md).
+Полный manifest: [tests/fixtures/manifests/sources.json](../../tests/fixtures/manifests/sources.json). Историческая карта обновлена в [docs/research/SOURCES.md](../archive/pre-snapshot/research/SOURCES.md).
 
 ## Проверка доменов, URL и документов
 

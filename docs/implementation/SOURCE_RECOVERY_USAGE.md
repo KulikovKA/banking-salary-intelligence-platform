@@ -16,7 +16,7 @@ Source регистрируется существующим ORM каталог�
 
 `SourcePolicy.acquisition_config` содержит независимые ключи `automatic` и `manual`. Значение каждого — JSON `AcquisitionPolicy.model_dump(mode="json")`: source_id, decision, allowed_urls, redirect_urls, method, corpus_kind, reviewer, official_relationship, acquisition_basis, storage_basis, reuse_basis, terms_evidence, purpose, expires_at, revoked, rate_seconds. Row.collection_decision также должен быть approved; bank/source связи и allowed_hosts должны совпадать с grant. Банк-only seed не содержит таких записей. Не использовать fictitious reviewer/basis для real corpus.
 
-Для automatic явно допустить exact target и `https://host/robots.txt`. Rate — интервал **между отдельными запросами**, schedule_seconds — интервал запусков source. Robots redirects неизвестны и не следуют автоматически. Target redirects должны быть отдельно перечислены; новый host должен иметь собственный разрешённый robots URL.
+Для automatic явно допустить exact target и `https://host/robots.txt`. Rate — интервал **между отдельными запросами**. `schedule_seconds` сохранён в схеме для совместимости; snapshot v1 не запускает расписание. Robots redirects неизвестны и не следуют автоматически. Target redirects должны быть отдельно перечислены; новый host должен иметь собственный разрешённый robots URL.
 
 ## Операторский CLI
 
@@ -44,10 +44,10 @@ $env:BANK_FETCH_EXTRA_CA_FILE = 'C:\approved-certs\root.crt'
 
 `IngestionService(factory, settings, store, gateway)`:
 
-- `fetch_source(source_id, attempt=1)` → observation/version/result/error_code/retry_at. Attempt должен приходить из JobRun; новый dispatch каждый раз перечитывает active grant. Сам service не запускает retry-loop или worker daemon.
+- `fetch_source(source_id, attempt=1)` → observation/version/result/error_code/retry_at. В snapshot v1 оператор выполняет отдельную попытку; retry_at — подсказка, не запланированная job. Повторный вызов перечитывает active grant. Сам service не запускает retry-loop или worker daemon.
 - `import_file(...)` → `manual_imported`, method manual, HTTP NULL; denied attempts получают отдельный rejected manual observation.
 - `accept_content(version_id, reviewer=..., applicability=...)` → перевод quarantine в accepted с hash verification; не публикация тарифа.
-- `current_content(source_id)` → last accepted version и stale. Failed/new quarantined fetch не стирает old accepted.
+- `current_content(source_id)` → last accepted version и legacy stale по успешным автоматическим checks. Failed/new quarantined fetch не стирает old accepted. Snapshot reader из SNAP-03 читает exact frozen membership и не использует эту 72h stale семантику как критерий годности fixed corpus.
 - `LocalBlobStore.reconcile(referenced_keys)` → missing/orphan report, без удаления.
 
 Gateway Fake transport допускается только в APP_ENV=test для synthetic corpus и требует fake resolver. Production transport невозможно подменить на произвольный HTTP transport через конструктор Gateway. Root должен принадлежать service account; originals открываются как файлы, HTML не рендерится и subresources не загружаются.
