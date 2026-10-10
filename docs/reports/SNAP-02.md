@@ -58,4 +58,7 @@ Downgrade 0004 намеренно запрещён с сообщением
 Следующий потребительский шаг — SNAP-03/SNAP-09 использовать готовую schema и
 сервисные проверки; status в `MASTER_PLAN.md` и `TASKS.json` оставлен integrator.
 
-Commit и PR будут добавлены после их создания.
+**Implementation commit:** `dc6ece19cc4b7fb5789c9853756d5b50d3871a0a`.
+Ветка `codex/snap-02-db` опубликована в `origin`. Создание PR через GitHub
+connector получило `403 Resource not accessible by integration`; создать PR в
+`main` можно по [ссылке создания PR](https://github.com/KulikovKA/banking-salary-intelligence-platform/pull/new/codex/snap-02-db).
