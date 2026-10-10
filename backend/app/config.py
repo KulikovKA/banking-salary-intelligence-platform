@@ -26,7 +26,12 @@ class Settings(BaseModel):
     secure_cookies: bool = False
     auth_enabled: bool = False
     fake_identity: bool = True
-    source_max_bytes: int = Field(default=52_428_800, gt=0)
+    source_max_bytes: int = Field(default=52_428_800, gt=0, le=52_428_800)
+    ingestion_mode: Literal["offline", "live"] = "offline"
+    bank_fetch_tls_mode: Literal["system", "certifi"] = "system"
+    bank_fetch_extra_ca_file: Path | None = None
+    fetch_total_timeout_seconds: float = Field(default=60, gt=0, le=300)
+    fetch_max_redirects: int = Field(default=5, ge=0, le=5)
     fetch_connect_timeout_seconds: float = Field(default=5, gt=0, le=120)
     fetch_read_timeout_seconds: float = Field(default=20, gt=0, le=300)
     worker_lease_seconds: int = Field(default=180, gt=0)
@@ -41,6 +46,8 @@ class Settings(BaseModel):
 
     @model_validator(mode="after")
     def validate_runtime_contract(self) -> Settings:
+        if self.app_env == "test" and self.ingestion_mode != "offline":
+            raise SettingsError("CONFIG_TEST_EGRESS_FORBIDDEN")
         if self.heartbeat_seconds >= self.worker_lease_seconds:
             raise SettingsError("CONFIG_INVALID: heartbeat must be shorter than lease")
         if ".." in self.storage_root.parts:
@@ -102,6 +109,11 @@ class Settings(BaseModel):
             "AUTH_ENABLED": "auth_enabled",
             "FAKE_IDENTITY": "fake_identity",
             "SOURCE_MAX_BYTES": "source_max_bytes",
+            "INGESTION_MODE": "ingestion_mode",
+            "BANK_FETCH_TLS_MODE": "bank_fetch_tls_mode",
+            "BANK_FETCH_EXTRA_CA_FILE": "bank_fetch_extra_ca_file",
+            "FETCH_TOTAL_TIMEOUT_SECONDS": "fetch_total_timeout_seconds",
+            "FETCH_MAX_REDIRECTS": "fetch_max_redirects",
             "FETCH_CONNECT_TIMEOUT_SECONDS": "fetch_connect_timeout_seconds",
             "FETCH_READ_TIMEOUT_SECONDS": "fetch_read_timeout_seconds",
             "WORKER_LEASE_SECONDS": "worker_lease_seconds",

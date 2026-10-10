@@ -53,6 +53,9 @@ class SourcePolicy(Base):
     id: Mapped[str] = uuid_pk()
     bank_id: Mapped[str] = mapped_column(ForeignKey("banks.id", ondelete="RESTRICT"), index=True)
     allowed_hosts: Mapped[list[str]] = mapped_column(JSONB, nullable=False)
+    acquisition_config: Mapped[dict[str, Any]] = mapped_column(
+        JSONB, nullable=False, default=dict, server_default=text("'{}'::jsonb")
+    )
     robots_checked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     terms_url: Mapped[str | None] = mapped_column(Text)
     terms_checked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
@@ -70,7 +73,8 @@ class Source(Base):
     __table_args__ = (
         UniqueConstraint("bank_id", "canonical_url", name="uq_sources_bank_canonical_url"),
         CheckConstraint("schedule_seconds > 0", name="ck_sources_schedule_positive"),
-        CheckConstraint("kind in ('html', 'pdf', 'index', 'news')", name="ck_sources_kind"),
+        CheckConstraint("kind in ('html', 'pdf', 'xlsx', 'index', 'news')", name="ck_sources_kind"),
+        CheckConstraint("corpus_kind in ('real', 'synthetic')", name="ck_sources_corpus"),
         CheckConstraint(
             "state in ('healthy', 'degraded', 'unknown', 'disabled', 'blocked')",
             name="ck_sources_state",
@@ -91,6 +95,9 @@ class Source(Base):
     schedule_seconds: Mapped[int] = mapped_column(Integer, nullable=False)
     next_check_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     state: Mapped[str] = mapped_column(String(24), nullable=False, default="unknown")
+    corpus_kind: Mapped[str] = mapped_column(
+        String(20), nullable=False, default="real", server_default="real"
+    )
     last_check_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     last_successful_check: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     last_successful_parse: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
@@ -98,10 +105,17 @@ class Source(Base):
 
 class Blob(Base):
     __tablename__ = "blobs"
-    __table_args__ = (CheckConstraint("byte_size > 0", name="ck_blobs_size_positive"),)
+    __table_args__ = (
+        CheckConstraint("byte_size > 0", name="ck_blobs_size_positive"),
+        UniqueConstraint("corpus_kind", "sha256", name="uq_blobs_corpus_sha256"),
+        CheckConstraint("corpus_kind in ('real', 'synthetic')", name="ck_blobs_corpus"),
+    )
 
     id: Mapped[str] = uuid_pk()
-    sha256: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    corpus_kind: Mapped[str] = mapped_column(
+        String(20), nullable=False, default="real", server_default="real"
+    )
     byte_size: Mapped[int] = mapped_column(BigInteger, nullable=False)
     media_type: Mapped[str] = mapped_column(String(200), nullable=False)
     storage_key: Mapped[str] = mapped_column(Text, unique=True, nullable=False)
@@ -122,6 +136,10 @@ class SourceVersion(Base):
     __tablename__ = "source_versions"
     __table_args__ = (
         UniqueConstraint("source_id", "blob_id", name="uq_source_versions_source_blob"),
+        CheckConstraint(
+            "content_state in ('quarantine', 'accepted', 'rejected')",
+            name="ck_source_versions_content_state",
+        ),
     )
 
     id: Mapped[str] = uuid_pk()
@@ -135,6 +153,11 @@ class SourceVersion(Base):
     metadata_json: Mapped[dict[str, Any]] = mapped_column(
         "metadata", JSONB, nullable=False, default=dict
     )
+    content_state: Mapped[str] = mapped_column(
+        String(20), nullable=False, default="quarantine", server_default="quarantine"
+    )
+    accepted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    accepted_by: Mapped[str | None] = mapped_column(String(200))
 
 
 class JobRun(Base):
@@ -180,12 +203,20 @@ class SourceFetch(Base):
     __table_args__ = (
         Index("ix_source_fetches_source_fetched", "source_id", "fetched_at"),
         CheckConstraint(
-            "result in ('success', 'not_modified', 'rejected', 'error')",
+            "result in ('success', 'not_modified', 'rejected', 'error', 'manual_imported')",
             name="ck_source_fetches_result",
         ),
         CheckConstraint(
             "http_status is null or http_status between 100 and 599",
             name="ck_source_fetches_http_status",
+        ),
+        CheckConstraint(
+            "acquisition_method in ('automatic', 'manual')", name="ck_source_fetches_method"
+        ),
+        CheckConstraint(
+            "result != 'manual_imported' or "
+            "(acquisition_method = 'manual' and http_status is null)",
+            name="ck_source_fetches_manual",
         ),
     )
 
@@ -206,6 +237,12 @@ class SourceFetch(Base):
     etag: Mapped[str | None] = mapped_column(Text)
     last_modified: Mapped[str | None] = mapped_column(Text)
     result: Mapped[str] = mapped_column(String(24), nullable=False)
+    acquisition_method: Mapped[str] = mapped_column(
+        String(20), nullable=False, default="automatic", server_default="automatic"
+    )
+    audit_metadata: Mapped[dict[str, Any]] = mapped_column(
+        JSONB, nullable=False, default=dict, server_default=text("'{}'::jsonb")
+    )
     error_code: Mapped[str | None] = mapped_column(String(80))
     source_version_id: Mapped[str | None] = mapped_column(
         ForeignKey("source_versions.id", ondelete="RESTRICT"), index=True

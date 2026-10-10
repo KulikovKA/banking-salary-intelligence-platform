@@ -23,6 +23,9 @@ frontend/coverage/
 *.key
 *.p12
 *.pfx
+.local/
+*.crt
+*.cer
 
 # Editors and OS
 .idea/
