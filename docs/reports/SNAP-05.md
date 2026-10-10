@@ -38,4 +38,4 @@ Base: `main` at `504c71f` (includes merged SNAP-04). Branch: `codex/snap-05-xlsx
 
 Only synthetic fixtures were used; no real originals, bank access, or provider calls were involved. This parser result does not claim product S0/S1/S2/S3 acceptance. The integrator should update task status after merge; `MASTER_PLAN.md` and `TASKS.json` were intentionally left unchanged.
 
-Commit: `ea27daa` (final SHA will be recorded after report update).
+Implementation commit: `6fcf51d9e7f3efad2bd199d01bd4ff5817e26c8b`.
