@@ -6,6 +6,8 @@
 
 **Implementation commit:** `00cd8ed`
 
+**Report commit:** `9dae3cd`
+
 **Status:** implementation scaffold is reviewable; final integration remains pending the shared dependency and schema-owner changes listed below.
 
 ## Implemented
@@ -89,3 +91,12 @@ add/lock `argon2-cffi` and rerun the checks before treating this PR as complete.
 `IN_PROGRESS` until the sequential dependencies and regression expectation are
 integrated and the locked-environment test suite is green. S0/S1/S2/S3 product
 gates are not assessed by this auth module report.
+
+## Push and PR handoff
+
+The branch was pushed to `origin/codex/snap-15-auth`. Draft PR creation was
+attempted but GitHub returned `403 Resource not accessible by integration`.
+The browser automation fallback could not connect to its Windows native pipe
+after the prescribed retry/reset (`file not found`, OS error 2). No PR was
+created. Open the [compare page](https://github.com/KulikovKA/banking-salary-intelligence-platform/compare/main...codex/snap-15-auth?expand=1)
+to create the draft PR; use the blockers above as its review checklist.
