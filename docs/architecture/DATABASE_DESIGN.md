@@ -74,3 +74,12 @@ test на SQLite сохраняется). Downgrade с потерей evidence �
 В v1 нет новых таблиц notifications/events/outbox/change tracking/chat memory.
 Backup: согласованные pg_dump + blob manifest/hashes, restore в отдельной DB/root,
 проверка ссылки original->chunk->fact до открытия read access.
+
+## Sequential integration correction 0004a
+
+`0004a_corpus_gates` preserves 0001?0004. Reviewed facts are published into a
+locked draft with exact extraction membership. Only frozen snapshots are readable
+by users. Final freeze requires reviewed publication for every member and rejects
+orphan facts. Frozen membership and publication are immutable. SNAP-15 revision
+0005 follows 0004a. A draft manifest may stage a provenance-checked original
+before extraction; SnapshotMember is created only after successful extraction.

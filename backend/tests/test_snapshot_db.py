@@ -139,16 +139,6 @@ def _add_published_chain(factory: sessionmaker, ids: dict[str, str]) -> dict[str
             )
         )
         session.flush()
-        session.execute(
-            update(Snapshot)
-            .where(Snapshot.id == chain["snapshot"])
-            .values(
-                state="frozen",
-                frozen_at=datetime.now(UTC),
-                manifest_sha256="f" * 64,
-            )
-        )
-        session.flush()
         payload = {
             "id": chain["candidate"],
             "bank_code": ids["corpus"],
@@ -207,6 +197,17 @@ def _add_published_chain(factory: sessionmaker, ids: dict[str, str]) -> dict[str
                 review_id=chain["review"],
             )
         )
+        session.flush()
+        session.execute(
+            update(Snapshot)
+            .where(Snapshot.id == chain["snapshot"])
+            .values(
+                state="frozen",
+                frozen_at=datetime.now(UTC),
+                manifest_sha256="f" * 64,
+            )
+        )
+        session.flush()
         session.add(
             LLMUsage(
                 request_id=str(uuid4()),
@@ -227,7 +228,7 @@ def test_snapshot_schema_runs_on_postgresql_18(snapshot_db) -> None:
         version = session.scalar(text("select current_setting('server_version_num')::int"))
         migration = session.scalar(text("select version_num from alembic_version"))
     assert version is not None and version >= 180000
-    assert migration == "0004_snapshot_core"
+    assert migration == "0004a_corpus_gates"
 
 
 def test_provenance_review_publication_and_usage_rows_round_trip(snapshot_db) -> None:
