@@ -6,6 +6,10 @@ Base: `504c71f` (`main`; SNAP-02 and SNAP-12 are merged)
 
 Branch: `codex/snap-13-groq`
 
+Implementation commit: `25c224870c5d7af31a0ab7811f547306fc31db15`
+
+Pull request: [#6](https://github.com/KulikovKA/banking-salary-intelligence-platform/pull/6)
+
 ## Result
 
 Implemented an asynchronous Groq Chat Completions adapter for the frozen LLM Protocol,
@@ -101,6 +105,5 @@ is retained. A caller that does not use `question_scope()` gets the per-completi
 cap, while the shared two-dispatch/question cap is applied when the assistant wraps the
 question. A live Groq smoke remains NOT RUN and does not block this offline adapter harness.
 
-Implementation commit and PR links will be added after publishing this branch. The
-integrator should update task status only after PR review/merge; S0–S3 and G1/G2 are not
-claimed as passed by this implementation report.
+The integrator should update task status only after PR review/merge; S0–S3 and G1/G2 are
+not claimed as passed by this implementation report.
