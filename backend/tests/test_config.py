@@ -10,6 +10,9 @@ def test_local_defaults_are_safe_and_non_secret() -> None:
     assert settings.llm_mode == "fake"
     assert settings.fake_identity is True
     assert settings.database_url is None
+    assert settings.llm_call_timeout_seconds == 20
+    assert settings.llm_total_timeout_seconds == 45
+    assert settings.llm_global_concurrency == settings.llm_user_concurrency == 1
 
 
 @pytest.mark.parametrize(
@@ -120,3 +123,12 @@ def test_storage_root_rejects_parent_traversal_and_file(tmp_path) -> None:
 def test_secret_type_masks_values() -> None:
     secret = SecretStr("example-secret")
     assert str(secret) == "**********"
+
+
+def test_llm_ceilings_reject_values_above_task_limits() -> None:
+    with pytest.raises(SettingsError, match="CONFIG_INVALID"):
+        Settings.from_environment({"LLM_CALL_TIMEOUT_SECONDS": "21"})
+    with pytest.raises(SettingsError, match="CONFIG_INVALID"):
+        Settings.from_environment({"LLM_MAX_INPUT_TOKENS": "4001"})
+    with pytest.raises(SettingsError, match="CONFIG_INVALID"):
+        Settings.from_environment({"LLM_MAX_ATTEMPTS": "3"})

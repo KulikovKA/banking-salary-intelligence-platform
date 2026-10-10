@@ -40,6 +40,14 @@ class Settings(BaseModel):
     llm_api_base: str | None = None
     llm_api_key: SecretStr | None = None
     llm_allowed_hosts: tuple[str, ...] = ()
+    llm_call_timeout_seconds: float = Field(default=20, gt=0, le=20)
+    llm_total_timeout_seconds: float = Field(default=45, gt=0, le=45)
+    llm_max_attempts: int = Field(default=2, ge=1, le=2)
+    llm_max_input_tokens: int = Field(default=4000, ge=1, le=4000)
+    llm_max_output_tokens: int = Field(default=1000, ge=1, le=1000)
+    llm_daily_token_budget: int = Field(default=10_000, gt=0)
+    llm_global_concurrency: int = Field(default=1, ge=1, le=1)
+    llm_user_concurrency: int = Field(default=1, ge=1, le=1)
 
     @model_validator(mode="after")
     def validate_runtime_contract(self) -> Settings:
@@ -117,6 +125,14 @@ class Settings(BaseModel):
             "LLM_API_BASE": "llm_api_base",
             "LLM_API_KEY": "llm_api_key",
             "LLM_ALLOWED_HOSTS": "llm_allowed_hosts",
+            "LLM_CALL_TIMEOUT_SECONDS": "llm_call_timeout_seconds",
+            "LLM_TOTAL_TIMEOUT_SECONDS": "llm_total_timeout_seconds",
+            "LLM_MAX_ATTEMPTS": "llm_max_attempts",
+            "LLM_MAX_INPUT_TOKENS": "llm_max_input_tokens",
+            "LLM_MAX_OUTPUT_TOKENS": "llm_max_output_tokens",
+            "LLM_DAILY_TOKEN_BUDGET": "llm_daily_token_budget",
+            "LLM_GLOBAL_CONCURRENCY": "llm_global_concurrency",
+            "LLM_USER_CONCURRENCY": "llm_user_concurrency",
         }
         values: dict[str, object] = {}
         for variable, field_name in aliases.items():
