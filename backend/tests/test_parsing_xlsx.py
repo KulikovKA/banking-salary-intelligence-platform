@@ -180,7 +180,8 @@ def test_enforces_file_cell_and_dimension_limits(tmp_path: Path) -> None:
         == "XLSX_FILE_SIZE_LIMIT"
     )
     assert (
-        XlsxParser(max_cells=1).parse(request, str(path)).diagnostics[0].code == "XLSX_RECTANGLE_LIMIT"
+        XlsxParser(max_cells=1).parse(request, str(path)).diagnostics[0].code
+        == "XLSX_RECTANGLE_LIMIT"
     )
 
     workbook = Workbook()
