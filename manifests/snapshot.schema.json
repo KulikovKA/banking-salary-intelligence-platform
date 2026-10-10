@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://banking-salary-intelligence.invalid/schemas/snapshot.schema.json",
+  "title": "Banking Salary Intelligence fixed corpus manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "snapshot_id", "revision", "corpus_kind", "region", "employer_segment", "documents", "missing_documents"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "snapshot_id": {"type": "string", "format": "uuid"},
+    "revision": {"type": "integer", "minimum": 1},
+    "corpus_kind": {"enum": ["real", "synthetic"]},
+    "region": {"type": "string", "minLength": 1, "maxLength": 80},
+    "employer_segment": {"type": "string", "minLength": 1, "maxLength": 80},
+    "documents": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/document"}},
+    "missing_documents": {"type": "array", "items": {"$ref": "#/$defs/missingDocument"}}
+  },
+  "$defs": {
+    "bank": {"enum": ["sber", "vtb", "alfa", "kuban_credit"]},
+    "document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bank_code", "source_id", "source_version_id", "source_fetch_id", "policy_id", "extraction_run_id", "sha256", "acquisition_method", "original_url", "final_url", "acquired_at", "scope", "effective_date", "document_type"],
+      "properties": {
+        "bank_code": {"$ref": "#/$defs/bank"},
+        "source_id": {"type": "string", "format": "uuid"},
+        "source_version_id": {"type": "string", "format": "uuid"},
+        "source_fetch_id": {"type": "string", "format": "uuid"},
+        "policy_id": {"type": "string", "format": "uuid"},
+        "extraction_run_id": {"type": "string", "format": "uuid"},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "acquisition_method": {"enum": ["automatic", "manual"]},
+        "original_url": {"type": "string", "minLength": 1, "maxLength": 2000},
+        "final_url": {"type": "string", "minLength": 1, "maxLength": 2000},
+        "acquired_at": {"type": "string", "format": "date-time"},
+        "scope": {"type": "object", "additionalProperties": {"type": ["string", "array", "null"]}},
+        "effective_date": {"type": ["string", "null"], "format": "date"},
+        "document_type": {"type": "string", "minLength": 1, "maxLength": 100}
+      }
+    },
+    "missingDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bank_code", "document_type", "reason", "basis_reference"],
+      "properties": {
+        "bank_code": {"$ref": "#/$defs/bank"},
+        "document_type": {"type": "string", "minLength": 1, "maxLength": 100},
+        "reason": {"type": "string", "minLength": 1, "maxLength": 500},
+        "basis_reference": {"type": ["string", "null"], "maxLength": 300}
+      }
+    }
+  }
+}
