@@ -4,6 +4,8 @@
 
 **Branch:** `codex/snap-15-auth`
 
+**Implementation commit:** `00cd8ed`
+
 **Status:** implementation scaffold is reviewable; final integration remains pending the shared dependency and schema-owner changes listed below.
 
 ## Implemented
