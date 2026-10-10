@@ -2,9 +2,9 @@
 
 **Result:** offline PDF parser and synthetic test harness implemented. This module result does not change S0–S3, G1/G2, source permissions, or product acceptance.
 
-**Base:** `ea6ae1a2f2f174981d8706b88a6192361d56df8b` (`main`).  
-**Branch:** `codex/snap-04-pdf`.  
-**Commit:** recorded in Git after the implementation/report are committed.
+**Base:** `ea6ae1a2f2f174981d8706b88a6192361d56df8b` (`main`).
+**Branch:** `codex/snap-04-pdf`.
+**Implementation/dependency commit:** `691af80` (`feat(parsing): add offline PDF parser`).
 
 ## Behaviour
 
