@@ -27,7 +27,7 @@
         "source_version_id": {"type": "string", "format": "uuid"},
         "source_fetch_id": {"type": "string", "format": "uuid"},
         "policy_id": {"type": "string", "format": "uuid"},
-        "extraction_run_id": {"type": "string", "format": "uuid"},
+        "extraction_run_id": {"type": ["string", "null"], "format": "uuid"},
         "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
         "acquisition_method": {"enum": ["automatic", "manual"]},
         "original_url": {"type": "string", "minLength": 1, "maxLength": 2000},

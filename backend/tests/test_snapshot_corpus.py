@@ -16,13 +16,58 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 
 from app.config import Settings
-from app.corpus.models import ExtractionRun, Snapshot, SnapshotMember
+from app.corpus.models import DocumentChunk, ExtractionRun, Snapshot, SnapshotMember
 from app.corpus.service import CorpusError, CorpusService, SnapshotManifest
 from app.ingestion.gateway import FetchGateway
 from app.ingestion.policy import AcquisitionPolicy
 from app.ingestion.service import IngestionService
 from app.registry.models import Bank, Blob, Source, SourceFetch, SourcePolicy, SourceVersion
 from app.storage.local import LocalBlobStore
+from app.tariffs.models import EvidenceRef, FactReview, PublishedFact, TariffCandidate
+
+
+def _publish_fixture(factory, ids):
+    """Explicit synthetic reviewed evidence, never an automatic service approval."""
+    with factory.begin() as session:
+        source = session.get(Source, ids["source"])
+        extraction = session.get(ExtractionRun, ids["extraction"])
+        chunk = DocumentChunk(
+            extraction_run_id=extraction.id, ordinal=0, text="Fee",
+            text_sha256=hashlib.sha256(b"Fee").hexdigest(),
+            locator={"kind": "pdf", "physical_page": 1}, relations=[], search_vector="",
+        )
+        candidate_id = str(uuid4())
+        payload = {
+            "id": candidate_id, "bank_code": "sber", "metric_code": "account_monthly_fee",
+            "corpus_kind": "synthetic", "publication_state": "pending_review",
+        }
+        candidate = TariffCandidate(
+            id=candidate_id, extraction_run_id=extraction.id, bank_id=source.bank_id,
+            metric_code="account_monthly_fee", payload=payload,
+            payload_sha256=hashlib.sha256(json.dumps(payload).encode()).hexdigest(),
+            corpus_kind="synthetic",
+        )
+        session.add_all([chunk, candidate])
+        session.flush()
+        evidence = EvidenceRef(
+            candidate_id=candidate.id, source_version_id=ids["version"],
+            extraction_run_id=extraction.id, chunk_id=chunk.id,
+            raw_sha256=extraction.raw_sha256, extraction_sha256=extraction.extraction_sha256,
+            quote="Fee", quote_start=0, quote_end=3, locator=chunk.locator,
+            support_role="value", original_url=source.url, acquired_at=datetime.now(UTC),
+        )
+        session.add(evidence)
+        session.flush()
+        review = FactReview(
+            candidate_id=candidate.id, reviewer_label="synthetic fixture operator",
+            decision="approved", reason="Explicit synthetic fixture review",
+            validation={"valid": True, "evidence_ids": [evidence.id]},
+        )
+        session.add(review)
+        session.flush()
+        session.add(PublishedFact(
+            snapshot_id=ids["snapshot"], candidate_id=candidate.id, review_id=review.id,
+        ))
 
 
 @pytest.fixture
@@ -226,6 +271,7 @@ def test_exact_membership_freeze_is_idempotent_and_read_checks_hash(corpus_db):
         service.add_version(manifest, -1)
     assert service.add_version(manifest, 0)["added"] is True
     assert service.add_version(manifest, 0)["added"] is False
+    _publish_fixture(factory, ids)
     result = service.freeze(manifest)
     assert result["state"] == "frozen" and result["idempotent"] is False
     assert service.freeze(manifest)["idempotent"] is True
@@ -271,6 +317,7 @@ def test_real_snapshot_cannot_freeze_with_missing_bank_documents(corpus_db):
 def test_revoked_permission_blocks_freeze_and_frozen_read(corpus_db, revocation):
     service, factory, _, ids, _, manifest = corpus_db
     service.add_version(manifest, 0)
+    _publish_fixture(factory, ids)
     service.freeze(manifest)
     with factory.begin() as session:
         policy = session.get(SourcePolicy, ids["policy"])
@@ -295,3 +342,35 @@ def test_manifest_cannot_choose_an_unrelated_accepted_version(corpus_db):
     )
     with pytest.raises(CorpusError, match="PROVENANCE_UNKNOWN"):
         service.validate(forged)
+
+
+def test_draft_original_is_available_before_extraction_with_full_admission(corpus_db):
+    service, factory, _, ids, _, manifest = corpus_db
+    draft = manifest.model_copy(update={"documents": (
+        manifest.documents[0].model_copy(update={"extraction_run_id": None}),
+    )})
+    assert service.add_version(draft, 0)["staged"] is True
+    assert service.read_draft_document(draft, 0).read_bytes()
+    with pytest.raises(CorpusError, match="EXTRACTION_NOT_READY"):
+        service.freeze(draft)
+    with pytest.raises(CorpusError, match="SNAPSHOT_NOT_READABLE"):
+        service.read_member(draft.snapshot_id, draft.documents[0].source_version_id)
+    with factory.begin() as session:
+        session.get(SourcePolicy, ids["policy"]).collection_decision = "denied"
+    with pytest.raises(CorpusError, match="PERMISSION_REVOKED"):
+        service.read_draft_document(draft, 0)
+
+
+def test_freeze_rejects_missing_reviewed_publication_in_service_and_database(corpus_db):
+    from sqlalchemy import update
+    from sqlalchemy.exc import IntegrityError
+
+    service, factory, _, ids, _, manifest = corpus_db
+    service.add_version(manifest, 0)
+    with pytest.raises(CorpusError, match="PUBLISHED_FACTS_NOT_READY"):
+        service.freeze(manifest)
+    with pytest.raises(IntegrityError):
+        with factory.begin() as session:
+            session.execute(update(Snapshot).where(Snapshot.id == ids["snapshot"]).values(
+                state="frozen", frozen_at=datetime.now(UTC), manifest_sha256="f" * 64,
+            ))

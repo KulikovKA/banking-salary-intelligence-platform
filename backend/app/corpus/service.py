@@ -18,6 +18,7 @@ from app.ingestion.errors import IngestionError
 from app.ingestion.policy import AcquisitionPolicy, validate_url
 from app.ingestion.service import IngestionService
 from app.registry.models import Bank, Blob, Source, SourceFetch, SourcePolicy, SourceVersion
+from app.tariffs.models import FactReview, PublishedFact, TariffCandidate
 
 BANK_CODES = ("sber", "vtb", "alfa", "kuban_credit")
 
@@ -47,7 +48,7 @@ class ManifestDocument(BaseModel):
     source_version_id: UUID
     source_fetch_id: UUID
     policy_id: UUID
-    extraction_run_id: UUID
+    extraction_run_id: UUID | None
     sha256: str = Field(pattern="^[a-f0-9]{64}$")
     acquisition_method: Literal["automatic", "manual"]
     original_url: str = Field(min_length=1, max_length=2000)
@@ -153,7 +154,8 @@ class CorpusService:
             raise CorpusError("MANIFEST_INVALID") from exc
 
     def _validate_document(
-        self, session: Session, manifest: SnapshotManifest, item: ManifestDocument
+        self, session: Session, manifest: SnapshotManifest, item: ManifestDocument,
+        *, require_extraction: bool = True,
     ) -> None:
         source = session.get(Source, str(item.source_id))
         version = session.get(SourceVersion, str(item.source_version_id))
@@ -214,6 +216,10 @@ class CorpusService:
             self.store.verify(self.ingestion._receipt(blob))
         except IngestionError as exc:
             raise CorpusError(exc.code) from exc
+        if not require_extraction:
+            return
+        if item.extraction_run_id is None:
+            raise CorpusError("EXTRACTION_NOT_READY")
         extraction = session.get(ExtractionRun, str(item.extraction_run_id))
         if (
             extraction is None
@@ -227,7 +233,9 @@ class CorpusService:
     def validate(self, manifest: SnapshotManifest) -> dict[str, object]:
         with self.factory() as session:
             for item in manifest.documents:
-                self._validate_document(session, manifest, item)
+                self._validate_document(
+                    session, manifest, item, require_extraction=item.extraction_run_id is not None
+                )
         return {
             "valid": True,
             "snapshot_id": str(manifest.snapshot_id),
@@ -275,7 +283,9 @@ class CorpusService:
         except IndexError as exc:
             raise CorpusError("DOCUMENT_INDEX_INVALID") from exc
         with self.factory.begin() as session:
-            self._validate_document(session, manifest, item)
+            self._validate_document(
+                session, manifest, item, require_extraction=item.extraction_run_id is not None
+            )
             snapshot = session.get(Snapshot, str(manifest.snapshot_id), with_for_update=True)
             if snapshot is None:
                 snapshot = Snapshot(
@@ -293,6 +303,8 @@ class CorpusService:
                 raise CorpusError("SNAPSHOT_IDENTITY_MISMATCH")
             if snapshot.state != "draft":
                 raise CorpusError("SNAPSHOT_NOT_DRAFT")
+            if item.extraction_run_id is None:
+                return {"snapshot_id": snapshot.id, "added": False, "staged": True}
             exists = session.get(
                 SnapshotMember,
                 (str(manifest.snapshot_id), str(item.source_version_id)),
@@ -309,10 +321,30 @@ class CorpusService:
                 )
         return {"snapshot_id": str(manifest.snapshot_id), "added": exists is None}
 
+    def read_draft_document(self, manifest: SnapshotManifest, document_index: int) -> Path:
+        """Operator pipeline input before extraction; exact manifest, never latest version."""
+        if not 0 <= document_index < len(manifest.documents):
+            raise CorpusError("DOCUMENT_INDEX_INVALID")
+        item = manifest.documents[document_index]
+        with self.factory() as session:
+            snapshot = session.get(Snapshot, str(manifest.snapshot_id))
+            if snapshot is None or snapshot.state != "draft":
+                raise CorpusError("SNAPSHOT_NOT_DRAFT")
+            if (
+                snapshot.revision != manifest.revision
+                or snapshot.corpus_kind != manifest.corpus_kind
+            ):
+                raise CorpusError("SNAPSHOT_IDENTITY_MISMATCH")
+            self._validate_document(session, manifest, item, require_extraction=False)
+            version = session.get(SourceVersion, str(item.source_version_id))
+            assert version is not None
+            blob = session.get(Blob, version.blob_id)
+            assert blob is not None
+            return self.store.verify(self.ingestion._receipt(blob))
+
     def freeze(self, manifest: SnapshotManifest) -> dict[str, object]:
         if manifest.corpus_kind == "real" and manifest.missing_documents:
             raise CorpusError("REAL_CORPUS_INCOMPLETE")
-        self.validate(manifest)
         expected = {
             (str(item.source_version_id), str(item.extraction_run_id))
             for item in manifest.documents
@@ -326,6 +358,8 @@ class CorpusService:
                 or snapshot.corpus_kind != manifest.corpus_kind
             ):
                 raise CorpusError("SNAPSHOT_IDENTITY_MISMATCH")
+            for item in manifest.documents:
+                self._validate_document(session, manifest, item)
             members = set(
                 session.execute(
                     select(
@@ -346,6 +380,21 @@ class CorpusService:
                 raise CorpusError("SNAPSHOT_NOT_DRAFT")
             if members != expected:
                 raise CorpusError("SNAPSHOT_COMPOSITION_MISMATCH")
+            for item in manifest.documents:
+                ready = session.scalar(
+                    select(PublishedFact.id)
+                    .join(TariffCandidate, TariffCandidate.id == PublishedFact.candidate_id)
+                    .join(FactReview, FactReview.id == PublishedFact.review_id)
+                    .where(
+                        PublishedFact.snapshot_id == snapshot.id,
+                        TariffCandidate.extraction_run_id == str(item.extraction_run_id),
+                        FactReview.candidate_id == TariffCandidate.id,
+                        FactReview.decision == "approved",
+                        FactReview.validation["valid"].as_boolean().is_(True),
+                    ).limit(1)
+                )
+                if ready is None:
+                    raise CorpusError("PUBLISHED_FACTS_NOT_READY")
             snapshot.state = "frozen"
             snapshot.frozen_at = datetime.now(UTC)
             snapshot.manifest_sha256 = manifest.manifest_sha256
