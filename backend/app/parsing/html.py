@@ -20,7 +20,7 @@ from app.contracts.parsing import (
     ParseResult,
 )
 
-PARSER_VERSION = "stdlib-html/1"
+PARSER_VERSION = "stdlib-html/2"
 MAX_FILE_BYTES = 50 * 1024 * 1024
 MAX_TEXT_CHARS = 10_000_000
 _VOID = {
@@ -57,6 +57,7 @@ class _Node:
     parent: _Node | None
     path: str = ""
     children: list[_Node | str] = field(default_factory=list)
+    child_counts: dict[str, int] = field(default_factory=dict)
 
     def text(self, *, skip_tables: bool = False) -> str:
         parts: list[str] = []
@@ -68,13 +69,20 @@ class _Node:
         return _clean("".join(parts))
 
 
+class _HtmlLimit(ValueError):
+    pass
+
+
 class _TreeParser(HTMLParser):
-    def __init__(self) -> None:
+    def __init__(self, max_text_chars: int) -> None:
         super().__init__(convert_charrefs=True)
         self.root = _Node("document", {}, None, "/")
         self.stack = [self.root]
         self.errors: list[str] = []
         self.suppressed = 0
+        self.node_count = 0
+        self.text_chars = 0
+        self.max_text_chars = max_text_chars
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.lower()
@@ -98,9 +106,11 @@ class _TreeParser(HTMLParser):
             self.errors.append(f"implicitly closed <{self.stack[-1].tag}> before <{tag}>")
             self.stack.pop()
         parent = self.stack[-1]
-        index = 1 + sum(
-            1 for item in parent.children if isinstance(item, _Node) and item.tag == tag
-        )
+        self.node_count += 1
+        if self.node_count > 200_000 or len(self.stack) >= 128:
+            raise _HtmlLimit("HTML_TREE_LIMIT")
+        index = parent.child_counts.get(tag, 0) + 1
+        parent.child_counts[tag] = index
         node = _Node(tag, attr_map, parent)
         node.path = (
             f"{parent.path}{tag}[{index}]" if parent is not self.root else f"/{tag}[{index}]"
@@ -132,6 +142,9 @@ class _TreeParser(HTMLParser):
 
     def handle_data(self, data: str) -> None:
         if not self.suppressed and data:
+            self.text_chars += len(data)
+            if self.text_chars > self.max_text_chars:
+                raise _HtmlLimit("HTML_TEXT_LIMIT")
             self.stack[-1].children.append(data)
 
     def unknown_decl(self, data: str) -> None:
@@ -177,12 +190,14 @@ class HtmlParser(Parser):
         except LookupError:
             return self._result(request, "unsupported", "HTML_ENCODING_UNSUPPORTED", encoding)
         replacement_count = decoded.count("\ufffd")
-        tree = _TreeParser()
+        tree = _TreeParser(self.max_text_chars)
         try:
             tree.feed(decoded)
             tree.close()
             if len(tree.stack) > 1:
                 tree.errors.append(f"{len(tree.stack) - 1} unclosed element(s) at end of document")
+        except _HtmlLimit as exc:
+            return self._result(request, "failed", str(exc))
         except Exception as exc:  # HTMLParser is forgiving; retain parser failure diagnostics.
             return self._result(request, "failed", "HTML_PARSE_ERROR", type(exc).__name__)
 
@@ -328,6 +343,15 @@ def _extract_blocks(request: ParseRequest, root: _Node) -> list[ParsedBlock]:
                         {"type": "span", "name": key, "value": value}
                         for key, value in sorted(span.items())
                     )
+                    for anchor in _descendants(cell):
+                        if anchor.tag == "a" and _nearest(anchor, "table") is node:
+                            anchor_href = anchor.attrs.get("href") or ""
+                            rel.append({
+                                "type": "footnote_reference" if anchor_href.startswith("#") else "link",
+                                "href": anchor_href,
+                                "element_path": anchor.path,
+                                "review_required": "true",
+                            })
                     if text:
                         add(
                             cell,

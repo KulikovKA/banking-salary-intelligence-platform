@@ -123,3 +123,23 @@ def test_recorded_legacy_encoding_and_original_hash_are_respected(tmp_path: Path
     mismatch = HtmlParser().parse(wrong, str(path))
     assert mismatch.status == "failed"
     assert mismatch.diagnostics[0].code == "HTML_ORIGINAL_HASH_MISMATCH"
+
+
+def test_deep_untrusted_tree_fails_with_diagnostic(tmp_path: Path) -> None:
+    path = tmp_path / "deep.html"
+    path.write_text("<div>" * 200 + "<p>fee</p>" + "</div>" * 200)
+    result = HtmlParser().parse(_request(path), str(path))
+    assert result.status == "failed"
+    assert result.blocks == ()
+    assert result.diagnostics[0].code == "HTML_TREE_LIMIT"
+
+
+def test_table_cell_retains_footnote_target_without_fetch(tmp_path: Path) -> None:
+    path = tmp_path / "note.html"
+    path.write_text('<table><tr><td>Fee 1<a href="#note">*</a></td></tr></table>'
+                    '<p id="note" role="doc-footnote">* Subject to package</p>')
+    result = HtmlParser().parse(_request(path), str(path))
+    assert result.status == "ok"
+    cell = next(block for block in result.blocks if block.table_id)
+    assert any(r["type"] == "footnote_reference" and r["href"] == "#note"
+               for r in cell.relations)

@@ -66,3 +66,15 @@ frozen ParsedBlock contract has no offset field. The extraction pipeline can cre
 quote start/end offsets directly against that block text.
 
 Implementation commit: `5bfa65cfd652279c43678b0323051085a8167ee8`.
+
+## Integrator review corrections (2026-10-10)
+
+Table-cell anchors previously lost their footnote target metadata; v2 retains
+target/path and marks the relationship for review. Deep untrusted markup could
+raise RecursionError during block extraction; tree depth/nodes/text are now
+bounded before traversal. Sibling path indexing uses counters instead of scanning
+all previous siblings. Parser version advances to `stdlib-html/2` because evidence
+serialization changed. No network or JS was introduced.
+
+Checks: HTML/PDF regressions 12 passed; Ruff/docs PASS. One intermediate mypy
+variable-type error was corrected before the final mypy check.
