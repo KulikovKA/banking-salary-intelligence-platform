@@ -1,0 +1,112 @@
+{
+  "run_id": "8216297f3b9849c9a70db3fd11bf93db",
+  "completed_at": "2026-10-10T19:47:03.886436+00:00",
+  "result": "PASS_SYNTHETIC_ONLY",
+  "real_scenario": "BLOCKED: no acquisition/storage/reuse approval",
+  "network_requests": 0,
+  "source_id": "5418280e-d351-4bc4-bd56-f2b31bc96641",
+  "bank_id": "018838dd-43ad-4392-9986-09d98c36e5f1",
+  "imports": [
+    {
+      "observation_id": "c2dbdbd9-a2fc-4c56-93bf-548e0fcf41f9",
+      "version_id": "1c147a4f-e8c3-4973-b8f0-c0b2cfbfb5d4",
+      "result": "manual_imported",
+      "error_code": null,
+      "retry_at": null
+    },
+    {
+      "observation_id": "bf6085ce-5992-4500-a108-250a7bd96628",
+      "version_id": "1c147a4f-e8c3-4973-b8f0-c0b2cfbfb5d4",
+      "result": "manual_imported",
+      "error_code": null,
+      "retry_at": null
+    },
+    {
+      "observation_id": "1611df79-b517-46e0-a11a-262edb3bf6dc",
+      "version_id": "f9475889-cfcb-40b8-887f-cbeab260c13f",
+      "result": "manual_imported",
+      "error_code": null,
+      "retry_at": null
+    }
+  ],
+  "expected_errors": [
+    "FORMAT_INVALID",
+    "STORAGE_WRITE_FAILED",
+    "POLICY_BLOCKED"
+  ],
+  "current_version_id": "f9475889-cfcb-40b8-887f-cbeab260c13f",
+  "blobs": [
+    {
+      "id": "269c9657-fca6-477d-9602-bae507c838c5",
+      "sha256": "079f6ecbdc71dbba49233bec61d0abf7f9b4b813868a6fe26d722eda80c4383b",
+      "byte_size": 633,
+      "storage_key": "synthetic/07/079f6ecbdc71dbba49233bec61d0abf7f9b4b813868a6fe26d722eda80c4383b",
+      "version_id": "1c147a4f-e8c3-4973-b8f0-c0b2cfbfb5d4",
+      "content_state": "accepted"
+    },
+    {
+      "id": "827b5fbf-75bf-4f49-8abe-7c572a132d2b",
+      "sha256": "ff8a39c3ba861b5d51c71089e9d540ec6b75d941d7c1b2368d4c2acf913cb75e",
+      "byte_size": 633,
+      "storage_key": "synthetic/ff/ff8a39c3ba861b5d51c71089e9d540ec6b75d941d7c1b2368d4c2acf913cb75e",
+      "version_id": "f9475889-cfcb-40b8-887f-cbeab260c13f",
+      "content_state": "accepted"
+    }
+  ],
+  "observations": [
+    {
+      "id": "16879552-86c2-4da9-a6d0-bcd3ec613708",
+      "result": "rejected",
+      "method": "manual",
+      "http_status": null,
+      "error_code": "STORAGE_WRITE_FAILED"
+    },
+    {
+      "id": "ca3a7ba1-cec3-4a63-81ca-8135a7bbb03e",
+      "result": "rejected",
+      "method": "manual",
+      "http_status": null,
+      "error_code": "POLICY_BLOCKED"
+    },
+    {
+      "id": "16a61df1-5130-40dc-9bff-0cbdc7aa8a77",
+      "result": "rejected",
+      "method": "automatic",
+      "http_status": null,
+      "error_code": "POLICY_BLOCKED"
+    },
+    {
+      "id": "c2dbdbd9-a2fc-4c56-93bf-548e0fcf41f9",
+      "result": "manual_imported",
+      "method": "manual",
+      "http_status": null,
+      "error_code": null
+    },
+    {
+      "id": "bf6085ce-5992-4500-a108-250a7bd96628",
+      "result": "manual_imported",
+      "method": "manual",
+      "http_status": null,
+      "error_code": null
+    },
+    {
+      "id": "1611df79-b517-46e0-a11a-262edb3bf6dc",
+      "result": "manual_imported",
+      "method": "manual",
+      "http_status": null,
+      "error_code": null
+    },
+    {
+      "id": "14581eb6-55b4-4281-b3fb-d658c0115a71",
+      "result": "rejected",
+      "method": "manual",
+      "http_status": null,
+      "error_code": "FORMAT_INVALID"
+    }
+  ],
+  "archive_reconcile": {
+    "missing": [],
+    "orphan": []
+  },
+  "scheduled_fetch_success": false
+}

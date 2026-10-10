@@ -154,7 +154,7 @@ TestClient-only domainless duplicate.
 - Full backend + TLS-tool pytest on dedicated PostgreSQL 18 bsi_wave2_test:
   **268 passed, 0 failed, 0 skipped**, no warnings.
 - Alembic upgrade/check: PASS on bsi_wave2_test; upgrade from 0004 and check on
-  bsi_e2e: PASS. 0001?0004 files are unchanged.
+  bsi_e2e: PASS. 0001–0004 files are unchanged.
 - Source recovery E2E: PASS_SYNTHETIC_ONLY, network_requests=0; evidence is copied
   to the wave-two integration report. This is not the deferred SNAP-08 pipeline.
 - Frontend lint/typecheck/build: PASS. Browser E2E NOT RUN: no UI implementation
