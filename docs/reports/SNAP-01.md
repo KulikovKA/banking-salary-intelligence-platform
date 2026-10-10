@@ -3,6 +3,7 @@
 **Result:** implementation ready for review; this report does not mark the plan task DONE.
 **Base commit:** `2432028412ca632a96a7e6df465702b6f0baeed0` (`main` at branch creation).
 **Branch:** `codex/snap-01-contracts`.
+**Implementation commit:** `d9a7a059341089b2f710b4493a5b1cef5e36ada6`.
 **Scope:** `backend/app/contracts/**` and `backend/tests/test_snapshot_contracts.py` only, plus this required report.
 
 ## Behavior delivered
