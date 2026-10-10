@@ -1,7 +1,7 @@
 # Snapshot acceptance S0–S3
 
 Это новые критерии для fixed corpus. Исторические
-[G1/G2](../archive/pre-snapshot/product/ACCEPTANCE_CRITERIA.md) остаются NOT PASSED:
+[G1/G2](https://github.com/KulikovKA/banking-salary-intelligence-platform/blob/02cd6c8e00e9f84c0528460c7a42835f95a41499/docs/archive/pre-snapshot/product/ACCEPTANCE_CRITERIA.md) остаются NOT PASSED:
 scheduled-fetch дни не выполняются, прежние corpus/quality thresholds не объявляются
 достигнутыми. Новая цель не требует scheduler и не теряет evidence validation.
 PASS требует записанного отчёта с corpus revision, denominator, результатами и

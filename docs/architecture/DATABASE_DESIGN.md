@@ -3,7 +3,7 @@
 ## Уже реализовано — не пересоздавать
 
 Источник истины: `backend/app/registry/models.py`, Alembic
-`0001_catalog.py` и `0002_source_recovery.py`.
+`0001_catalog.py`, `0002_source_recovery.py`, `0003_operator_only.py`.
 
 | Таблица | Содержание / ограничения |
 |---|---|
@@ -13,14 +13,18 @@
 | blobs | immutable SHA-256, bytes/MIME/storage_key, unique corpus_kind+sha256 |
 | source_versions | source/blob FK, unique source+blob, quarantine/accepted/rejected, acceptance metadata |
 | source_fetches | observations, exact URLs/redirects, result/method/audit; manual HTTP status NULL |
-| job_runs | existing idempotency/lease/retry schema/helper; v1 не запускает scheduler |
 
-schedule_seconds, next_check_at, due index, stale/lease config сохраняются как
-legacy совместимость. Это не требование запускать scheduling. Изначальные
-миграции не редактировать; тест `test_db_contract.py` сейчас проверяет точный
+Активный ORM содержит только шесть catalog/ingestion tables. Queue helper и
+JobRun ORM удалены. Physical job_runs, sources.schedule_seconds/next_check_at,
+source_fetches.job_run_id и их constraints/indexes оставлены в существующей БД
+как исторические audit data, без runtime использования. Миграция 0003 меняет
+только DEFAULT schedule_seconds на 1 (inert, не расписание), не значения строк.
+`db/migration_scope.py` исключает эти явно перечисленные absent objects из
+destructive autogenerate; unrelated schema drift не скрывается. Original 0001/0002
+не редактировать; тест `test_db_contract.py` сейчас проверяет точный
 набор таблиц — SNAP-02 должен осмысленно расширить ожидание, не удалить проверку.
 
-## SNAP-02 — добавочная revision 0003 (план)
+## SNAP-02 — добавочная revision 0004 (план)
 
 | Таблица | Ключевые поля и правила |
 |---|---|
@@ -51,7 +55,7 @@ trigger. Raw SQL не должен обходить immutable frozen membership.
 на каждом уровне. Отзыв source policy блокирует read, даже frozen.
 DB reference коммитится после atomic blob write; orphan возможен и виден reconcile.
 
-## SNAP-15 — отдельная revision 0004 (план)
+## SNAP-15 — отдельная revision 0005 (план)
 
 users (unique normalized login, password_hash, role analyst|admin, active),
 invitations (token_hash unique, expiry, used_at, issuer FK),
@@ -60,7 +64,7 @@ revoked_at), auth_audit (event code, actor ID, timestamp; без паролей/
 FK reviewer/user и llm_usage.user_id добавляются без выдуманных historical users:
 операторский identity в ранних review остаётся явно отличим от user FK.
 
-Revision 0003 принадлежит только SNAP-02, 0004 только SNAP-15; downstream tasks
+Revision 0003 уже реализована; 0004 принадлежит только SNAP-02, 0005 только SNAP-15; downstream tasks
 используют готовые модели. Если схема требует коррекции, отдельная follow-up
 задача единственному владельцу миграций после merge. Alembic env импортирует
 все model modules; migration upgrade + alembic check на PostgreSQL обязательны.

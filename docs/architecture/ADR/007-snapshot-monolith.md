@@ -15,12 +15,12 @@ Scheduler, recurring acquisition, изменения/уведомления и o
 Альтернативы: прежний monitoring MVP — лишний critical path; только шаблонный бот —
 полезный fallback, но не выполняет требование реального LLM ассистента.
 
-Предыдущие [ADR](../../archive/pre-snapshot/architecture/ADR/README.md) сохраняются
+Предыдущие [ADR](https://github.com/KulikovKA/banking-salary-intelligence-platform/blob/02cd6c8e00e9f84c0528460c7a42835f95a41499/docs/archive/pre-snapshot/architecture/ADR/README.md) сохраняются
 неизменными по смыслу, включая исторические proposed/accepted статусы.
 ADR-001/002/003/005: переносим принципы provenance, временной применимости,
 constrained claims и originals вне БД в активные контракты, без переноса outbox
 и полной bitemporal платформы. ADR-004: jobs/outbox вне активного scope, существующие
-таблицы/helper сохраняются. ADR-006: source-specific approval, offline egress ban,
+physical audit data сохраняются в БД, queue helper/runtime ORM удалены. ADR-006: source-specific approval, offline egress ban,
 отдельный manual grant, corpus isolation сохраняются. Его WORK-зависимости заменены
 новым SNAP DAG; исторические G1/G2 не пройдены и не переименованы в PASS.
 
@@ -30,7 +30,7 @@ Groq UI — S3. Недостаток документов возвращает N
 при этом разрешает продолжать независимую разработку.
 
 Миграция: только добавочные Alembic revisions, старые originals/tests/migrations
-не удалять. Legacy schedule/stale поля не управляют frozen snapshot. Откат —
+не удалять. Legacy DB objects не управляют frozen snapshot; stale/worker config удалена. Откат —
 возврат планирования, а не ослабление policy/evidence checks. Verification:
 docs validator, существующие backend/frontend/PG/E2E и отдельные SNAP acceptance
-tests по мере реализации. [Аудит](../../reports/SNAPSHOT-REBASE-2026-10-10.md).
+tests по мере реализации. [Разделение веток](../../reports/MAIN-CLEANUP-2026-10-10.md).

@@ -15,8 +15,9 @@
 | [Source recovery](implementation/SOURCE_RECOVERY_USAGE.md) | Работающий fetch/import CLI |
 | [Приёмка](product/ACCEPTANCE_CRITERIA.md) | S0–S3, реальные данные и честный NO-GO |
 | [Codex](../AGENTS.md) | Правила исполнения и совместной работы |
-| [Аудит изменений](reports/SNAPSHOT-REBASE-2026-10-10.md) | Инвентаризация, проверки, ограничения |
-| [Архив](archive/README.md) | Предыдущие планы/ADR, отчёты и доказательства |
+| [Разделение веток](reports/MAIN-CLEANUP-2026-10-10.md) | Удалённые материалы, проверки и сохранность БД |
+| [Источники](research/SOURCE_STATUS.md) | Актуальные решения, hashes и blockers |
+| [Ветка archive](https://github.com/KulikovKA/banking-salary-intelligence-platform/tree/archive) | Полный предыдущий снимок и история |
 
 Задачи находятся только в `implementation/prompts/SNAP-*.md`; их зависимости и
 статусы — в одном `implementation/TASKS.json`. Старые WORK_INDEX/TASK_INDEX не активны.

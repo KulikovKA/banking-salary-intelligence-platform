@@ -4,7 +4,7 @@
 
 Прочитай README.md, docs/implementation/MASTER_PLAN.md и один SNAP prompt.
 Архитектура/контракты/DB/API/security в docs/architecture, release criteria —
-docs/product/ACCEPTANCE_CRITERIA.md. docs/archive — история, не активные задания.
+docs/product/ACCEPTANCE_CRITERIA.md. Ветка archive — история, не runtime dependency main.
 Фактическая реализация определяется кодом и миграциями; планируемые модули
 не считать выполненными. Report предыдущего шага проверяй по merged code/tests.
 
@@ -13,7 +13,7 @@ docs/product/ACCEPTANCE_CRITERIA.md. docs/archive — история, не ак�
 - FastAPI modular monolith + PostgreSQL + Next.js + local originals.
 - Snapshot corpus; без scheduler/recurring fetch/change notifications/outbox,
   очередей, Redis/Celery/vector DB и новых сервисов.
-- Сохранять FetchGateway/BlobStore/ingestion/tests/E2E/0001/0002; additive migrations.
+- Сохранять FetchGateway/BlobStore/operator ingestion/tests/E2E/0001/0002/0003; additive migrations.
 - Основной provider Groq `openai/gpt-oss-120b`, Fake для CI. Не заменять provider
   и не переходить на paid tier автоматически.
 - Offline tests/CI не обращаются к банкам/Groq. Real source bytes только после

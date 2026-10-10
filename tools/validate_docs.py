@@ -1,8 +1,7 @@
-"""Validate local documentation links, snapshot task DAG and archival inventory."""
+"""Validate standalone main documentation, snapshot prompts and source decisions."""
 
 from __future__ import annotations
 
-import hashlib
 import json
 import re
 from pathlib import Path
@@ -73,17 +72,28 @@ def validate() -> list[str]:
         if task["status"] not in {"TODO", "IN_PROGRESS", "DONE", "BLOCKED"}:
             errors.append(f"{task['id']}: invalid status")
 
-    inventory_path = ROOT / "docs/reports/evidence/snapshot-document-audit-2026-10-10.json"
-    inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
-    for entry in inventory["entries"]:
-        destination = ROOT / entry["destination"]
-        if not destination.is_file():
-            errors.append(f"Archive inventory: missing {entry['destination']}")
-        elif destination.suffix != ".md":
-            # Git/Windows may convert line endings; content must stay unchanged.
-            digest = hashlib.sha256(destination.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
-            if digest != entry["sha256_lf_before"]:
-                errors.append(f"Archive inventory: non-Markdown evidence changed {destination}")
+    if len(tasks) != 19:
+        errors.append("Snapshot v1 requires exactly 19 prompts")
+    if (ROOT / "docs/archive").exists():
+        errors.append("Historical documentation belongs to the archive branch, not main")
+    if (ROOT / "backend/app/ingestion/jobs.py").exists():
+        errors.append("Runtime queue helper must not be present in operator-only main")
+    manifest = json.loads(
+        (ROOT / "tests/fixtures/manifests/sources.json").read_text(encoding="utf-8")
+    )
+    if manifest["snapshot_context"]["gates"] != {
+        "G1": "NOT_PASSED", "G2": "NOT_PASSED", "S1": "BLOCKED"
+    }:
+        errors.append("Source manifest gates require a reviewed change with evidence")
+    if set(bank["bank_code"] for bank in manifest["banks"]) != {
+        "sber", "vtb", "alfa", "kuban_credit"
+    }:
+        errors.append("Source manifest must describe all four banks")
+    for task in tasks:
+        text = (ROOT / "docs/implementation" / task["prompt"]).read_text(encoding="utf-8")
+        for field in ("implementation", "acceptance", "parallelism", "outcome"):
+            if task[field] not in text:
+                errors.append(f"{task['id']}: prompt/registry {field} mismatch")
     return errors
 
 
@@ -94,7 +104,7 @@ def main() -> int:
     if errors:
         print(f"FAIL: {len(errors)} documentation errors")
         return 1
-    print("PASS: local links, 19 snapshot prompts, task DAG/statuses and archive evidence")
+    print("PASS: standalone main links, 19 snapshot prompts, DAG/statuses and source decisions")
     return 0
 
 

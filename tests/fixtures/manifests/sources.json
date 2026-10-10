@@ -4,7 +4,7 @@
   "manifest_status": "partial_blocked",
   "checked_at": "2026-10-09T23:55:00+03:00",
   "project_decisions": {
-    "architecture": "v1.1 accepted as baseline",
+    "architecture": "snapshot v1 modular monolith",
     "banks": [
       "sber",
       "vtb",
@@ -14,9 +14,7 @@
     "region": "RU-KDA",
     "priority_segment": "SME",
     "original_storage": "local outside public access and Git",
-    "collection_rule": "Do not bypass CAPTCHA, authentication, anti-bot protection, or explicit limits. If automated collection permission is unconfirmed, block that source and offer manual import of an official document. Project owner approval is not bank permission.",
-    "poll_interval_target_hours": 24,
-    "poll_interval_note": "Preliminary target only; does not override site-specific robots, terms, rate limits, or bank permission."
+    "collection_rule": "Do not bypass CAPTCHA, authentication, anti-bot protection, or explicit limits. If automated collection permission is unconfirmed, block that source and offer manual import of an official document. Project owner approval is not bank permission."
   },
   "source_status_definitions": {
     "approved": "Accepted for the limited purpose stated in the source record; does not imply permission for automated collection unless explicitly stated.",
@@ -62,7 +60,6 @@
           "url": null,
           "result": "No applicable public terms for salary/product pages confirmed."
         },
-        "target_interval_hours": 24,
         "approved_rate_seconds": null
       },
       "coverage": {
@@ -108,7 +105,6 @@
           "result": "No applicable terms for www.vtb.ru salary page confirmed.",
           "note": "A discovered agreement for developer.vtb.ru applies to another host."
         },
-        "target_interval_hours": 24,
         "approved_rate_seconds": null
       },
       "coverage": {
@@ -153,7 +149,6 @@
           "url": null,
           "result": "No applicable general terms for the salary pages confirmed."
         },
-        "target_interval_hours": 24,
         "approved_rate_seconds": null
       },
       "coverage": {
@@ -212,7 +207,6 @@
           "result": "No applicable public terms for automated access/reuse on kk.ru confirmed.",
           "note": "start.kk.bank agreement names ООО «ИСУ» and is unrelated."
         },
-        "target_interval_hours": 24,
         "approved_rate_seconds": null
       },
       "coverage": {
@@ -470,9 +464,9 @@
   },
   "unresolved_legal_questions": [
     "Whether each bank permits automated retrieval and local archive storage under the terms and document-specific conditions that apply to each host/path.",
-    "Applicable path-specific request limits and whether 24-hour rechecks are allowed; no bank-side permission inferred.",
     "Copyright/licensing conditions for retaining originals and reusing extracted facts.",
-    "Future personal-data processing, localization/transfer, and retention review before external LLM use."
+    "Future personal-data processing, localization/transfer, and retention review before external LLM use.",
+    "Applicable request-rate limits for approved one-time acquisition; no recurring collection planned."
   ],
   "originals_storage": "FAQ reference archive and two research-only Kuban candidate PDFs are local outside Git. The latter are not approved application corpus and were not imported. Synthetic E2E uses a separate PostgreSQL test database and synthetic archive.",
   "discovery_leads": [
@@ -518,10 +512,6 @@
       "robots_http_status": 200,
       "product_page_path": "/business/solutions/zp-project/",
       "product_page_path_disallowed": false,
-      "pdf_paths_disallowed": [
-        "/upload/*.pdf",
-        "/upload/iblock/*.pdf"
-      ],
       "terms": "No applicable automated-access/reuse terms confirmed",
       "direct_page_get": {
         "status": 200,
@@ -529,8 +519,16 @@
         "redirect_chain": [],
         "mime_type": "text/html"
       },
-      "pdf_target_get": "not attempted because robots disallows supplied paths",
-      "automation_decision": "blocked"
+      "pdf_target_get": "Research originals obtained previously; hashes/size recorded in exact source entries. No approved application acquisition/import.",
+      "automation_decision": "blocked",
+      "robots_group_correction": {
+        "source": "2026-10-10 existing research / source E2E",
+        "robots_sha256": "57b087c698d6e11464571542c4d33b02fca45c03d123856b9f91d63286584f2d",
+        "user_agent": "BankSalaryResearch/0.1",
+        "pdf_paths_allowed": true,
+        "reason": "PDF Disallow directives belong to Yandex, not *; this is not permission.",
+        "fresh_network_request": false
+      }
     },
     {
       "host": "www.vtb.ru",
@@ -552,15 +550,24 @@
     }
   ],
   "technical_blockers": [
-    "VTB and Alfa direct page/robots probes fail local TLS certificate validation before HTTP; no bypass performed.",
-    "Kuban Credit tariff and service-terms PDFs are explicitly disallowed by kk.ru robots.txt; target GETs were intentionally not attempted, so local originals and SHA-256 are unavailable.",
-    "Sber current exact employer-tariff URL and accepted original remain unresolved.",
-    "Local PostgreSQL integration environment unavailable in this workspace because Docker daemon is not running."
+    "VTB/Alfa earlier direct page/robots probes failed TLS validation; exact documents/current applicability remain unresolved. No new probes in this branch cleanup.",
+    "Sber exact employer tariff URL and accepted original remain unresolved.",
+    "Kuban research originals exist but are not accepted application corpus; robots group correction is documented, no new network check."
   ],
   "legal_and_organizational_blockers": [
     "Bank-side permission and applicable terms for automated retrieval, local archival storage, and reuse must be established per host/path; project-owner approval is not bank permission.",
-    "Path-specific request limits and permissibility of the preliminary 24-hour target require confirmation before scheduler enablement.",
     "Human/legal review of document copyright/licensing and permitted reuse of extracted tariff facts remains outstanding.",
     "Current official employer tariff/conditions and SME/RU-KDA/package applicability still need human or bank-provided confirmation for all four banks."
-  ]
+  ],
+  "snapshot_context": {
+    "scope": "Fixed corpus, operator-only acquisition/import. No polling or scheduler.",
+    "archive_commit": "02cd6c8e00e9f84c0528460c7a42835f95a41499",
+    "summary": "docs/research/SOURCE_STATUS.md",
+    "network_rechecked": false,
+    "gates": {
+      "G1": "NOT_PASSED",
+      "G2": "NOT_PASSED",
+      "S1": "BLOCKED"
+    }
+  }
 }

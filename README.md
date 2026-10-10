@@ -6,7 +6,7 @@ FastAPI + PostgreSQL + Next.js; основная LLM — `openai/gpt-oss-120b` �
 Fake LLM — для тестов. Scheduler, регулярное скачивание, мониторинг и уведомления
 вне активного scope.
 
-Уже реализованы каталог, миграции `0001`/`0002`, policy-gated FetchGateway,
+Уже реализованы каталог, миграции `0001`/`0002`/`0003`, policy-gated FetchGateway,
 LocalBlobStore, операторский fetch/import и synthetic E2E. API пока содержит `/health`,
 frontend — стартовую страницу. Парсинг содержания, тарифы, сравнение, поиск, LLM и auth
 предстоит реализовать. Реальный корпус четырёх банков ещё не принят;
@@ -17,7 +17,7 @@ frontend — стартовую страницу. Парсинг содержа�
 - [Snapshot-приёмка](docs/product/ACCEPTANCE_CRITERIA.md)
 - [Инструкции Codex](AGENTS.md)
 - [Получение и разрешённый импорт](docs/implementation/SOURCE_RECOVERY_USAGE.md)
-- [Последний source E2E и блокеры](docs/reports/SOURCE-RECOVERY-E2E-2026-10-10.md)
+- [Source decisions и блокеры](docs/research/SOURCE_STATUS.md)
 
 ## Локальный запуск
 
@@ -61,5 +61,7 @@ PostgreSQL integration включается через `TEST_DATABASE_URL` на 
 `python tools/source_recovery_e2e.py --output-root .local/source-e2e`.
 Проверки не требуют запросов к банкам или Groq.
 
-[Лицензионный inventory](docs/reports/license-inventory.md) сохранён вместе с
-историческими [отчётами](docs/reports/) и [архивом проектирования](docs/archive/README.md).
+[Лицензионный inventory](docs/reports/license-inventory.md) и
+[текущие source decisions](docs/research/SOURCE_STATUS.md) входят в main.
+Полная прежняя разработка и исторические отчёты — в независимой
+[ветке archive](https://github.com/KulikovKA/banking-salary-intelligence-platform/tree/archive). Main не читает файлы этой ветки при запуске.

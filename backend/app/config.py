@@ -34,10 +34,7 @@ class Settings(BaseModel):
     fetch_max_redirects: int = Field(default=5, ge=0, le=5)
     fetch_connect_timeout_seconds: float = Field(default=5, gt=0, le=120)
     fetch_read_timeout_seconds: float = Field(default=20, gt=0, le=300)
-    worker_lease_seconds: int = Field(default=180, gt=0)
-    heartbeat_seconds: int = Field(default=30, gt=0)
-    max_job_attempts: int = Field(default=3, gt=0)
-    source_stale_hours: int = Field(default=72, gt=0)
+    fetch_max_attempts: int = Field(default=3, gt=0)
     llm_mode: Literal["fake", "provider"] = "fake"
     llm_model: str | None = None
     llm_api_base: str | None = None
@@ -48,8 +45,6 @@ class Settings(BaseModel):
     def validate_runtime_contract(self) -> Settings:
         if self.app_env == "test" and self.ingestion_mode != "offline":
             raise SettingsError("CONFIG_TEST_EGRESS_FORBIDDEN")
-        if self.heartbeat_seconds >= self.worker_lease_seconds:
-            raise SettingsError("CONFIG_INVALID: heartbeat must be shorter than lease")
         if ".." in self.storage_root.parts:
             raise SettingsError("CONFIG_STORAGE_ROOT_INVALID: STORAGE_ROOT cannot traverse parents")
         if self.storage_root.exists() and not self.storage_root.is_dir():
@@ -116,10 +111,7 @@ class Settings(BaseModel):
             "FETCH_MAX_REDIRECTS": "fetch_max_redirects",
             "FETCH_CONNECT_TIMEOUT_SECONDS": "fetch_connect_timeout_seconds",
             "FETCH_READ_TIMEOUT_SECONDS": "fetch_read_timeout_seconds",
-            "WORKER_LEASE_SECONDS": "worker_lease_seconds",
-            "HEARTBEAT_SECONDS": "heartbeat_seconds",
-            "MAX_JOB_ATTEMPTS": "max_job_attempts",
-            "SOURCE_STALE_HOURS": "source_stale_hours",
+            "FETCH_MAX_ATTEMPTS": "fetch_max_attempts",
             "LLM_MODE": "llm_mode",
             "LLM_MODEL": "llm_model",
             "LLM_API_BASE": "llm_api_base",

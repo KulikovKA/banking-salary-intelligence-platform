@@ -1,4 +1,4 @@
-"""Public, secret-safe ingestion failures and scheduler retry decisions."""
+"""Secret-safe ingestion errors and optional retry timing for an operator attempt."""
 
 from __future__ import annotations
 

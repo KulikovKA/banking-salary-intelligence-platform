@@ -100,7 +100,6 @@ def run_synthetic_e2e(factory, root: Path) -> dict:
                 canonical_url=URL,
                 kind="pdf",
                 corpus_kind="synthetic",
-                schedule_seconds=86400,
             )
         )
 
@@ -146,12 +145,12 @@ def run_synthetic_e2e(factory, root: Path) -> dict:
         reviewer="offline-e2e-test",
         applicability={"corpus_kind": "synthetic", "scope": "test only", "edition": "A"},
     )
-    require(service.current_content(source_id)[0] == first.version_id, "accepted A")
+    require(service.current_content(source_id) == first.version_id, "accepted A")
 
     original.write_bytes(body_b)
     third = import_document()
     require(third.version_id != first.version_id, "new version B")
-    require(service.current_content(source_id)[0] == first.version_id, "last accepted A retained")
+    require(service.current_content(source_id) == first.version_id, "last accepted A retained")
     with factory() as session:
         require(
             session.get(SourceVersion, third.version_id).content_state == "quarantine",
@@ -167,7 +166,7 @@ def run_synthetic_e2e(factory, root: Path) -> dict:
         policy = session.get(SourcePolicy, session.get(Source, source_id).policy_id)
         policy.acquisition_config = {"manual": {**grant.model_dump(mode="json"), "revoked": True}}
     errors.append(expect_error("POLICY_BLOCKED"))
-    require(service.current_content(source_id)[0] == first.version_id, "errors preserve A")
+    require(service.current_content(source_id) == first.version_id, "errors preserve A")
     blocked_fetch = service.fetch_source(source_id)
     require(blocked_fetch.error_code == "POLICY_BLOCKED", "no automatic grant")
 
@@ -176,7 +175,7 @@ def run_synthetic_e2e(factory, root: Path) -> dict:
         reviewer="offline-e2e-test",
         applicability={"corpus_kind": "synthetic", "scope": "test only", "edition": "B"},
     )
-    require(service.current_content(source_id)[0] == third.version_id, "accepted B is current")
+    require(service.current_content(source_id) == third.version_id, "accepted B is current")
     with factory() as session:
         source = session.get(Source, source_id)
         versions = list(

@@ -15,7 +15,6 @@ def test_initial_registry_schema_contains_only_catalog_and_ingestion_tables() ->
         "blobs",
         "source_versions",
         "source_fetches",
-        "job_runs",
     }
 
 
@@ -30,7 +29,9 @@ def test_initial_schema_constraints_and_foreign_keys_are_declared() -> None:
     assert any(
         fk.target_fullname == "source_versions.id" for fk in tables["source_fetches"].foreign_keys
     )
-    assert any(fk.target_fullname == "job_runs.id" for fk in tables["source_fetches"].foreign_keys)
+    assert "job_run_id" not in tables["source_fetches"].columns
+    assert "schedule_seconds" not in tables["sources"].columns
+    assert "next_check_at" not in tables["sources"].columns
 
 
 def test_bank_seed_uses_postgres_conflict_safe_insert_and_no_sources() -> None:

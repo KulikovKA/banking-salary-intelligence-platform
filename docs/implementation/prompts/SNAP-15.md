@@ -19,12 +19,12 @@ DATABASE_DESIGN.md, API_CONTRACTS.md, SECURITY.md и docs/product/ACCEPTANCE_CRI
 Работай offline с synthetic fixtures, если конкретный real/provider run не допущен.
 Не создавай фиктивные разрешения, тарифы, reviewer или PASS. Не запускай scheduler,
 recurring download, notifications, очереди, микросервисы или автоматический paid fallback.
-Сохрани FetchGateway, LocalBlobStore, source recovery, E2E и миграции 0001/0002.
+Сохрани FetchGateway, LocalBlobStore, operator source recovery, E2E и миграции 0001/0002/0003.
 
 ## Файлы и ответственность
 
 - `backend/app/auth/**`
-- `backend/alembic/versions/0004_auth.py`
+- `backend/alembic/versions/0005_auth.py`
 - `backend/alembic/env.py`
 - `backend/tests/test_auth_sessions.py`
 - `pyproject.toml`
@@ -36,7 +36,7 @@ recurring download, notifications, очереди, микросервисы ил
 
 ## Реализация и ограничения
 
-Следуй SECURITY, official password hashing docs проверить при реализации. Add argon2-cffi после parser dependency merges. Dedicated auth 0004 после 0003, integrate metadata sequentially. Один use invite/reset при row lock, rotation/expiry/revoke, last-admin guard, login rate limits, no email infrastructure. Expose FastAPI dependency/router factory для SNAP-16, не менять main.py. Production Settings сохраняй, auth local HTTP cookie и test identity контролируемо; config changes согласовать с SNAP-13 после его merge. Не сохранять chat data.
+Следуй SECURITY, official password hashing docs проверить при реализации. Add argon2-cffi после parser dependency merges. Dedicated auth 0005 после 0004, integrate metadata sequentially. Один use invite/reset при row lock, rotation/expiry/revoke, last-admin guard, login rate limits, no email infrastructure. Expose FastAPI dependency/router factory для SNAP-16, не менять main.py. Production Settings сохраняй, auth local HTTP cookie и test identity контролируемо; config changes согласовать с SNAP-13 после его merge. Не сохранять chat data.
 
 ## Тесты и критерии приёмки
 

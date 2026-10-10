@@ -19,7 +19,7 @@ DATABASE_DESIGN.md, API_CONTRACTS.md, SECURITY.md и docs/product/ACCEPTANCE_CRI
 Работай offline с synthetic fixtures, если конкретный real/provider run не допущен.
 Не создавай фиктивные разрешения, тарифы, reviewer или PASS. Не запускай scheduler,
 recurring download, notifications, очереди, микросервисы или автоматический paid fallback.
-Сохрани FetchGateway, LocalBlobStore, source recovery, E2E и миграции 0001/0002.
+Сохрани FetchGateway, LocalBlobStore, operator source recovery, E2E и миграции 0001/0002/0003.
 
 ## Файлы и ответственность
 

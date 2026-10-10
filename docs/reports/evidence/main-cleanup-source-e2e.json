@@ -1,0 +1,112 @@
+{
+  "run_id": "f28e77ccf30348f1ad63203e0d886355",
+  "completed_at": "2026-10-10T17:44:25.222794+00:00",
+  "result": "PASS_SYNTHETIC_ONLY",
+  "real_scenario": "BLOCKED: no acquisition/storage/reuse approval",
+  "network_requests": 0,
+  "source_id": "24dfa3e7-c4a0-4157-84ab-3fb24b3861f6",
+  "bank_id": "cadbff90-8c3f-416a-b0be-f1852eba799a",
+  "imports": [
+    {
+      "observation_id": "16058327-ec01-48ea-8f37-197a4c49c28f",
+      "version_id": "5d783c46-0eb4-4eed-9c40-faa56dec6fdd",
+      "result": "manual_imported",
+      "error_code": null,
+      "retry_at": null
+    },
+    {
+      "observation_id": "96d165b8-5aa4-4c75-93af-8c43493d472c",
+      "version_id": "5d783c46-0eb4-4eed-9c40-faa56dec6fdd",
+      "result": "manual_imported",
+      "error_code": null,
+      "retry_at": null
+    },
+    {
+      "observation_id": "17dfe47d-d45d-4bf7-81d3-8f8fac39afb7",
+      "version_id": "abb200e4-8fbe-4df0-983e-fd6fdd51896a",
+      "result": "manual_imported",
+      "error_code": null,
+      "retry_at": null
+    }
+  ],
+  "expected_errors": [
+    "FORMAT_INVALID",
+    "STORAGE_WRITE_FAILED",
+    "POLICY_BLOCKED"
+  ],
+  "current_version_id": "abb200e4-8fbe-4df0-983e-fd6fdd51896a",
+  "blobs": [
+    {
+      "id": "94513f1f-24ff-44c9-878a-97cd8662a0f8",
+      "sha256": "faf0ecc96e055ea073662cd22532c7c6deacc2587818a4a625f5d9dcad5297af",
+      "byte_size": 633,
+      "storage_key": "synthetic/fa/faf0ecc96e055ea073662cd22532c7c6deacc2587818a4a625f5d9dcad5297af",
+      "version_id": "abb200e4-8fbe-4df0-983e-fd6fdd51896a",
+      "content_state": "accepted"
+    },
+    {
+      "id": "f4f15fb0-a61e-49f1-ab60-f99b378581a1",
+      "sha256": "405d26227b3a10e086bbcf239347728ae8bfacb9a220f8f19bee2751321207cf",
+      "byte_size": 633,
+      "storage_key": "synthetic/40/405d26227b3a10e086bbcf239347728ae8bfacb9a220f8f19bee2751321207cf",
+      "version_id": "5d783c46-0eb4-4eed-9c40-faa56dec6fdd",
+      "content_state": "accepted"
+    }
+  ],
+  "observations": [
+    {
+      "id": "16058327-ec01-48ea-8f37-197a4c49c28f",
+      "result": "manual_imported",
+      "method": "manual",
+      "http_status": null,
+      "error_code": null
+    },
+    {
+      "id": "96d165b8-5aa4-4c75-93af-8c43493d472c",
+      "result": "manual_imported",
+      "method": "manual",
+      "http_status": null,
+      "error_code": null
+    },
+    {
+      "id": "17dfe47d-d45d-4bf7-81d3-8f8fac39afb7",
+      "result": "manual_imported",
+      "method": "manual",
+      "http_status": null,
+      "error_code": null
+    },
+    {
+      "id": "01a629cb-34fe-41c1-b050-22942059fbc8",
+      "result": "rejected",
+      "method": "manual",
+      "http_status": null,
+      "error_code": "FORMAT_INVALID"
+    },
+    {
+      "id": "5dcc61b6-ce39-45b1-9c0c-62cbea714b24",
+      "result": "rejected",
+      "method": "manual",
+      "http_status": null,
+      "error_code": "STORAGE_WRITE_FAILED"
+    },
+    {
+      "id": "50375db2-68be-457b-8fa0-b3cd3c127932",
+      "result": "rejected",
+      "method": "manual",
+      "http_status": null,
+      "error_code": "POLICY_BLOCKED"
+    },
+    {
+      "id": "c049d700-963e-4258-858c-71f6fdf4f366",
+      "result": "rejected",
+      "method": "automatic",
+      "http_status": null,
+      "error_code": "POLICY_BLOCKED"
+    }
+  ],
+  "archive_reconcile": {
+    "missing": [],
+    "orphan": []
+  },
+  "scheduled_fetch_success": false
+}

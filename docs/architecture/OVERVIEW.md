@@ -72,15 +72,18 @@ Content acceptance не публикует тариф. LLM не вычисляе
 ## Существующее и планируемое
 
 Сохранить без переписывания `ingestion/{gateway,transport,tls,robots,policy,service,
-formats,adapters,evidence,cli,jobs}.py`, `storage/local.py`, registry, E2E и миграции.
+formats,adapters,evidence,cli}.py`, `storage/local.py`, registry, E2E и миграции.
 `formats.py` проверяет контейнер, а не извлекает содержание; `adapters.py` делает
 discovery для ВТБ/Кубань Кредит, а не четыре полноценных парсера тарифов.
-`jobs.py` — helper enqueue, scheduler отсутствует. Поля schedule/lease/retry,
-`job_runs`, stale settings сохраняются для совместимости, но новых dispatch loops
-и recurring jobs нет. `IngestionService.current_content()` сохраняет legacy stale
-семантику; новый snapshot read service читает точное membership и не использует
-72h stale как критерий годности frozen corpus. Blob checks, отзыв прав и business
-validity продолжают проверяться. `/health` — liveness, не product readiness.
+Queue helper/JobRun ORM, worker lease/heartbeat config и 72h stale logic удалены.
+`IngestionService.current_content()` возвращает ID последней accepted version
+для операторской инспекции; это не snapshot membership и не проверка прав чтения.
+Новый snapshot read service проверяет точное membership, rights revocation, hashes
+и business validity. Старые physical DB audit objects не удаляются; active ORM
+их не использует, Alembic исключает только явно перечисленные retired objects.
+Миграция 0003 задаёт инертный DB default старому NOT NULL schedule column, чтобы
+новые source rows создавались без scheduling fields. FETCH_MAX_ATTEMPTS и retry_at
+ограничивают явные operator attempts, не запускают фоновые повторы. `/health` — liveness, не product readiness.
 
 Дальнейшие модули: `contracts`, `parsing`, `corpus`, `tariffs`, `evidence`, `search`,
 `comparison`, `llm`, `assistant`, `auth`, `api`; это директории внутри `backend/app`.

@@ -4,11 +4,11 @@
 корпусе. [Архитектура](../architecture/OVERVIEW.md),
 [приёмка S0–S3](../product/ACCEPTANCE_CRITERIA.md), [Codex](../../AGENTS.md).
 Машиночитаемый реестр: [TASKS.json](TASKS.json); executable prompts — таблица ниже.
-Никаких активных WORK/TASK/luna пакетов: они сохранены в архиве.
+WORK/TASK/luna пакетов в main нет: они сохранены в ветке archive.
 
 ## Реализованная основа и blockers
 
-Каталог/0001/0002, config, FetchGateway/TLS/robots/transport, immutable BlobStore,
+Каталог/0001/0002/0003, config, FetchGateway/TLS/robots/transport, immutable BlobStore,
 operator fetch/import/accept_content, discoveries ВТБ/Кубань Кредит, evidence DTO,
 synthetic PG E2E и CI уже существуют. Не переписывать их.
 Стартовый API/UI есть, бизнес-сервисы ещё нет. New tasks TODO — не утверждение,
@@ -68,7 +68,7 @@ DONE модуля не означает S1/S2/S3 PASS. При data blocker modul
 7. SNAP-19 финальная интеграция/restore/S0–S3 после 17+18.
 
 Один владелец на file tree, отдельные branches/worktrees, один integrator merge.
-Миграции 0003/0004 и Alembic env никогда не редактируются одновременно;
+Планируемые миграции 0004/0005 и Alembic env никогда не редактируются одновременно;
 downstream schema fixes — отдельная follow-up schema owner. Не обновлять task
 statuses/report индексы из разных worktrees одновременно. UI DTO владеет 16,
 UI consumes. CI/compose/README изменяет 19 в финальной волне.

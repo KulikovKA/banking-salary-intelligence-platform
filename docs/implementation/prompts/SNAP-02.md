@@ -5,7 +5,7 @@
 
 ## Цель и ожидаемый результат
 
-Добавочная 0003, ORM для extraction/chunks/snapshot/candidates/evidence/reviews/publication/usage без удаления legacy schema.
+Добавочная 0004, ORM для extraction/chunks/snapshot/candidates/evidence/reviews/publication/usage без удаления legacy schema.
 
 ## Условия начала
 
@@ -19,14 +19,14 @@ DATABASE_DESIGN.md, API_CONTRACTS.md, SECURITY.md и docs/product/ACCEPTANCE_CRI
 Работай offline с synthetic fixtures, если конкретный real/provider run не допущен.
 Не создавай фиктивные разрешения, тарифы, reviewer или PASS. Не запускай scheduler,
 recurring download, notifications, очереди, микросервисы или автоматический paid fallback.
-Сохрани FetchGateway, LocalBlobStore, source recovery, E2E и миграции 0001/0002.
+Сохрани FetchGateway, LocalBlobStore, operator source recovery, E2E и миграции 0001/0002/0003.
 
 ## Файлы и ответственность
 
 - `backend/app/corpus/models.py`
 - `backend/app/tariffs/models.py`
 - `backend/app/llm/models.py`
-- `backend/alembic/versions/0003_snapshot_core.py`
+- `backend/alembic/versions/0004_snapshot_core.py`
 - `backend/alembic/env.py`
 - `backend/tests/test_snapshot_db.py`
 - `backend/tests/test_db_contract.py`
@@ -50,7 +50,7 @@ DB с migrations); frontend lint/typecheck/build при изменении front
 
 ## Параллелизм
 
-Единственный владелец 0003/Alembic env. Можно параллельно с parser/normalization/Fake DTO modules после SNAP-01; shared contract не редактировать.
+Единственный владелец 0004/Alembic env. Можно параллельно с parser/normalization/Fake DTO modules после SNAP-01; shared contract не редактировать.
 
 Используй отдельную ветку/worktree при реальном параллельном запуске. Не spawn
 других агентов без отдельного поручения. Общие lockfiles/миграции/main.py интегрируй

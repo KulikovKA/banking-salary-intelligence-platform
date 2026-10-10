@@ -1,7 +1,7 @@
 """Transactional integration with the existing catalog, not a scheduled worker.
 
-One attempt owns a session/transaction. PG source locks and advisory host locks
-serialize workers. Files are completed first; rollback can leave an orphan but
+One operator attempt owns a transaction. PG source locks and advisory host locks
+serialize concurrent calls. Files are completed first; rollback can leave an orphan but
 cannot commit a DB reference to a partial file. Content acceptance is separate.
 """
 
@@ -11,7 +11,7 @@ import hashlib
 import os
 from collections.abc import Callable, Iterator
 from dataclasses import asdict, dataclass
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -101,7 +101,7 @@ class IngestionService:
                     raise IngestionError("REQUEST_RATE_LIMIT", retry_after=wait)
 
     def fetch_source(self, source_id: str, *, attempt: int = 1) -> AcquisitionOutcome:
-        if attempt < 1 or attempt > self.settings.max_job_attempts:
+        if attempt < 1 or attempt > self.settings.fetch_max_attempts:
             raise IngestionError("ATTEMPT_LIMIT")
         with self.factory.begin() as session:
             source = self._source(session, source_id)
@@ -165,7 +165,7 @@ class IngestionService:
                 source.last_successful_check = now
                 source.state = "healthy"
             except IngestionError as exc:
-                next_attempt = retry_at(exc, attempt, max_attempts=self.settings.max_job_attempts)
+                next_attempt = retry_at(exc, attempt, max_attempts=self.settings.fetch_max_attempts)
                 observation.error_code = exc.code
                 observation.audit_metadata = {
                     **exc.audit,
@@ -361,7 +361,8 @@ class IngestionService:
             version.accepted_at, version.accepted_by = datetime.now(UTC), reviewer
             version.metadata_json = {**version.metadata_json, "applicability": applicability}
 
-    def current_content(self, source_id: str) -> tuple[str | None, bool]:
+    def current_content(self, source_id: str) -> str | None:
+        """Last accepted version for operator inspection, not a snapshot/read permission check."""
         with self.factory() as session:
             source = session.get(Source, source_id)
             if source is None:
@@ -374,13 +375,7 @@ class IngestionService:
                 .order_by(SourceVersion.accepted_at.desc())
                 .limit(1)
             )
-            stale = (
-                source.state != "healthy"
-                or source.last_successful_check is None
-                or source.last_successful_check
-                < datetime.now(UTC) - timedelta(hours=self.settings.source_stale_hours)
-            )
-            return version.id if version else None, stale
+            return version.id if version else None
 
 
 def read_chunks(path: Path) -> Iterator[bytes]:

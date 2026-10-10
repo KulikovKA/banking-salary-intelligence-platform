@@ -34,15 +34,15 @@
         "backend/app/corpus/models.py",
         "backend/app/tariffs/models.py",
         "backend/app/llm/models.py",
-        "backend/alembic/versions/0003_snapshot_core.py",
+        "backend/alembic/versions/0004_snapshot_core.py",
         "backend/alembic/env.py",
         "backend/tests/test_snapshot_db.py",
         "backend/tests/test_db_contract.py"
       ],
-      "outcome": "Добавочная 0003, ORM для extraction/chunks/snapshot/candidates/evidence/reviews/publication/usage без удаления legacy schema.",
+      "outcome": "Добавочная 0004, ORM для extraction/chunks/snapshot/candidates/evidence/reviews/publication/usage без удаления legacy schema.",
       "implementation": "Следуй DATABASE_DESIGN; foreign keys RESTRICT, uniqueness/hash/corpus/state CHECKs, frozen membership DB trigger, append-only payload/review protection. Register metadata imports. Models держи в отдельных модулях, registry не пересоздавай. llm_usage reservations готовит схему, сам provider ещё не реализуй. Решения identity в review оставь operator label + nullable user_id для SNAP-15. Создай factory fixtures отдельной PG DB.",
       "acceptance": "На настоящем PG18 upgrade с 0002 и чистой DB, alembic check, повторный upgrade; forbidden frozen membership UPDATE/INSERT/DELETE, duplicate extraction/publication, FK invalid references. Existing 0001/0002 и ingestion tests green; test_db_contract расширяет точный ожидаемый набор.",
-      "parallelism": "Единственный владелец 0003/Alembic env. Можно параллельно с parser/normalization/Fake DTO modules после SNAP-01; shared contract не редактировать.",
+      "parallelism": "Единственный владелец 0004/Alembic env. Можно параллельно с parser/normalization/Fake DTO modules после SNAP-01; shared contract не редактировать.",
       "prompt": "prompts/SNAP-02.md"
     },
     {
@@ -62,7 +62,7 @@
         "docs/reports/SNAP-03-source-status.md"
       ],
       "outcome": "Ручное формирование draft/frozen corpus из exact accepted versions; реестр coverage/blockers четырёх банков, без выдуманных approval.",
-      "implementation": "Переиспользуй IngestionService/FetchGateway/BlobStore. Manifest хранит references к реальным решениям, hashes, exact source/version/method/scope/date и missing banks, но не secrets. Synthetic example отдельно от real manifest. CLI dry-run validation, add accepted version и freeze после approved published facts/extractions; service read проверяет snapshot membership и revocation вместо legacy 72h stale. Freeze materialized membership только после готовности downstream records; ранние tests используют explicit fixtures. Для источников сначала прочти reports и tests/fixtures/manifests/sources.json, не импортируй исследовательские bytes без отдельного допуска. Real acquisition остаётся blocked до записи ответственного.",
+      "implementation": "Переиспользуй IngestionService/FetchGateway/BlobStore. Manifest хранит references к реальным решениям, hashes, exact source/version/method/scope/date и missing banks, но не secrets. Synthetic example отдельно от real manifest. CLI dry-run validation, add accepted version и freeze после approved published facts/extractions; service read проверяет exact snapshot membership и revocation без periodic freshness/stale. Freeze materialized membership только после готовности downstream records; ранние tests используют explicit fixtures. Для источников сначала прочти docs/research/SOURCE_STATUS.md и tests/fixtures/manifests/sources.json, не импортируй исследовательские bytes без отдельного допуска. Real acquisition остаётся blocked до записи ответственного.",
       "acceptance": "Empty/mixed corpus/fictitious admission/missing original/wrong hash/quarantine rejected; legacy fetch/manual idempotency остаётся; membership deterministic manifest hash, freeze retry без duplicate; revoked rights block read. Real S1 пока NO-GO с перечнем missing basis, synthetic freeze не проходит real gate.",
       "parallelism": "Отдельный corpus owner; параллельно SNAP-04..07/12/15. Не менять existing grants/manifest задним числом; human source review может идти независимо от разработки.",
       "prompt": "prompts/SNAP-03.md"
@@ -304,14 +304,14 @@
       "reasoning_effort": "high",
       "owned_paths": [
         "backend/app/auth/**",
-        "backend/alembic/versions/0004_auth.py",
+        "backend/alembic/versions/0005_auth.py",
         "backend/alembic/env.py",
         "backend/tests/test_auth_sessions.py",
         "pyproject.toml",
         "uv.lock"
       ],
       "outcome": "Admin bootstrap/invite login, Argon2id passwords, DB sessions, RBAC/CSRF dependencies.",
-      "implementation": "Следуй SECURITY, official password hashing docs проверить при реализации. Add argon2-cffi после parser dependency merges. Dedicated auth 0004 после 0003, integrate metadata sequentially. Один use invite/reset при row lock, rotation/expiry/revoke, last-admin guard, login rate limits, no email infrastructure. Expose FastAPI dependency/router factory для SNAP-16, не менять main.py. Production Settings сохраняй, auth local HTTP cookie и test identity контролируемо; config changes согласовать с SNAP-13 после его merge. Не сохранять chat data.",
+      "implementation": "Следуй SECURITY, official password hashing docs проверить при реализации. Add argon2-cffi после parser dependency merges. Dedicated auth 0005 после 0004, integrate metadata sequentially. Один use invite/reset при row lock, rotation/expiry/revoke, last-admin guard, login rate limits, no email infrastructure. Expose FastAPI dependency/router factory для SNAP-16, не менять main.py. Production Settings сохраняй, auth local HTTP cookie и test identity контролируемо; config changes согласовать с SNAP-13 после его merge. Не сохранять chat data.",
       "acceptance": "Actual PG invite race, hash-only tokens, password check/rotation/logout/idle+absolute expiry; admin vs analyst, session A/B, CSRF/Origin/session fixation, brute-force generic responses, last admin guard. Migration check и existing production config tests. Нет default production password.",
       "parallelism": "Основной auth код параллельно pipeline/search/comparison/LLM; migration env/lockfiles edits после SNAP-02/04/05 merge, config.py не трогать до SNAP-13. Один владелец auth revision.",
       "prompt": "prompts/SNAP-15.md"

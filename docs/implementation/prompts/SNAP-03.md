@@ -19,7 +19,7 @@ DATABASE_DESIGN.md, API_CONTRACTS.md, SECURITY.md и docs/product/ACCEPTANCE_CRI
 Работай offline с synthetic fixtures, если конкретный real/provider run не допущен.
 Не создавай фиктивные разрешения, тарифы, reviewer или PASS. Не запускай scheduler,
 recurring download, notifications, очереди, микросервисы или автоматический paid fallback.
-Сохрани FetchGateway, LocalBlobStore, source recovery, E2E и миграции 0001/0002.
+Сохрани FetchGateway, LocalBlobStore, operator source recovery, E2E и миграции 0001/0002/0003.
 
 ## Файлы и ответственность
 
@@ -36,7 +36,7 @@ recurring download, notifications, очереди, микросервисы ил
 
 ## Реализация и ограничения
 
-Переиспользуй IngestionService/FetchGateway/BlobStore. Manifest хранит references к реальным решениям, hashes, exact source/version/method/scope/date и missing banks, но не secrets. Synthetic example отдельно от real manifest. CLI dry-run validation, add accepted version и freeze после approved published facts/extractions; service read проверяет snapshot membership и revocation вместо legacy 72h stale. Freeze materialized membership только после готовности downstream records; ранние tests используют explicit fixtures. Для источников сначала прочти reports и tests/fixtures/manifests/sources.json, не импортируй исследовательские bytes без отдельного допуска. Real acquisition остаётся blocked до записи ответственного.
+Переиспользуй IngestionService/FetchGateway/BlobStore. Manifest хранит references к реальным решениям, hashes, exact source/version/method/scope/date и missing banks, но не secrets. Synthetic example отдельно от real manifest. CLI dry-run validation, add accepted version и freeze после approved published facts/extractions; service read проверяет exact snapshot membership и revocation без periodic freshness/stale. Freeze materialized membership только после готовности downstream records; ранние tests используют explicit fixtures. Для источников сначала прочти docs/research/SOURCE_STATUS.md и tests/fixtures/manifests/sources.json, не импортируй исследовательские bytes без отдельного допуска. Real acquisition остаётся blocked до записи ответственного.
 
 ## Тесты и критерии приёмки
 

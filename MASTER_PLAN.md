@@ -2,4 +2,4 @@
 
 Единственный активный план: [snapshot MASTER_PLAN](docs/implementation/MASTER_PLAN.md).
 Инструкции исполнителю: [AGENTS.md](AGENTS.md).
-Предыдущие WORK/TASK планы — [исторический архив](docs/archive/README.md).
+Предыдущие WORK/TASK планы — [исторический архив](https://github.com/KulikovKA/banking-salary-intelligence-platform/tree/archive).

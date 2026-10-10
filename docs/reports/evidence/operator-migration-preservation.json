@@ -1,0 +1,17 @@
+{
+  "result": "PASS",
+  "preserved_counts": {
+    "banks": 6,
+    "sources": 2,
+    "source_policies": 2,
+    "blobs": 4,
+    "source_versions": 4,
+    "source_fetches": 14,
+    "job_runs": 0
+  },
+  "legacy_values_and_blob_hashes_unchanged": true,
+  "schema_changes": [
+    "sources.schedule_seconds DEFAULT 1"
+  ],
+  "revision": "0003_operator_only"
+}

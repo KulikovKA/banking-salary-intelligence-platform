@@ -3,11 +3,13 @@
 import os
 from dataclasses import asdict
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from uuid import uuid4
 
 import httpx2 as httpx
 import pytest
-from sqlalchemy import create_engine, func, select, text
+from alembic.script import ScriptDirectory
+from sqlalchemy import create_engine, func, inspect, select, text
 from sqlalchemy.orm import sessionmaker
 
 from app.config import Settings
@@ -74,7 +76,6 @@ def catalog(tmp_path):
                 canonical_url="https://example.com/doc.pdf",
                 kind="pdf",
                 corpus_kind="synthetic",
-                schedule_seconds=86400,
             )
         )
     settings = Settings(app_env="test")
@@ -114,7 +115,7 @@ def test_fetch_versions_quarantine_dedup_and_last_good(catalog):
     assert first.result == "success", first.error_code
     with factory() as session:
         assert session.get(SourceVersion, first.version_id).content_state == "quarantine"
-    assert service.current_content(source_id)[0] is None
+    assert service.current_content(source_id) is None
     service.accept_content(first.version_id, reviewer="tester", applicability={"scope": "unknown"})
     second = service.fetch_source(source_id)
     assert second.result == "success", second.error_code
@@ -139,11 +140,11 @@ def test_fetch_versions_quarantine_dedup_and_last_good(catalog):
     state["body"] = b"%PDF-1.7 synthetic-two"
     third = service.fetch_source(source_id)
     assert third.result == "success" and third.version_id != first.version_id
-    assert service.current_content(source_id)[0] == first.version_id
+    assert service.current_content(source_id) == first.version_id
     state["status"] = 403
     failed = service.fetch_source(source_id)
     assert failed.error_code == "HTTP_FORBIDDEN"
-    assert service.current_content(source_id) == (first.version_id, True)
+    assert service.current_content(source_id) == first.version_id
     with factory() as session:
         keys = set(
             session.scalars(
@@ -261,11 +262,14 @@ def test_real_manual_import_is_blocked_before_file_read(catalog, tmp_path):
 
 def test_schema_matches_migration(catalog):
     _, factory, _, _, _ = catalog
+    head = ScriptDirectory(str(Path(__file__).resolve().parents[1] / "alembic")).get_current_head()
     with factory() as session:
-        assert (
-            session.scalar(text("select version_num from alembic_version"))
-            == "0002_source_recovery"
-        )
+        assert session.scalar(text("select version_num from alembic_version")) == head
+        schema = inspect(session.connection())
+        assert "job_runs" in schema.get_table_names()  # Retired physical audit data is not dropped.
+        columns = {c["name"]: c for c in schema.get_columns("sources")}
+        assert columns["schedule_seconds"]["default"] == "1"
+        assert "next_check_at" in columns
 
 
 def test_content_acceptance_rechecks_hash_and_preserves_last_accepted(catalog):
@@ -285,7 +289,7 @@ def test_content_acceptance_rechecks_hash_and_preserves_last_accepted(catalog):
         )
     with factory() as session:
         assert session.get(SourceVersion, second.version_id).content_state == "quarantine"
-    assert service.current_content(source_id)[0] == first.version_id
+    assert service.current_content(source_id) == first.version_id
 
 
 def test_content_acceptance_cannot_overwrite_previous_review(catalog):
