@@ -57,4 +57,8 @@ extends owned paths to schema/tests; frozen public DTO/Protocols are unchanged.
 Final provenance review: frozen read now rechecks exact extraction/source/raw hash,
 and admission/read both authorize every recorded redirect and final URL.
 Regression tests reject unapproved redirects and a changed original pointer.
-Corpus suite: 13 passed; Ruff/mypy PASS. No source grant or original was added.
+The first added-pointer test failed at FORMAT_INVALID (synthetic replacement lacked
+the PDF container signature); its fixture was corrected before final validation.
+No real source grant or original was added.
+
+Final corpus validation after fixture correction: 13 passed; Ruff/mypy PASS.
