@@ -94,7 +94,11 @@ Dedicated PostgreSQL 18 database `bsi_snap13_test`; migrations through `0004_sna
   0 failed, 0 skipped.
 - `uv run python tools/validate_docs.py` — PASS, 19 prompts and DAG/status checks.
 - `git diff --check` — PASS.
-- Frontend lint/typecheck/build and browser E2E — NOT RUN; no frontend changes.
+- GitHub Actions [CI run 38077743888](https://github.com/KulikovKA/banking-salary-intelligence-platform/actions/runs/38077743888)
+  for implementation commit `25c224870c5d7af31a0ab7811f547306fc31db15` — PASS; backend
+  and frontend jobs succeeded, including the existing offline synthetic document E2E.
+- Local frontend lint/typecheck/build and browser E2E — NOT RUN; no frontend changes.
+  CI frontend lint/typecheck/build passed as recorded above.
 - Live Groq request — NOT RUN; tests use HTTP mocks only.
 
 ## Limitations and next step
