@@ -25,7 +25,7 @@ S2/S3 NOT EVALUATED; полный S0 ждёт реализации нового 
 
 | Prompt | Результат | Merged зависимости | Effort | Status |
 |---|---|---|---|---|
-| [SNAP-01](prompts/SNAP-01.md) | Зафиксировать исполняемые DTO и Protocol | — | high | TODO |
+| [SNAP-01](prompts/SNAP-01.md) | Зафиксировать исполняемые DTO и Protocol | — | high | DONE |
 | [SNAP-02](prompts/SNAP-02.md) | Добавить schema snapshot и тарифного pipeline | SNAP-01 | high | TODO |
 | [SNAP-03](prompts/SNAP-03.md) | Операторский corpus manifest и freeze service | SNAP-02 | high | TODO |
 | [SNAP-04](prompts/SNAP-04.md) | PDF parser с page/table evidence | SNAP-01 | high | TODO |

@@ -10,7 +10,7 @@
       "id": "SNAP-01",
       "title": "Зафиксировать исполняемые DTO и Protocol",
       "deps": [],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "high",
       "owned_paths": [
         "backend/app/contracts/**",
