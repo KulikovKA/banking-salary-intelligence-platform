@@ -88,6 +88,7 @@ def test_unknown_usage_keeps_daily_reservation_and_crashed_reservation_releases_
                     model_id="openai/gpt-oss-120b",
                 )
             )
+
         # Stale reservations still consume daily tokens but no longer block the
         # global/user in-flight concurrency slot after a crashed process.
         assert reserve(budget, next_id, user, 99)
@@ -102,3 +103,20 @@ def test_unknown_usage_keeps_daily_reservation_and_crashed_reservation_releases_
                     )
                 )
             )
+
+
+def test_short_window_request_ceiling_survives_reservation_release(budget_factory):
+    first, second = uuid4(), uuid4()
+    budget = PostgresTokenBudget(
+        budget_factory, daily_token_limit=10_000, minute_request_limit=2,
+    )
+    try:
+        asyncio.run(budget.reserve(first, None, 50, "openai/gpt-oss-120b"))
+        asyncio.run(budget.release(first))
+        with pytest.raises(BudgetRejected):
+            asyncio.run(budget.reserve(second, None, 50, "openai/gpt-oss-120b"))
+    finally:
+        with budget_factory.begin() as session:
+            session.execute(delete(LLMUsage).where(
+                LLMUsage.request_id.in_([str(first), str(second)])
+            ))

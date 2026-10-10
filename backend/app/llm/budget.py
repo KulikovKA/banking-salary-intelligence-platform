@@ -47,13 +47,18 @@ class PostgresTokenBudget:
         daily_token_limit: int,
         global_concurrency: int = 1,
         user_concurrency: int = 1,
+        minute_request_limit: int = 20,
+        minute_token_limit: int = 8000,
     ) -> None:
-        if min(daily_token_limit, global_concurrency, user_concurrency) <= 0:
+        if min(daily_token_limit, global_concurrency, user_concurrency,
+               minute_request_limit, minute_token_limit) <= 0:
             raise ValueError("BUDGET_LIMITS_MUST_BE_POSITIVE")
         self._factory = factory
         self.daily_token_limit = daily_token_limit
         self.global_concurrency = global_concurrency
         self.user_concurrency = user_concurrency
+        self.minute_request_limit = minute_request_limit
+        self.minute_token_limit = minute_token_limit
 
     async def reserve(
         self, request_id: UUID, user_id: str | None, tokens: int, model_id: str
@@ -100,6 +105,16 @@ class PostgresTokenBudget:
                     LLMUsage.created_at < end,
                 )
             )
+            minute_count, minute_tokens = session.execute(
+                select(func.count(), func.coalesce(func.sum(self._accounted_tokens()), 0))
+                .where(LLMUsage.created_at >= now - timedelta(minutes=1))
+            ).one()
+            # One completion can dispatch twice. Charge both slots conservatively
+            # without adding a parallel counter schema or relying on one process.
+            if minute_count * 2 + 2 > self.minute_request_limit:
+                raise BudgetRejected
+            if int(minute_tokens) + tokens > self.minute_token_limit:
+                raise BudgetRejected
             active_since = now - timedelta(minutes=2)
             active = session.scalar(
                 select(func.count()).select_from(LLMUsage).where(

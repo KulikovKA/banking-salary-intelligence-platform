@@ -111,3 +111,25 @@ question. A live Groq smoke remains NOT RUN and does not block this offline adap
 
 The integrator should update task status only after PR review/merge; S0–S3 and G1/G2 are
 not claimed as passed by this implementation report.
+
+## Integrator review corrections (2026-10-10)
+
+The initial adapter counted one token allowance even when retry dispatched twice,
+and the character/3 estimate underestimated Cyrillic. The adapter now uses a
+conservative UTF-8 byte allowance including strict schema and framing, charges
+each dispatch, and permits retry only within shared input/output caps. Successful
+usage replaces that dispatch estimate. HTTP 200 with non-JSON content and cancelled
+dispatches retain unknown usage; duplicate JSON keys, tool calls and truncated
+finish reasons fail validation. Per-call wait_for is capped at 20 seconds. The
+HTTP client is reused and exposes `aclose` for the composition lifespan owner.
+
+PostgreSQL short-window admission uses the same global advisory lock and usage
+records. Configurable constructor ceilings default to 20 worst-case dispatch slots
+and 8000 estimated tokens/minute; each completion reserves two request slots to
+cover a possible retry. These are conservative ceilings, not account entitlements.
+The assistant must use the shared question scope and bind an authenticated user.
+
+Official structured-output/rate-limit and Argon2 documentation were reread on
+2026-10-10. No live provider call was made. Relevant LLM contract/HTTP/budget
+checks: 72 passed on dedicated PostgreSQL 18; Ruff and mypy PASS. Intermediate
+test edit failures were corrected before committing. Real Groq smoke NOT RUN.

@@ -9,7 +9,14 @@ import httpx2 as httpx
 import pytest
 
 from app.config import Settings
-from app.contracts.llm import IntentResult, LLMError, LLMMessage, LLMRequest, LLMResponse
+from app.contracts.llm import (
+    ExplainResult,
+    IntentResult,
+    LLMError,
+    LLMMessage,
+    LLMRequest,
+    LLMResponse,
+)
 from app.llm.groq import GroqLLM, _payload, _retry_after_ms, _validate_base
 
 _KEY = "canary-groq-secret-do-not-log"
@@ -95,6 +102,20 @@ def valid_body(*, usage: dict[str, int] | None = None) -> dict[str, object]:
     }
 
 
+def explain_request() -> LLMRequest:
+    schema = ExplainResult.model_json_schema()
+    schema.update(allowed_claim_ids=[], allowed_templates=[])
+    return make_request().model_copy(update={"purpose": "explain", "output_schema": schema})
+
+
+def explain_body() -> dict[str, object]:
+    body = valid_body()
+    body["choices"] = [{"finish_reason": "stop", "message": {"content": json.dumps({
+        "schema_version": 1, "ordered_claim_ids": [], "template_by_claim": {},
+    })}}]
+    return body
+
+
 def configured_client(handler, budget: BudgetStub | None = None) -> tuple[GroqLLM, BudgetStub]:
     selected_budget = budget or BudgetStub()
     transport = httpx.MockTransport(handler)
@@ -173,10 +194,10 @@ def test_429_retries_once_only_when_retry_after_fits_deadline() -> None:
         calls += 1
         if calls == 1:
             return httpx.Response(429, headers={"retry-after": "0"}, json={"error": "busy"})
-        return httpx.Response(200, json=valid_body())
+        return httpx.Response(200, json=explain_body())
 
     client, _ = configured_client(handler)
-    assert isinstance(run(client), LLMResponse)
+    assert isinstance(run(client, explain_request()), LLMResponse)
     assert calls == 2
 
 
@@ -254,7 +275,7 @@ def test_network_timeout_unknown_usage_and_budget_exhaustion() -> None:
         raise httpx.ReadTimeout("private timeout detail", request=request)
 
     client, budget = configured_client(timeout)
-    assert run(client) == LLMError(code="timeout")
+    assert run(client, explain_request()) == LLMError(code="timeout")
     assert timeout_calls == 2
     assert budget.unknown == [UUID(int=11)]
 
@@ -318,3 +339,55 @@ def test_retry_after_supports_seconds_and_http_dates() -> None:
     schema = _payload(make_request(), "openai/gpt-oss-120b", 128)["response_format"]
     assert isinstance(schema, dict)
     assert schema["json_schema"]["strict"] is True
+
+
+def test_ambiguous_retry_cannot_exceed_shared_output_token_cap() -> None:
+    calls = 0
+
+    def handler(request):
+        nonlocal calls
+        calls += 1
+        return httpx.Response(503)
+
+    client, budget = configured_client(handler)
+    request = explain_request().model_copy(update={"max_output_tokens": 600})
+    assert run(client, request) == LLMError(code="unavailable")
+    assert calls == 1
+    assert len(budget.unknown) == 1
+
+
+def test_large_utf8_input_is_rejected_before_dispatch_or_reservation() -> None:
+    client, budget = configured_client(lambda request: pytest.fail("must not dispatch"))
+    request = make_request().model_copy(update={
+        "messages": (LLMMessage(role="user", content="\u0416" * 2000),),
+    })
+    assert run(client, request) == LLMError(code="context_exceeded")
+    assert budget.reserved == []
+
+
+def test_non_json_http_success_preserves_unknown_usage() -> None:
+    client, budget = configured_client(lambda request: httpx.Response(200, text="not JSON"))
+    assert run(client) == LLMError(code="invalid_output")
+    assert budget.unknown == [_DEFAULT_REQUEST_ID]
+    assert budget.released == []
+
+
+def test_cancelled_dispatched_request_preserves_unknown_usage() -> None:
+    async def handler(request):
+        raise asyncio.CancelledError
+
+    client, budget = configured_client(handler)
+    with pytest.raises(asyncio.CancelledError):
+        run(client)
+    assert budget.unknown == [_DEFAULT_REQUEST_ID]
+
+
+def test_duplicate_json_keys_and_truncated_finish_are_rejected() -> None:
+    body = valid_body()
+    body["choices"][0]["message"]["content"] = '{"intent":"clarify","intent":"search"}'
+    client, _ = configured_client(lambda request: httpx.Response(200, json=body))
+    assert run(client) == LLMError(code="invalid_output")
+    body = valid_body()
+    body["choices"][0]["finish_reason"] = "length"
+    client, _ = configured_client(lambda request: httpx.Response(200, json=body))
+    assert run(client) == LLMError(code="invalid_output")

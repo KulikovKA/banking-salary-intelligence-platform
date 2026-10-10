@@ -67,6 +67,13 @@ class GroqLLM(LLMClient):
         self._max_output = settings.llm_max_output_tokens
         self._daily_limit = settings.llm_daily_token_budget
         self._client_factory = client_factory
+        self._client: httpx.AsyncClient | None = None
+
+    async def aclose(self) -> None:
+        """Close the reusable transport from the application lifespan owner."""
+        if self._client is not None:
+            await self._client.aclose()
+            self._client = None
 
     @asynccontextmanager
     async def question_scope(self) -> AsyncIterator[None]:
@@ -84,7 +91,9 @@ class GroqLLM(LLMClient):
         started = time.monotonic()
         prompt_estimate = _estimate_tokens(request)
         output_cap = min(request.max_output_tokens, self._max_output)
-        scope = _question_scope.get()
+        if prompt_estimate > self._max_input or request.max_output_tokens > self._max_output:
+            return LLMError(code="context_exceeded")
+        scope = _question_scope.get() or _QuestionScope(started + self._total_timeout)
         attempts = min(self._max_attempts, 2)
         if scope is not None:
             attempts = min(attempts, 2 - scope.dispatched)
@@ -98,6 +107,13 @@ class GroqLLM(LLMClient):
             return LLMError(code="context_exceeded")
         reservation = prompt_estimate + output_cap
         # An ambiguous failed attempt may have consumed the entire reservation.
+        attempts = min(
+            attempts,
+            (self._max_input - scope.input_tokens) // prompt_estimate,
+            (self._max_output - scope.output_tokens) // output_cap,
+        )
+        if attempts <= 0:
+            return LLMError(code="budget_exceeded")
         reserved_total = reservation * attempts
         if reserved_total > self._daily_limit:
             return LLMError(code="budget_exceeded")
@@ -110,10 +126,6 @@ class GroqLLM(LLMClient):
         except Exception:
             _LOG.warning("llm_budget_unavailable")
             return LLMError(code="unavailable")
-        if scope is not None:
-            scope.input_tokens += prompt_estimate
-            scope.output_tokens += output_cap
-
         deadline = started + min(self._total_timeout, request.timeout_ms / 1000)
         if scope is not None:
             deadline = min(deadline, scope.deadline)
@@ -126,15 +138,18 @@ class GroqLLM(LLMClient):
         status_error: str | None = None
         timeout = httpx.Timeout(self._call_timeout)
         try:
-            async with self._client_factory(
-                timeout=timeout,
-                follow_redirects=False,
-                trust_env=False,
-                headers={
-                    "Authorization": f"Bearer {self._key}",
-                    "Content-Type": "application/json",
-                },
-            ) as client:
+            if self._client is None:
+                self._client = self._client_factory(
+                    timeout=timeout,
+                    follow_redirects=False,
+                    trust_env=False,
+                    headers={
+                        "Authorization": f"Bearer {self._key}",
+                        "Content-Type": "application/json",
+                    },
+                )
+            client = self._client
+            try:
                 for attempt in range(attempts):
                     remaining = deadline - time.monotonic()
                     if remaining <= 0:
@@ -147,13 +162,15 @@ class GroqLLM(LLMClient):
                                 status_error = "budget_exceeded"
                                 break
                             scope.dispatched += 1
+                            scope.input_tokens += prompt_estimate
+                            scope.output_tokens += output_cap
                         response = await asyncio.wait_for(
                             client.post(
                                 f"{self._base}/chat/completions",
                                 json=_payload(request, self._model, output_cap),
                                 timeout=min(self._call_timeout, remaining),
                             ),
-                            timeout=remaining,
+                            timeout=min(self._call_timeout, remaining),
                         )
                     except (TimeoutError, httpx.TimeoutException):
                         ambiguous = True
@@ -172,6 +189,7 @@ class GroqLLM(LLMClient):
                             response_data = response.json()
                         except (ValueError, TypeError):
                             status_error = "invalid_output"
+                            ambiguous = True
                         break
                     if response.status_code == 401 or response.status_code == 403:
                         status_error = "auth"
@@ -203,6 +221,11 @@ class GroqLLM(LLMClient):
                         else "invalid_output"
                     )
                     break
+            except asyncio.CancelledError:
+                await asyncio.shield(
+                    self._preserve_usage(request.request_id, dispatched, dispatched)
+                )
+                raise
         except (TimeoutError, httpx.TimeoutException):
             status_error = "timeout"
             ambiguous = dispatched
@@ -237,6 +260,11 @@ class GroqLLM(LLMClient):
                     _LOG.warning("llm_usage_settlement_failed")
                     return LLMError(code="unavailable")
                 estimated = False
+                # Replace the successful dispatch estimate with authoritative usage.
+                scope.input_tokens += used_prompt - prompt_estimate
+                scope.output_tokens += used_completion - output_cap
+            if scope.input_tokens > self._max_input or scope.output_tokens > self._max_output:
+                return LLMError(code="budget_exceeded")
             return LLMResponse(
                 parsed_json=result,
                 usage=LLMUsage(
@@ -299,9 +327,12 @@ def _validate_base(value: str) -> str:
 
 
 def _estimate_tokens(request: LLMRequest) -> int:
-    # Conservative character heuristic; provider token usage settles the reservation.
-    chars = sum(len(message.content) for message in request.messages)
-    return max(1, (chars + 2) // 3)
+    # UTF-8 byte upper bound includes strict schema and message framing. Character/3
+    # underestimates Cyrillic and arbitrary text; actual usage settles successful calls.
+    schema = json.dumps(
+        _provider_schema(request.output_schema), ensure_ascii=False, separators=(",", ":")
+    ).encode("utf-8")
+    return len(schema) + sum(len(m.content.encode("utf-8")) + 64 for m in request.messages) + 256
 
 
 def _payload(request: LLMRequest, model: str, max_tokens: int) -> dict[str, object]:
@@ -440,7 +471,9 @@ def _decode(
     content = message.get("content")
     if not isinstance(content, str):
         raise OutputValidationError("CONTENT_MISSING")
-    parsed = json.loads(content)
+    if message.get("tool_calls") or message.get("function_call"):
+        raise OutputValidationError("TOOLS_FORBIDDEN")
+    parsed = json.loads(content, object_pairs_hook=_unique_object)
     parsed = _clean_wire_payload(request.purpose, parsed)
     normalized = validate_output(request, parsed)
     usage = data.get("usage")
@@ -452,9 +485,18 @@ def _decode(
     finish_reason = choice.get("finish_reason")
     if provider_id is not None and not isinstance(provider_id, str):
         provider_id = None
-    if not isinstance(finish_reason, str) or not finish_reason:
+    if finish_reason != "stop":
         raise OutputValidationError("FINISH_REASON_MISSING")
     return normalized, prompt_tokens, completion_tokens, provider_id, finish_reason
+
+
+def _unique_object(pairs: list[tuple[str, object]]) -> dict[str, object]:
+    result: dict[str, object] = {}
+    for key, value in pairs:
+        if key in result:
+            raise OutputValidationError("DUPLICATE_JSON_KEY")
+        result[key] = value
+    return result
 
 
 def _clean_wire_payload(purpose: str, payload: object) -> object:
@@ -491,7 +533,7 @@ def _retry_after_ms(value: str | None) -> int | None:
         return None
     try:
         return max(0, min(300_000, int(float(value) * 1000)))
-    except ValueError:
+    except (ValueError, OverflowError):
         try:
             target = parsedate_to_datetime(value)
             if target.tzinfo is None:
