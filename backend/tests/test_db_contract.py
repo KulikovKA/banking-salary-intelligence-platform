@@ -3,8 +3,11 @@ from sqlalchemy import Column, Integer, MetaData, Table, create_engine, select
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import sessionmaker
 
+from app.corpus import models as corpus_models  # noqa: F401
 from app.db.base import Base, transaction
+from app.llm import models as llm_models  # noqa: F401
 from app.registry.seed import BANKS, seed_banks
+from app.tariffs import models as tariff_models  # noqa: F401
 
 
 def test_initial_registry_schema_contains_only_catalog_and_ingestion_tables() -> None:
@@ -15,6 +18,15 @@ def test_initial_registry_schema_contains_only_catalog_and_ingestion_tables() ->
         "blobs",
         "source_versions",
         "source_fetches",
+        "snapshots",
+        "extraction_runs",
+        "document_chunks",
+        "snapshot_members",
+        "tariff_candidates",
+        "evidence_refs",
+        "fact_reviews",
+        "published_facts",
+        "llm_usage",
     }
 
 
