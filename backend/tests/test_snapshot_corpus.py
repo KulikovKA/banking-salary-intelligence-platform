@@ -395,7 +395,7 @@ def test_frozen_read_rejects_changed_original_pointer(corpus_db):
     service.add_version(manifest, 0)
     _publish_fixture(factory, ids)
     service.freeze(manifest)
-    replacement = store.put([b"different synthetic original"], "pdf", "synthetic")
+    replacement = store.put([b"%PDF-1.7 different synthetic original\n"], "pdf", "synthetic")
     with factory.begin() as session:
         blob = Blob(**asdict(replacement), verified_at=datetime.now(UTC))
         session.add(blob)
