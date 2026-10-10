@@ -8,6 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
+from app.auth import models as auth_models  # noqa: F401
 from app.corpus import models as corpus_models  # noqa: F401
 from app.db.base import Base
 from app.db.migration_scope import include_object

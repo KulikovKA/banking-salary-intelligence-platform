@@ -3,6 +3,7 @@ from sqlalchemy import Column, Integer, MetaData, Table, create_engine, select
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import sessionmaker
 
+from app.auth import models as auth_models  # noqa: F401
 from app.corpus import models as corpus_models  # noqa: F401
 from app.db.base import Base, transaction
 from app.llm import models as llm_models  # noqa: F401
@@ -27,6 +28,11 @@ def test_initial_registry_schema_contains_only_catalog_and_ingestion_tables() ->
         "fact_reviews",
         "published_facts",
         "llm_usage",
+        "users",
+        "invitations",
+        "password_resets",
+        "sessions",
+        "auth_audit",
     }
 
 
