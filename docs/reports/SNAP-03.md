@@ -53,3 +53,8 @@ Checks on dedicated PostgreSQL 18 `bsi_wave2_test`: Alembic upgrade/check PASS;
 first full run 208 passed / 1 failed (null UUID handling), corrected corpus/schema
 regressions 17 passed; Ruff and strict mypy PASS. This explicit integrator change
 extends owned paths to schema/tests; frozen public DTO/Protocols are unchanged.
+
+Final provenance review: frozen read now rechecks exact extraction/source/raw hash,
+and admission/read both authorize every recorded redirect and final URL.
+Regression tests reject unapproved redirects and a changed original pointer.
+Corpus suite: 13 passed; Ruff/mypy PASS. No source grant or original was added.

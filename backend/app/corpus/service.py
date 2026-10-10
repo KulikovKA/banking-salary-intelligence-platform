@@ -196,6 +196,9 @@ class CorpusService:
             manifest.corpus_kind,
             item.acquisition_method,
             item.original_url,
+            tuple(fetch.redirect_chain) + (
+                (item.final_url,) if item.final_url != item.original_url else ()
+            ),
         )
         applicability = version.metadata_json.get("applicability")
         if not isinstance(applicability, dict) or applicability != item.scope:
@@ -253,6 +256,7 @@ class CorpusService:
         corpus_kind: str,
         method: str,
         url: str,
+        redirects: tuple[str, ...] = (),
     ) -> None:
         try:
             grant = AcquisitionPolicy.model_validate(policy.acquisition_config.get(method))
@@ -270,6 +274,8 @@ class CorpusService:
             ):
                 raise CorpusError("PERMISSION_MISMATCH")
             grant.authorize(url, method)
+            for target in redirects:
+                grant.authorize(target, method, redirect=True)
         except CorpusError:
             raise
         except (ValidationError, IngestionError, TypeError) as exc:
@@ -412,11 +418,12 @@ class CorpusService:
             if snapshot is None or snapshot.state != "frozen":
                 raise CorpusError("SNAPSHOT_NOT_READABLE")
             row = session.execute(
-                select(SourceVersion, Source, SourcePolicy, Blob)
+                select(SourceVersion, Source, SourcePolicy, Blob, ExtractionRun)
                 .join(Source, Source.id == SourceVersion.source_id)
                 .join(SourcePolicy, SourcePolicy.id == Source.policy_id)
                 .join(Blob, Blob.id == SourceVersion.blob_id)
                 .join(SnapshotMember, SnapshotMember.source_version_id == SourceVersion.id)
+                .join(ExtractionRun, ExtractionRun.id == SnapshotMember.extraction_run_id)
                 .where(
                     SnapshotMember.snapshot_id == snapshot.id,
                     SourceVersion.id == str(source_version_id),
@@ -424,11 +431,15 @@ class CorpusService:
             ).first()
             if row is None:
                 raise CorpusError("SNAPSHOT_MEMBER_UNKNOWN")
-            version, source, policy, blob = row
+            version, source, policy, blob, extraction = row
             if (
                 version.content_state != "accepted"
                 or source.corpus_kind != snapshot.corpus_kind
                 or blob.corpus_kind != snapshot.corpus_kind
+                or extraction.source_version_id != version.id
+                or extraction.raw_sha256 != blob.sha256
+                or extraction.corpus_kind != snapshot.corpus_kind
+                or extraction.status != "ok"
             ):
                 raise CorpusError("SNAPSHOT_MEMBER_INVALID")
             if policy.collection_decision != "approved":
@@ -443,6 +454,8 @@ class CorpusService:
                 raise CorpusError("PROVENANCE_UNKNOWN")
             if (
                 fetch.source_version_id != version.id
+                or fetch.source_id != source.id
+                or fetch.final_url is None
                 or fetch.result not in {"success", "manual_imported", "not_modified"}
             ):
                 raise CorpusError("ACQUISITION_NOT_SUCCESSFUL")
@@ -452,6 +465,9 @@ class CorpusService:
                 snapshot.corpus_kind,
                 fetch.acquisition_method,
                 fetch.requested_url,
+                tuple(fetch.redirect_chain) + (
+                    (fetch.final_url,) if fetch.final_url != fetch.requested_url else ()
+                ),
             )
             try:
                 return self.store.verify(self.ingestion._receipt(blob))
