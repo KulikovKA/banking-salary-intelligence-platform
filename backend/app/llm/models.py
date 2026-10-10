@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import uuid4
 
-from sqlalchemy import CheckConstraint, DateTime, Index, Integer, String, func
+from sqlalchemy import CheckConstraint, DateTime, ForeignKeyConstraint, Index, Integer, String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -13,6 +13,9 @@ from app.db.base import Base
 class LLMUsage(Base):
     __tablename__ = "llm_usage"
     __table_args__ = (
+        ForeignKeyConstraint(
+            ["user_id"], ["users.id"], name="fk_llm_usage_user_id", ondelete="RESTRICT"
+        ),
         CheckConstraint("window_started_at <= created_at", name="ck_llm_usage_window_start"),
         CheckConstraint("reserved_tokens > 0", name="ck_llm_usage_reserved_positive"),
         CheckConstraint(

@@ -17,6 +17,8 @@ dependencies = [
     "protego>=0.7,<0.8",
     "cryptography>=44,<49",
     "pdfplumber>=0.11,<0.12",
+    "openpyxl>=3.1,<4",
+    "argon2-cffi>=25.1.0",
 ]
 
 [dependency-groups]
@@ -24,6 +26,7 @@ dev = [
     "mypy>=1.20,<1.21",
     "pytest>=9.1,<9.2",
     "ruff>=0.16,<0.17",
+    "types-openpyxl>=3.1,<4",
 ]
 
 [tool.pytest.ini_options]

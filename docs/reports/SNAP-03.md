@@ -39,7 +39,7 @@ Synthetic PostgreSQL harness подтверждает composition/freeze/read in
 
 The initial PR allowed freeze without reviewed publication and could not provide
 a draft original before extraction. Sequential migration `0004a_corpus_gates`
-preserves 0001?0004 and permits approved publication only in a locked draft.
+preserves 0001–0004 and permits approved publication only in a locked draft.
 Freeze requires publication for every exact member and rejects orphan facts.
 Frozen publication is closed. PostgreSQL fixtures explicitly publish reviewed
 synthetic evidence before freeze; the service never approves candidates itself.
