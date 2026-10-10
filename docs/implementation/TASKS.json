@@ -28,7 +28,7 @@
       "deps": [
         "SNAP-01"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "high",
       "owned_paths": [
         "backend/app/corpus/models.py",
@@ -73,7 +73,7 @@
       "deps": [
         "SNAP-01"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "high",
       "owned_paths": [
         "backend/app/parsing/pdf.py",
@@ -134,7 +134,7 @@
       "deps": [
         "SNAP-01"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "high",
       "owned_paths": [
         "backend/app/tariffs/normalize.py",
@@ -235,7 +235,7 @@
       "deps": [
         "SNAP-01"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "medium",
       "owned_paths": [
         "backend/app/llm/base.py",

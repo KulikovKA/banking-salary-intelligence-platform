@@ -1,8 +1,8 @@
-﻿# SNAP-12 — typed offline Fake LLM
+# SNAP-12 — typed offline Fake LLM
 
 ## Result and integration base
 
-SNAP-12 implementation is ready for integration after local review and the checks below.
+SNAP-12 is implemented, reviewed, and merged into main; the first four-task wave is complete.
 Original base: `ea6ae1a2f2f174981d8706b88a6192361d56df8b`.
 Existing branch: `codex/snap-12-llm`; PR: [#5](https://github.com/KulikovKA/banking-salary-intelligence-platform/pull/5).
 Synchronized with `main` at `4c56949` via merge `7c9ab6e`; no conflicts.
@@ -92,3 +92,18 @@ belongs to SNAP-14; SNAP-12 supplies typed failure/fallback scenarios without an
 Groq adapter/quotas remain SNAP-13. S0 is not complete and S1 remains BLOCKED;
 S2/S3 remain NOT EVALUATED, G1/G2 NOT PASSED. CI and merge evidence will be recorded
 in the final integration response; task statuses are updated only after the PR merge.
+
+
+## Completed merge evidence
+
+- Implementation fix: [2136b14](https://github.com/KulikovKA/banking-salary-intelligence-platform/commit/2136b149991ed9f0c900f82d1a16e74543e876ff).
+- PR [#5](https://github.com/KulikovKA/banking-salary-intelligence-platform/pull/5)
+  merged after backend and frontend CI passed; no outstanding review threads or changes requested.
+  Review was performed locally by the implementing agent; no separate human approval is recorded.
+- Green PR CI: [run 38076573502](https://github.com/KulikovKA/banking-salary-intelligence-platform/actions/runs/38076573502).
+- Main merge: [f9ea7d1](https://github.com/KulikovKA/banking-salary-intelligence-platform/commit/f9ea7d1635dd1855e51439839921c7367c11be45).
+- Integrator updates only the statuses of merged SNAP-02, SNAP-04, SNAP-07 and SNAP-12
+  to DONE in the active plan/registry, preserving task order, dependencies and product gates.
+- Next independent work: SNAP-03, SNAP-05, SNAP-06, SNAP-13 and SNAP-15;
+  SNAP-05 owns the next parser dependency/lockfile update. SNAP-13 implements the
+  Groq Free adapter after this Fake boundary. Real source/provider permissions remain separate.

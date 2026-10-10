@@ -26,17 +26,17 @@ S2/S3 NOT EVALUATED; полный S0 ждёт реализации нового 
 | Prompt | Результат | Merged зависимости | Effort | Status |
 |---|---|---|---|---|
 | [SNAP-01](prompts/SNAP-01.md) | Зафиксировать исполняемые DTO и Protocol | — | high | DONE |
-| [SNAP-02](prompts/SNAP-02.md) | Добавить schema snapshot и тарифного pipeline | SNAP-01 | high | TODO |
+| [SNAP-02](prompts/SNAP-02.md) | Добавить schema snapshot и тарифного pipeline | SNAP-01 | high | DONE |
 | [SNAP-03](prompts/SNAP-03.md) | Операторский corpus manifest и freeze service | SNAP-02 | high | TODO |
-| [SNAP-04](prompts/SNAP-04.md) | PDF parser с page/table evidence | SNAP-01 | high | TODO |
+| [SNAP-04](prompts/SNAP-04.md) | PDF parser с page/table evidence | SNAP-01 | high | DONE |
 | [SNAP-05](prompts/SNAP-05.md) | XLSX parser без вычисления формул | SNAP-01 | high | TODO |
 | [SNAP-06](prompts/SNAP-06.md) | HTML parser сохранённого original | SNAP-01 | medium | TODO |
-| [SNAP-07](prompts/SNAP-07.md) | Нормализация тарифов и registry метрик | SNAP-01 | high | TODO |
+| [SNAP-07](prompts/SNAP-07.md) | Нормализация тарифов и registry метрик | SNAP-01 | high | DONE |
 | [SNAP-08](prompts/SNAP-08.md) | Последовательный parsing/extraction pipeline | SNAP-03, SNAP-04, SNAP-05, SNAP-06, SNAP-07 | high | TODO |
 | [SNAP-09](prompts/SNAP-09.md) | Evidence validation, manual review и publication | SNAP-08 | high | TODO |
 | [SNAP-10](prompts/SNAP-10.md) | PostgreSQL FTS по frozen corpus | SNAP-09 | medium | TODO |
 | [SNAP-11](prompts/SNAP-11.md) | Детерминированный Comparison Engine | SNAP-09 | high | TODO |
-| [SNAP-12](prompts/SNAP-12.md) | LLM Protocol, Fake и bounded renderer inputs | SNAP-01 | medium | TODO |
+| [SNAP-12](prompts/SNAP-12.md) | LLM Protocol, Fake и bounded renderer inputs | SNAP-01 | medium | DONE |
 | [SNAP-13](prompts/SNAP-13.md) | GroqCloud Free adapter и quotas | SNAP-02, SNAP-12 | high | TODO |
 | [SNAP-14](prompts/SNAP-14.md) | Evidence-first ассистент и renderer | SNAP-10, SNAP-11, SNAP-13 | high | TODO |
 | [SNAP-15](prompts/SNAP-15.md) | Приглашения, auth и server sessions | SNAP-02 | high | TODO |
