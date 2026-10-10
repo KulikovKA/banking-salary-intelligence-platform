@@ -11,6 +11,12 @@ docs/product/ACCEPTANCE_CRITERIA.md. Ветка archive — история, не
 ## Обязательные границы
 
 - FastAPI modular monolith + PostgreSQL + Next.js + local originals.
+- Наша команда владеет Backend/PostgreSQL/тарифами/поиском/comparison/LLM/auth/API
+  и интеграционными тестами. Дизайн, страницы, компоненты, кабинет, сравнение,
+  чат и адаптивность создаёт внешний frontend-разработчик; второй UI не строить.
+  SNAP-17 принимает и адаптирует переданный код по
+  [FRONTEND_HANDOFF](docs/implementation/FRONTEND_HANDOFF.md). FE-01–FE-04 начинать
+  только после проверяемой передачи исходников и merged backend-зависимостей.
 - Snapshot corpus; без scheduler/recurring fetch/change notifications/outbox,
   очередей, Redis/Celery/vector DB и новых сервисов.
 - Сохранять FetchGateway/BlobStore/operator ingestion/tests/E2E/0001/0002/0003; additive migrations.
