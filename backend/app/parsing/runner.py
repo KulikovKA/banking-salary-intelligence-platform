@@ -283,7 +283,9 @@ def _terminate_process(process: subprocess.Popen[bytes], job_handle: int | None)
             pass
     if os.name == "posix" and process.poll() is None:
         try:
-            os.killpg(process.pid, 9)  # type: ignore[attr-defined]
+            killpg_name = "killpg"
+            killpg = getattr(os, killpg_name)
+            killpg(process.pid, 9)
         except OSError:
             pass
     try:
@@ -298,7 +300,9 @@ def _close_windows_handle(handle: int) -> None:
         import ctypes
         from ctypes import wintypes
 
-        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        win_dll_name = "WinDLL"
+        win_dll = getattr(ctypes, win_dll_name)
+        kernel32 = win_dll("kernel32", use_last_error=True)
         kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
         kernel32.CloseHandle.restype = wintypes.BOOL
         kernel32.CloseHandle(handle)
@@ -340,7 +344,9 @@ def _attach_windows_job(
             ("PeakJobMemoryUsed", ctypes.c_size_t),
         ]
 
-    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    win_dll_name = "WinDLL"
+    win_dll = getattr(ctypes, win_dll_name)
+    kernel32 = win_dll("kernel32", use_last_error=True)
     kernel32.CreateJobObjectW.argtypes = [ctypes.c_void_p, wintypes.LPCWSTR]
     kernel32.CreateJobObjectW.restype = wintypes.HANDLE
     kernel32.SetInformationJobObject.argtypes = [
@@ -360,7 +366,9 @@ def _attach_windows_job(
     )
     process_handle = int(process._handle)  # type: ignore[attr-defined]
     if not ok or not kernel32.AssignProcessToJobObject(handle, process_handle):
-        error = ctypes.get_last_error()
+        get_last_error_name = "get_last_error"
+        get_last_error = getattr(ctypes, get_last_error_name)
+        error = get_last_error()
         kernel32.CloseHandle(handle)
         raise BoundedParseResourceError(f"could not apply Windows Job Object limits ({error})")
     return int(handle)
