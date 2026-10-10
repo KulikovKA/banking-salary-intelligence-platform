@@ -27,19 +27,19 @@ S2/S3 NOT EVALUATED; полный S0 ждёт реализации нового 
 |---|---|---|---|---|
 | [SNAP-01](prompts/SNAP-01.md) | Зафиксировать исполняемые DTO и Protocol | — | high | DONE |
 | [SNAP-02](prompts/SNAP-02.md) | Добавить schema snapshot и тарифного pipeline | SNAP-01 | high | DONE |
-| [SNAP-03](prompts/SNAP-03.md) | Операторский corpus manifest и freeze service | SNAP-02 | high | TODO |
+| [SNAP-03](prompts/SNAP-03.md) | Операторский corpus manifest и freeze service | SNAP-02 | high | DONE |
 | [SNAP-04](prompts/SNAP-04.md) | PDF parser с page/table evidence | SNAP-01 | high | DONE |
-| [SNAP-05](prompts/SNAP-05.md) | XLSX parser без вычисления формул | SNAP-01 | high | TODO |
-| [SNAP-06](prompts/SNAP-06.md) | HTML parser сохранённого original | SNAP-01 | medium | TODO |
+| [SNAP-05](prompts/SNAP-05.md) | XLSX parser без вычисления формул | SNAP-01 | high | DONE |
+| [SNAP-06](prompts/SNAP-06.md) | HTML parser сохранённого original | SNAP-01 | medium | DONE |
 | [SNAP-07](prompts/SNAP-07.md) | Нормализация тарифов и registry метрик | SNAP-01 | high | DONE |
 | [SNAP-08](prompts/SNAP-08.md) | Последовательный parsing/extraction pipeline | SNAP-03, SNAP-04, SNAP-05, SNAP-06, SNAP-07 | high | TODO |
 | [SNAP-09](prompts/SNAP-09.md) | Evidence validation, manual review и publication | SNAP-08 | high | TODO |
 | [SNAP-10](prompts/SNAP-10.md) | PostgreSQL FTS по frozen corpus | SNAP-09 | medium | TODO |
 | [SNAP-11](prompts/SNAP-11.md) | Детерминированный Comparison Engine | SNAP-09 | high | TODO |
 | [SNAP-12](prompts/SNAP-12.md) | LLM Protocol, Fake и bounded renderer inputs | SNAP-01 | medium | DONE |
-| [SNAP-13](prompts/SNAP-13.md) | GroqCloud Free adapter и quotas | SNAP-02, SNAP-12 | high | TODO |
+| [SNAP-13](prompts/SNAP-13.md) | GroqCloud Free adapter и quotas | SNAP-02, SNAP-12 | high | DONE |
 | [SNAP-14](prompts/SNAP-14.md) | Evidence-first ассистент и renderer | SNAP-10, SNAP-11, SNAP-13 | high | TODO |
-| [SNAP-15](prompts/SNAP-15.md) | Приглашения, auth и server sessions | SNAP-02 | high | TODO |
+| [SNAP-15](prompts/SNAP-15.md) | Приглашения, auth и server sessions | SNAP-02 | high | DONE |
 | [SNAP-16](prompts/SNAP-16.md) | FastAPI routers и composition root | SNAP-03, SNAP-09, SNAP-14, SNAP-15 | high | TODO |
 | [SNAP-17](prompts/SNAP-17.md) | Next.js закрытый интерфейс ассистента | SNAP-16 | medium | TODO |
 | [SNAP-18](prompts/SNAP-18.md) | Реальный corpus gold и оценка S1/S2/Groq | SNAP-03, SNAP-09, SNAP-11, SNAP-14 | high | TODO |
@@ -75,12 +75,13 @@ UI consumes. CI/compose/README изменяет 19 в финальной вол�
 
 ## Что запускать сейчас
 
-Полностью без предпосылок — **SNAP-01**. Одновременно можно собирать human
-source decisions/coverage по отчётам, не выдавая grants и не получая новые bytes
-до допуска. Остальные coding prompts начинают после соответствующих merges;
-04/05/06/07/12 доступны сразу после 01, 02 тоже. Уже работающий offline E2E
-можно запускать сейчас независимо от документации/данных. Snapshot changes
-не требуют сначала пройти historical G2 для разработки auth/API/UI.
+Следующая доступная кодовая задача — **SNAP-08**: SNAP-03/04/05/06/07 merged.
+Draft original доступен до extraction через проверяемый операторский manifest;
+final freeze выполняется после reviewed publication. SNAP-09 следует за 08,
+SNAP-10 и 11 — за 09, SNAP-14 — за 10+11+13. Новые задачи требуют отдельного поручения.
+Human source review можно готовить независимо; real bytes остаются blocked до
+source-specific acquisition/storage/reuse допуска. G1/G2 и S1/S2/S3 не изменяются
+от технических synthetic проверок.
 
 ## Общее Definition of Done
 

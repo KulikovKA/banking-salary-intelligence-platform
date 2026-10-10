@@ -51,7 +51,7 @@
       "deps": [
         "SNAP-02"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "high",
       "owned_paths": [
         "backend/app/corpus/service.py",
@@ -94,7 +94,7 @@
       "deps": [
         "SNAP-01"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "high",
       "owned_paths": [
         "backend/app/parsing/xlsx.py",
@@ -115,7 +115,7 @@
       "deps": [
         "SNAP-01"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "medium",
       "owned_paths": [
         "backend/app/parsing/html.py",
@@ -255,7 +255,7 @@
         "SNAP-02",
         "SNAP-12"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "high",
       "owned_paths": [
         "backend/app/llm/groq.py",
@@ -300,7 +300,7 @@
       "deps": [
         "SNAP-02"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "high",
       "owned_paths": [
         "backend/app/auth/**",
