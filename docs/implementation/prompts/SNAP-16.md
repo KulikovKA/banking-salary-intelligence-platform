@@ -34,11 +34,11 @@ recurring download, notifications, очереди, микросервисы ил
 
 ## Реализация и ограничения
 
-Собери existing FastAPI app без переписывания ingestion. Каждый protected route проверяет session/role; unsafe requests CSRF. Download только член readable snapshot, verify original hash, attachment/nosniff, no arbitrary storage key/path. Admin review/freeze вызывают сервисы, не bypass validation. Bounded sync question/comparison, uniform typed error envelope. Stable generated/manual typed TS DTO без secrets. Health semantics остаётся liveness; no ingest upload/scheduler/job poll endpoints.
+Собери existing FastAPI app без переписывания ingestion. Каждый protected route проверяет session/role; unsafe requests CSRF. Download только член readable snapshot, verify original hash, attachment/nosniff, no arbitrary storage key/path. Admin review/freeze вызывают сервисы, не bypass validation. Bounded sync question/comparison, uniform typed error envelope. Stable generated/manual typed TS DTO без secrets. Передай внешнему frontend стабильный OpenAPI/TS контракт и synthetic request/response примеры auth/CSRF, snapshot/search/comparison/documents/assistant, unknown/conflict/individual/fallback и ошибок 429/503; примеры сохраняй в report SNAP-16 без реальных данных. Визуальную реализацию определяет внешний разработчик. Публичные DTO/API не менять без обоснованного follow-up и согласования владельца. Health semantics остаётся liveness; no ingest upload/scheduler/job poll endpoints.
 
 ## Тесты и критерии приёмки
 
-API fixtures real PG + Fake: health, login/logout/invite, protected reads, analyst denial admin mutation, wrong Origin, snapshot freeze conflict, source revoked download, traversal, unknown object, limits 429, insufficient/fallback envelope 200. OpenAPI/TS DTO match. Existing health tests green.
+API fixtures real PG + Fake: health, login/logout/invite, protected reads, analyst denial admin mutation, wrong Origin, snapshot freeze conflict, source revoked download, traversal, unknown object, limits 429, insufficient/fallback envelope 200. OpenAPI/TS DTO match; в report зафиксированы revision контракта, правила cookie/Origin/CSRF, typed errors и synthetic примеры для FE-01–FE-04. Existing health tests green.
 
 Выполни ruff/mypy для backend и релевантные pytest (PG integration на dedicated
 DB с migrations); frontend lint/typecheck/build при изменении frontend. Проверь
@@ -47,7 +47,7 @@ DB с migrations); frontend lint/typecheck/build при изменении front
 
 ## Параллелизм
 
-Единственный main.py/API composition owner. frontend/lib/api-contracts.ts merge перед UI; SNAP-17 не генерирует конкурирующие DTO.
+Единственный main.py/API composition owner. frontend/lib/api-contracts.ts merge перед интеграцией внешнего UI; внешний разработчик и SNAP-17 используют контракт без конкурирующих DTO. SNAP-16 не разрабатывает страницы/дизайн; передача API описана в FRONTEND_HANDOFF.
 
 Используй отдельную ветку/worktree при реальном параллельном запуске. Не spawn
 других агентов без отдельного поручения. Общие lockfiles/миграции/main.py интегрируй

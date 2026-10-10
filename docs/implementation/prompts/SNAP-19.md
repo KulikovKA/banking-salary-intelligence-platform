@@ -11,6 +11,11 @@
 
 Merged зависимости: SNAP-17, SNAP-18. Пока зависимость не завершена, допустим только явно
 отдельный scaffold/harness; окончательная приёмка ждёт merged implementation.
+SNAP-17 принимается только после FE-01–FE-04 из
+[FRONTEND_HANDOFF](../FRONTEND_HANDOFF.md), включая интеграцию переданного внешнего
+frontend с FastAPI и offline browser E2E. SNAP-19 проверяет готовую интеграцию;
+создание frontend с нуля нашей командой не входит в scope. Нет передачи/FE evidence
+или merged интеграции — финальная приёмка ждёт; независимый restore harness допустим.
 
 Прочитай AGENTS.md, docs/architecture/OVERVIEW.md, DOMAIN_CONTRACTS.md,
 DATABASE_DESIGN.md, API_CONTRACTS.md, SECURITY.md и docs/product/ACCEPTANCE_CRITERIA.md.
@@ -36,11 +41,11 @@ recurring download, notifications, очереди, микросервисы ил
 
 ## Реализация и ограничения
 
-Собери уже готовые компоненты, не расширяй архитектуру. CI offline synthetic pipeline/auth/UI/PG/E2E/docs; real-model evaluation opt-in отдельно. PG dump+blob hash manifest restore только в новую dedicated DB/root; hashes/evidence pointers/auth доступ проверены перед открытием. 3 concurrent users и quotas/fallback, search/comparison p95/question deadline. Production env/cookie/ingress instructions, no fake identity. Final report перечисляет actual gates, limitations и конкретные blockers; ни G1/G2, ни S3 не помечать PASS без evidence. Обнови README о фактическом runnable продукте только если достигнут.
+Собери уже готовые компоненты, не расширяй архитектуру. Проверь принятую SNAP-17 интеграцию внешнего frontend и FE-01–FE-04 evidence; второй UI с нуля не создавать, дефекты передавай владельцам. CI offline synthetic pipeline/auth/UI/PG/E2E/docs; real-model evaluation opt-in отдельно. PG dump+blob hash manifest restore только в новую dedicated DB/root; hashes/evidence pointers/auth доступ проверены перед открытием. 3 concurrent users и quotas/fallback, search/comparison p95/question deadline. Production env/cookie/ingress instructions, no fake identity. Final report перечисляет actual gates, limitations и конкретные blockers; ни G1/G2, ни S3 не помечать PASS без evidence. Обнови README о фактическом runnable продукте только если достигнут.
 
 ## Тесты и критерии приёмки
 
-Все существующие и новые required checks, restore 100% linkage, explicit secret/log/XSS/access tests green, browser real-product smoke при данных/ключе. Partial technical PASS и real NO-GO разделены. Не удалять snapshots/данные тестов, не выполнять destructive downgrade.
+Merged SNAP-17 с принятыми FE-01–FE-04 и exact frontend/API revisions; все существующие и новые required checks, offline browser E2E интегрированного внешнего frontend, restore 100% linkage, explicit secret/log/XSS/access tests green, browser real-product smoke при данных/ключе. Partial technical PASS и real NO-GO разделены; при отсутствии frontend integration финальная приёмка не завершена. Не удалять snapshots/данные тестов, не выполнять destructive downgrade.
 
 Выполни ruff/mypy для backend и релевантные pytest (PG integration на dedicated
 DB с migrations); frontend lint/typecheck/build при изменении frontend. Проверь

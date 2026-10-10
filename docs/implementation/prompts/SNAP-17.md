@@ -1,16 +1,21 @@
-# SNAP-17 — Next.js закрытый интерфейс ассистента
+# SNAP-17 — Интеграция и адаптация внешнего frontend
 
 Готовый исполнительский промпт: выдай весь этот файл Codex вместе с репозиторием.
 Рекомендуемый reasoning effort: **medium**; выбор модели свободный.
 
 ## Цель и ожидаемый результат
 
-Login/invite, выбор snapshot/scenario, вопрос/сравнение/источники, admin review; рабочий end-to-end browser flow.
+Принятый и адаптированный внешний frontend в Next.js, подключённый к FastAPI; FE-01–FE-04 закрыты с evidence и рабочими browser flows login/invite, snapshot/scenario, поиск/сравнение/ассистент/источники и admin review.
 
 ## Условия начала
 
-Merged зависимости: SNAP-16. Пока зависимость не завершена, допустим только явно
-отдельный scaffold/harness; окончательная приёмка ждёт merged implementation.
+Merged зависимости: SNAP-16. Дополнительный обязательный вход: проверяемая передача
+внешнего репозитория/исходников с exact revision, зависимостями и лицензиями по
+[FRONTEND_HANDOFF](../FRONTEND_HANDOFF.md). Передача пока не подтверждена.
+До получения исходников и merged backend/API не начинать FE-01–FE-04, перенос,
+переписывание UI или отдельный scaffold. Зафиксируй blocker и продолжай только
+независимую backend-задачу по отдельному поручению. Внешний разработчик может
+создавать свой frontend параллельно; эта задача не создаёт второй интерфейс.
 
 Прочитай AGENTS.md, docs/architecture/OVERVIEW.md, DOMAIN_CONTRACTS.md,
 DATABASE_DESIGN.md, API_CONTRACTS.md, SECURITY.md и docs/product/ACCEPTANCE_CRITERIA.md.
@@ -25,11 +30,22 @@ recurring download, notifications, очереди, микросервисы ил
 
 - `frontend/app/**`
 - `frontend/components/**`
+- `frontend/public/**`
+- `frontend/styles/**`
 - `frontend/lib/client.ts`
 - `frontend/next.config.ts`
+- `frontend/tsconfig.json`
+- `frontend/eslint.config.mjs`
 - `frontend/tests/**`
 - `frontend/package.json`
 - `frontend/package-lock.json`
+
+Владелец переноса — наша команда интеграции frontend; визуальное решение и
+исходные компоненты передаёт внешний frontend-разработчик. Backend и
+`frontend/lib/api-contracts.ts` read-only, владелец публичного API/TS DTO — SNAP-16.
+Расширение owned paths после FE-01 согласуется с интегратором до редактирования.
+Статусы FE и ссылки на evidence в FRONTEND_HANDOFF обновляет интегратор
+последовательно после принятого отчёта; исполнитель передаёт результаты FE-01–FE-04.
 
 Остальные модули read-only. Если требуется общий контракт/schema/config change,
 подготовь точный запрос владельцу и дождись sequential merge; не правь чужие
@@ -37,11 +53,11 @@ recurring download, notifications, очереди, микросервисы ил
 
 ## Реализация и ограничения
 
-Используй существующий Next.js scaffold и API contracts, same-origin proxy, HttpOnly cookie без provider key/token localStorage. Экран показывает corpus revision/date/missing banks/synthetic/fallback/unknown/individual/conflict. Source citation открывает protected attachment, snippets escaped. Scenario forms payer/region/segment/amount, не запрашивают payroll personal data. Минимальный admin candidates/review/freeze; no monitoring/dashboard уведомлений. Память диалога только текущий UI, logout очищает её. Добавь Playwright как dev dependency только для meaningful E2E.
+Выполни FE-01–FE-04 по FRONTEND_HANDOFF: проверь переданный exact revision, зависимости/лицензии/качество/безопасность и матрицу экран -> API; перенеси предоставленный код в существующую Next.js архитектуру с сохранением согласованного дизайна/компонентов и минимальным переписыванием. Удали временные клиентские расчёты тарифов, approvals и небезопасные решения. Замени product mocks типизированными FastAPI вызовами frozen TS DTO SNAP-16: auth, snapshots, search, comparison, documents, assistant, admin review/freeze. Same-origin proxy, server sessions/HttpOnly cookie, корректный Origin/CSRF; без auth token localStorage, Groq key только на backend. Покажи revision/date/coverage/missing banks/synthetic/evidence/unknown/conflict/individual/conditions/scope/fallback и typed errors 429/503. Protected originals, escaped snippets, scenario без payroll personal data. Память диалога только текущий UI, logout очищает её. Недостающие сценарии возвращай внешнему разработчику как конкретные follow-up; public API/DTO changes только через владельца SNAP-16. Второй UI с нуля и monitoring/notifications не создавать. Playwright dev dependency только для meaningful E2E.
 
 ## Тесты и критерии приёмки
 
-Lint/tsc/build; browser login -> choose synthetic snapshot -> compare -> inspect citation -> logout; invited analyst cannot admin; fallback/429/missing-input/unknown/conflict states и malicious snippet XSS. Tests без bank/Groq network; API integration реальная, не только screenshot mocks.
+FE-01–FE-04 имеют принятые отчёты с exact revision и evidence каждого AC; lint/typecheck/build green. Browser E2E на реальном FastAPI + dedicated PostgreSQL с migrations + frozen synthetic corpus + Fake: invite/login/logout, выбор snapshot/scenario, поиск, сравнение, вопросы ассистенту, открытие protected originals и admin review/freeze. Проверены RBAC/CSRF/XSS, истечение сессии, fallback/429/503/missing-input/unknown/conflict/individual и очистка диалога при logout. Bank/Groq network = 0; API integration реальная, не только mocks. Нет client secrets/тарифных расчётов/approvals; отчёт готовности фиксирует limitations и NOT RUN, synthetic не считается S1/S2/S3 PASS.
 
 Выполни ruff/mypy для backend и релевантные pytest (PG integration на dedicated
 DB с migrations); frontend lint/typecheck/build при изменении frontend. Проверь
@@ -50,7 +66,7 @@ DB с migrations); frontend lint/typecheck/build при изменении front
 
 ## Параллелизм
 
-Frontend owner, backend read-only. Можно предварительно оформить компоненты на frozen TS DTO после SNAP-16, full acceptance ждёт API. Не менять api-contracts.ts без согласования SNAP-16.
+Внешний разработчик создаёт UI параллельно Backend + AI в своём репозитории; наша команда не создаёт второй frontend. SNAP-17 начинает FE-01–FE-04 только после передачи исходников и merged SNAP-16, единолично владеет переносом frontend tree/package-lock. Новые внешние revisions принимать последовательно без перезаписи соседних изменений. Backend и api-contracts.ts read-only; API/DTO follow-up владельцу SNAP-16, FE-статусы интегратору. SNAP-18 может идти параллельно на disjoint paths.
 
 Используй отдельную ветку/worktree при реальном параллельном запуске. Не spawn
 других агентов без отдельного поручения. Общие lockfiles/миграции/main.py интегрируй

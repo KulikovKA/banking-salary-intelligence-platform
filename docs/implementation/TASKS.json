@@ -334,14 +334,14 @@
         "frontend/lib/api-contracts.ts"
       ],
       "outcome": "Маршруты API_CONTRACTS, injected services/auth, OpenAPI и стабильный frontend client contract.",
-      "implementation": "Собери existing FastAPI app без переписывания ingestion. Каждый protected route проверяет session/role; unsafe requests CSRF. Download только член readable snapshot, verify original hash, attachment/nosniff, no arbitrary storage key/path. Admin review/freeze вызывают сервисы, не bypass validation. Bounded sync question/comparison, uniform typed error envelope. Stable generated/manual typed TS DTO без secrets. Health semantics остаётся liveness; no ingest upload/scheduler/job poll endpoints.",
-      "acceptance": "API fixtures real PG + Fake: health, login/logout/invite, protected reads, analyst denial admin mutation, wrong Origin, snapshot freeze conflict, source revoked download, traversal, unknown object, limits 429, insufficient/fallback envelope 200. OpenAPI/TS DTO match. Existing health tests green.",
-      "parallelism": "Единственный main.py/API composition owner. frontend/lib/api-contracts.ts merge перед UI; SNAP-17 не генерирует конкурирующие DTO.",
+      "implementation": "Собери existing FastAPI app без переписывания ingestion. Каждый protected route проверяет session/role; unsafe requests CSRF. Download только член readable snapshot, verify original hash, attachment/nosniff, no arbitrary storage key/path. Admin review/freeze вызывают сервисы, не bypass validation. Bounded sync question/comparison, uniform typed error envelope. Stable generated/manual typed TS DTO без secrets. Передай внешнему frontend стабильный OpenAPI/TS контракт и synthetic request/response примеры auth/CSRF, snapshot/search/comparison/documents/assistant, unknown/conflict/individual/fallback и ошибок 429/503; примеры сохраняй в report SNAP-16 без реальных данных. Визуальную реализацию определяет внешний разработчик. Публичные DTO/API не менять без обоснованного follow-up и согласования владельца. Health semantics остаётся liveness; no ingest upload/scheduler/job poll endpoints.",
+      "acceptance": "API fixtures real PG + Fake: health, login/logout/invite, protected reads, analyst denial admin mutation, wrong Origin, snapshot freeze conflict, source revoked download, traversal, unknown object, limits 429, insufficient/fallback envelope 200. OpenAPI/TS DTO match; в report зафиксированы revision контракта, правила cookie/Origin/CSRF, typed errors и synthetic примеры для FE-01–FE-04. Existing health tests green.",
+      "parallelism": "Единственный main.py/API composition owner. frontend/lib/api-contracts.ts merge перед интеграцией внешнего UI; внешний разработчик и SNAP-17 используют контракт без конкурирующих DTO. SNAP-16 не разрабатывает страницы/дизайн; передача API описана в FRONTEND_HANDOFF.",
       "prompt": "prompts/SNAP-16.md"
     },
     {
       "id": "SNAP-17",
-      "title": "Next.js закрытый интерфейс ассистента",
+      "title": "Интеграция и адаптация внешнего frontend",
       "deps": [
         "SNAP-16"
       ],
@@ -350,16 +350,20 @@
       "owned_paths": [
         "frontend/app/**",
         "frontend/components/**",
+        "frontend/public/**",
+        "frontend/styles/**",
         "frontend/lib/client.ts",
         "frontend/next.config.ts",
+        "frontend/tsconfig.json",
+        "frontend/eslint.config.mjs",
         "frontend/tests/**",
         "frontend/package.json",
         "frontend/package-lock.json"
       ],
-      "outcome": "Login/invite, выбор snapshot/scenario, вопрос/сравнение/источники, admin review; рабочий end-to-end browser flow.",
-      "implementation": "Используй существующий Next.js scaffold и API contracts, same-origin proxy, HttpOnly cookie без provider key/token localStorage. Экран показывает corpus revision/date/missing banks/synthetic/fallback/unknown/individual/conflict. Source citation открывает protected attachment, snippets escaped. Scenario forms payer/region/segment/amount, не запрашивают payroll personal data. Минимальный admin candidates/review/freeze; no monitoring/dashboard уведомлений. Память диалога только текущий UI, logout очищает её. Добавь Playwright как dev dependency только для meaningful E2E.",
-      "acceptance": "Lint/tsc/build; browser login -> choose synthetic snapshot -> compare -> inspect citation -> logout; invited analyst cannot admin; fallback/429/missing-input/unknown/conflict states и malicious snippet XSS. Tests без bank/Groq network; API integration реальная, не только screenshot mocks.",
-      "parallelism": "Frontend owner, backend read-only. Можно предварительно оформить компоненты на frozen TS DTO после SNAP-16, full acceptance ждёт API. Не менять api-contracts.ts без согласования SNAP-16.",
+      "outcome": "Принятый и адаптированный внешний frontend в Next.js, подключённый к FastAPI; FE-01–FE-04 закрыты с evidence и рабочими browser flows login/invite, snapshot/scenario, поиск/сравнение/ассистент/источники и admin review.",
+      "implementation": "Выполни FE-01–FE-04 по FRONTEND_HANDOFF: проверь переданный exact revision, зависимости/лицензии/качество/безопасность и матрицу экран -> API; перенеси предоставленный код в существующую Next.js архитектуру с сохранением согласованного дизайна/компонентов и минимальным переписыванием. Удали временные клиентские расчёты тарифов, approvals и небезопасные решения. Замени product mocks типизированными FastAPI вызовами frozen TS DTO SNAP-16: auth, snapshots, search, comparison, documents, assistant, admin review/freeze. Same-origin proxy, server sessions/HttpOnly cookie, корректный Origin/CSRF; без auth token localStorage, Groq key только на backend. Покажи revision/date/coverage/missing banks/synthetic/evidence/unknown/conflict/individual/conditions/scope/fallback и typed errors 429/503. Protected originals, escaped snippets, scenario без payroll personal data. Память диалога только текущий UI, logout очищает её. Недостающие сценарии возвращай внешнему разработчику как конкретные follow-up; public API/DTO changes только через владельца SNAP-16. Второй UI с нуля и monitoring/notifications не создавать. Playwright dev dependency только для meaningful E2E.",
+      "acceptance": "FE-01–FE-04 имеют принятые отчёты с exact revision и evidence каждого AC; lint/typecheck/build green. Browser E2E на реальном FastAPI + dedicated PostgreSQL с migrations + frozen synthetic corpus + Fake: invite/login/logout, выбор snapshot/scenario, поиск, сравнение, вопросы ассистенту, открытие protected originals и admin review/freeze. Проверены RBAC/CSRF/XSS, истечение сессии, fallback/429/503/missing-input/unknown/conflict/individual и очистка диалога при logout. Bank/Groq network = 0; API integration реальная, не только mocks. Нет client secrets/тарифных расчётов/approvals; отчёт готовности фиксирует limitations и NOT RUN, synthetic не считается S1/S2/S3 PASS.",
+      "parallelism": "Внешний разработчик создаёт UI параллельно Backend + AI в своём репозитории; наша команда не создаёт второй frontend. SNAP-17 начинает FE-01–FE-04 только после передачи исходников и merged SNAP-16, единолично владеет переносом frontend tree/package-lock. Новые внешние revisions принимать последовательно без перезаписи соседних изменений. Backend и api-contracts.ts read-only; API/DTO follow-up владельцу SNAP-16, FE-статусы интегратору. SNAP-18 может идти параллельно на disjoint paths.",
       "prompt": "prompts/SNAP-17.md"
     },
     {
@@ -403,8 +407,8 @@
         "README.md"
       ],
       "outcome": "Воспроизводимый запуск/restore и окончательный S0–S3 readiness verdict на exact commit/corpus.",
-      "implementation": "Собери уже готовые компоненты, не расширяй архитектуру. CI offline synthetic pipeline/auth/UI/PG/E2E/docs; real-model evaluation opt-in отдельно. PG dump+blob hash manifest restore только в новую dedicated DB/root; hashes/evidence pointers/auth доступ проверены перед открытием. 3 concurrent users и quotas/fallback, search/comparison p95/question deadline. Production env/cookie/ingress instructions, no fake identity. Final report перечисляет actual gates, limitations и конкретные blockers; ни G1/G2, ни S3 не помечать PASS без evidence. Обнови README о фактическом runnable продукте только если достигнут.",
-      "acceptance": "Все существующие и новые required checks, restore 100% linkage, explicit secret/log/XSS/access tests green, browser real-product smoke при данных/ключе. Partial technical PASS и real NO-GO разделены. Не удалять snapshots/данные тестов, не выполнять destructive downgrade.",
+      "implementation": "Собери уже готовые компоненты, не расширяй архитектуру. Проверь принятую SNAP-17 интеграцию внешнего frontend и FE-01–FE-04 evidence; второй UI с нуля не создавать, дефекты передавай владельцам. CI offline synthetic pipeline/auth/UI/PG/E2E/docs; real-model evaluation opt-in отдельно. PG dump+blob hash manifest restore только в новую dedicated DB/root; hashes/evidence pointers/auth доступ проверены перед открытием. 3 concurrent users и quotas/fallback, search/comparison p95/question deadline. Production env/cookie/ingress instructions, no fake identity. Final report перечисляет actual gates, limitations и конкретные blockers; ни G1/G2, ни S3 не помечать PASS без evidence. Обнови README о фактическом runnable продукте только если достигнут.",
+      "acceptance": "Merged SNAP-17 с принятыми FE-01–FE-04 и exact frontend/API revisions; все существующие и новые required checks, offline browser E2E интегрированного внешнего frontend, restore 100% linkage, explicit secret/log/XSS/access tests green, browser real-product smoke при данных/ключе. Partial technical PASS и real NO-GO разделены; при отсутствии frontend integration финальная приёмка не завершена. Не удалять snapshots/данные тестов, не выполнять destructive downgrade.",
       "parallelism": "Финальный integrator после всех merges, единственный владелец CI/compose/README на этом этапе. Общие файлы больше не правятся параллельно.",
       "prompt": "prompts/SNAP-19.md"
     }
