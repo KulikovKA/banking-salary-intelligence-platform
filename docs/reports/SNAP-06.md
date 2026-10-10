@@ -65,4 +65,4 @@ semantics. Offsets are derived from normalized immutable block text because the
 frozen ParsedBlock contract has no offset field. The extraction pipeline can create
 quote start/end offsets directly against that block text.
 
-Commit: pending at report creation.
+Implementation commit: `5bfa65cfd652279c43678b0323051085a8167ee8`.
