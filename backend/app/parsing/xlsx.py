@@ -30,7 +30,7 @@ from app.contracts.parsing import (
 from app.ingestion.errors import IngestionError
 from app.ingestion.formats import check_format
 
-PARSER_VERSION = "openpyxl/1"
+PARSER_VERSION = "openpyxl/2"
 MAX_FILE_BYTES = 50 * 1024 * 1024
 MAX_SHEETS = 100
 MAX_CELLS = 200_000
@@ -112,6 +112,7 @@ class XlsxParser(Parser):
         text_chars = 0
         sheet_xml_count = 0
         merged_cell_count = 0
+        rectangle_cells = 0
         with zipfile.ZipFile(path) as archive:
             entries = archive.infolist()
             if len(entries) > 10_000 or sum(item.file_size for item in entries) > 100 * 1024 * 1024:
@@ -128,7 +129,14 @@ class XlsxParser(Parser):
                 if not is_sheet and not is_shared_strings:
                     continue
                 with archive.open(entry) as stream:
+                    max_row_seen = max_col_seen = 0
                     for _event, element in ET.iterparse(stream, events=("end",)):
+                        if is_sheet and element.tag == f"{_XML_NS}dimension":
+                            bounds = _required_bounds(element.attrib.get("ref", "A1"))
+                            if bounds[2] > self.max_columns or bounds[3] > self.max_rows:
+                                raise _ResourceLimit("XLSX_DIMENSION_LIMIT")
+                            if bounds[2] * bounds[3] > self.max_cells:
+                                raise _ResourceLimit("XLSX_RECTANGLE_LIMIT")
                         if is_sheet and element.tag == f"{_XML_NS}c":
                             cell_count += 1
                             if cell_count > self.max_cells:
@@ -142,6 +150,8 @@ class XlsxParser(Parser):
                                     raise _ResourceLimit("XLSX_INVALID_CELL_REFERENCE") from exc
                                 if row > self.max_rows or col > self.max_columns:
                                     raise _ResourceLimit("XLSX_DIMENSION_LIMIT")
+                                max_row_seen = max(max_row_seen, row)
+                                max_col_seen = max(max_col_seen, col)
                         elif is_sheet and element.tag == f"{_XML_NS}mergeCell":
                             ref = element.attrib.get("ref", "")
                             min_col, min_row, max_col, max_row = _required_bounds(ref)
@@ -155,6 +165,9 @@ class XlsxParser(Parser):
                             if text_chars > MAX_PACKAGE_TEXT_CHARS:
                                 raise _ResourceLimit("XLSX_PACKAGE_TEXT_LIMIT")
                         element.clear()
+                    rectangle_cells += max_row_seen * max_col_seen
+                    if rectangle_cells > self.max_cells:
+                        raise _ResourceLimit("XLSX_RECTANGLE_LIMIT")
             if sheet_xml_count == 0:
                 raise _ResourceLimit("XLSX_NO_WORKSHEETS")
         return {"cells": cell_count, "text_chars": text_chars, "sheets": sheet_xml_count}
@@ -171,6 +184,8 @@ class XlsxParser(Parser):
         text_count = 0
         sheet_map = {sheet.title: sheet for sheet in cached_wb.worksheets}
         for formulas_sheet in formulas_wb.worksheets:
+            if formulas_sheet.max_row * formulas_sheet.max_column > self.max_cells:
+                raise _ResourceLimit("XLSX_RECTANGLE_LIMIT")
             cached_sheet = sheet_map[formulas_sheet.title]
             hidden = formulas_sheet.sheet_state != "visible"
             if hidden:
@@ -256,6 +271,14 @@ class XlsxParser(Parser):
                         None,
                     )
                     relations: list[dict[str, str]] = []
+                    if isinstance(cell.value, (int, float, Decimal)) and not isinstance(
+                        cell.value, bool
+                    ):
+                        relations.append({
+                            "type": "numeric_cell",
+                            "raw_value": _scalar_text(cell.value),
+                            "number_format": cell.number_format,
+                        })
                     if hidden:
                         relations.append(
                             {"type": "hidden_sheet", "state": formulas_sheet.sheet_state}

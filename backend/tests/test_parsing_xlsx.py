@@ -180,7 +180,7 @@ def test_enforces_file_cell_and_dimension_limits(tmp_path: Path) -> None:
         == "XLSX_FILE_SIZE_LIMIT"
     )
     assert (
-        XlsxParser(max_cells=1).parse(request, str(path)).diagnostics[0].code == "XLSX_CELL_LIMIT"
+        XlsxParser(max_cells=1).parse(request, str(path)).diagnostics[0].code == "XLSX_RECTANGLE_LIMIT"
     )
 
     workbook = Workbook()
@@ -190,3 +190,29 @@ def test_enforces_file_cell_and_dimension_limits(tmp_path: Path) -> None:
     result = XlsxParser(max_columns=10).parse(_request(wide), str(wide))
     assert result.status == "failed"
     assert result.diagnostics[0].code == "XLSX_DIMENSION_LIMIT"
+
+
+def test_sparse_worksheet_cannot_materialize_an_unbounded_rectangle(tmp_path: Path) -> None:
+    workbook = Workbook()
+    workbook.active["A1"] = "first"
+    workbook.active["SF100000"] = "sparse last cell"
+    path = tmp_path / "sparse.xlsx"
+    workbook.save(path)
+    result = XlsxParser().parse(_request(path), str(path))
+    assert result.status == "failed"
+    assert result.blocks == ()
+    assert result.diagnostics[0].code == "XLSX_RECTANGLE_LIMIT"
+
+
+def test_percent_display_retains_underlying_numeric_precision(tmp_path: Path) -> None:
+    workbook = Workbook()
+    workbook.active["A1"] = 0.00333
+    workbook.active["A1"].number_format = "0.0%"
+    path = tmp_path / "precision.xlsx"
+    workbook.save(path)
+    result = XlsxParser().parse(_request(path), str(path))
+    assert result.status == "ok"
+    block = result.blocks[0]
+    assert block.text == "0.3%"
+    assert any(r["type"] == "numeric_cell" and r["raw_value"] == "0.00333"
+               for r in block.relations)

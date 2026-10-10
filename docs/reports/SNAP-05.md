@@ -39,3 +39,17 @@ Base: `main` at `504c71f` (includes merged SNAP-04). Branch: `codex/snap-05-xlsx
 Only synthetic fixtures were used; no real originals, bank access, or provider calls were involved. This parser result does not claim product S0/S1/S2/S3 acceptance. The integrator should update task status after merge; `MASTER_PLAN.md` and `TASKS.json` were intentionally left unchanged.
 
 Implementation commit: `6fcf51d9e7f3efad2bd199d01bd4ff5817e26c8b`.
+
+## Integrator review corrections (2026-10-10)
+
+Sparse workbooks could pass the populated-cell cap while iter_rows materialized
+up to 50 million empty cells. The v2 parser bounds worksheet dimensions and the
+sum of materialized rectangles in XML preflight, before opening with openpyxl;
+it also checks loaded dimensions. Numeric cells now retain raw numeric value
+and number format in evidence relations so display rounding cannot erase the
+underlying precision. Formula/cache behavior, exact locators, PDF dependencies
+and frozen DTO/Protocols are preserved.
+
+Locked sync/Ruff/mypy PASS. The existing cell-limit assertion now expects the
+earlier rectangle-limit failure. New sparse-workbook and percent-precision tests
+exercise the actual risks; final parser checks are recorded by the integrator.
