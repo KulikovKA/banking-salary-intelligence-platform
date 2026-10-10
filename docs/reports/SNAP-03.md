@@ -34,3 +34,22 @@
 Synthetic PostgreSQL harness подтверждает composition/freeze/read invariants и не доказывает качество реальных данных, законность acquisition/reuse или readiness S1. S1 остаётся `BLOCKED`, G1/G2 — `NOT PASSED`. Текущая schema SNAP-02 не хранит полный manifest JSON в PostgreSQL: база фиксирует membership и hash, оператор сохраняет manifest как immutable run artifact.
 
 **Implementation commit:** `194fd03da7465ed16dbe97461c2ac5ba6505179d`. **PR:** не создан: GitHub API вернул `403 Resource not accessible by integration`, авторизованный браузер в этой сессии недоступен. [Открыть форму PR в `main`](https://github.com/KulikovKA/banking-salary-intelligence-platform/pull/new/codex/snap-03-corpus).
+
+## Integrator review corrections (2026-10-10)
+
+The initial PR allowed freeze without reviewed publication and could not provide
+a draft original before extraction. Sequential migration `0004a_corpus_gates`
+preserves 0001?0004 and permits approved publication only in a locked draft.
+Freeze requires publication for every exact member and rejects orphan facts.
+Frozen publication is closed. PostgreSQL fixtures explicitly publish reviewed
+synthetic evidence before freeze; the service never approves candidates itself.
+
+A manifest may have `extraction_run_id: null` during staging. `add_version` then
+creates a draft without an extraction/member. `read_draft_document(manifest, index)`
+rechecks exact source/version/fetch/policy, corpus, scope and hash before SNAP-08.
+Final freeze requires successful extraction and exact materialized membership.
+
+Checks on dedicated PostgreSQL 18 `bsi_wave2_test`: Alembic upgrade/check PASS;
+first full run 208 passed / 1 failed (null UUID handling), corrected corpus/schema
+regressions 17 passed; Ruff and strict mypy PASS. This explicit integrator change
+extends owned paths to schema/tests; frozen public DTO/Protocols are unchanged.
