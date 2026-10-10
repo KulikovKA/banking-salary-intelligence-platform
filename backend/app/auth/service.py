@@ -60,6 +60,7 @@ def bootstrap_admin(db: Session, login: str, password: str, passwords: PasswordS
 def create_invitation(
     db: Session, *, issuer: AuthUser, login: str, role: str, now: datetime
 ) -> tuple[AuthInvitation, str]:
+    _require_admin(db, issuer)
     normalized = normalize_login(login)
     _validate_login(normalized)
     _validate_role(role)
@@ -145,14 +146,21 @@ def validate_session(
 def rotate_password(
     db: Session, *, reset_token: str, password: str, passwords: PasswordService, now: datetime
 ) -> tuple[AuthUser, str, str]:
+    initial = db.scalar(
+        select(AuthPasswordReset).where(AuthPasswordReset.token_hash == token_digest(reset_token))
+    )
+    if initial is None:
+        raise AuthError("RESET_INVALID")
+    # Lock the user before reset rows, matching issue/reset revocation order.
+    user = db.scalar(select(AuthUser).where(AuthUser.id == initial.user_id).with_for_update())
     row = db.scalar(
         select(AuthPasswordReset)
-        .where(AuthPasswordReset.token_hash == token_digest(reset_token))
+        .where(AuthPasswordReset.id == initial.id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     if not row or row.used_at or row.revoked_at or row.expires_at <= now:
         raise AuthError("RESET_INVALID")
-    user = db.scalar(select(AuthUser).where(AuthUser.id == row.user_id).with_for_update())
     if not user or not user.active:
         raise AuthError("RESET_INVALID")
     user.password_hash = passwords.hash(password)
@@ -180,7 +188,10 @@ def rotate_password(
 def issue_password_reset(
     db: Session, *, issuer: AuthUser, user_id: str, now: datetime
 ) -> tuple[AuthPasswordReset, str]:
-    user = db.scalar(select(AuthUser).where(AuthUser.id == user_id, AuthUser.active.is_(True)))
+    _require_admin(db, issuer)
+    user = db.scalar(
+        select(AuthUser).where(AuthUser.id == user_id, AuthUser.active.is_(True)).with_for_update()
+    )
     if not user:
         raise AuthError("USER_NOT_FOUND")
     token = new_secret()
@@ -223,6 +234,7 @@ def change_user_access(
 ) -> AuthUser:
     _validate_role(role) if role is not None else None
     db.execute(text("SELECT pg_advisory_xact_lock(:key)"), {"key": ADMIN_GUARD_LOCK})
+    _require_admin(db, actor)
     user = db.scalar(select(AuthUser).where(AuthUser.id == user_id).with_for_update())
     if not user:
         raise AuthError("USER_NOT_FOUND")
@@ -254,6 +266,18 @@ def change_user_access(
 def _validate_login(login: str) -> None:
     if not 3 <= len(login) <= 254 or any(ord(char) < 32 for char in login):
         raise AuthError("LOGIN_INVALID")
+
+
+def _require_admin(db: Session, actor: AuthUser) -> None:
+    db.execute(text("SELECT pg_advisory_xact_lock(:key)"), {"key": ADMIN_GUARD_LOCK})
+    current = db.scalar(
+        select(AuthUser)
+        .where(AuthUser.id == actor.id)
+        .with_for_update()
+        .execution_options(populate_existing=True)
+    )
+    if current is None or not current.active or current.role != "admin":
+        raise AuthError("ROLE_REQUIRED")
 
 
 def _validate_role(role: str | None) -> None:

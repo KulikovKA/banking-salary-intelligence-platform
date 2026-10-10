@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 from uuid import uuid4
 
 import pytest
-from sqlalchemy import create_engine, delete, select, text, update
+from sqlalchemy import create_engine, delete, inspect, select, text, update
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 
@@ -227,8 +227,18 @@ def test_snapshot_schema_runs_on_postgresql_18(snapshot_db) -> None:
     with factory() as session:
         version = session.scalar(text("select current_setting('server_version_num')::int"))
         migration = session.scalar(text("select version_num from alembic_version"))
-    assert version is not None and version >= 180000
-    assert migration == "0004a_corpus_gates"
+    assert version is not None and 180000 <= version < 190000
+    assert migration == "0005_auth"
+    with factory() as session:
+        schema = inspect(session.connection())
+        for table in ("fact_reviews", "llm_usage"):
+            assert next(c for c in schema.get_columns(table) if c["name"] == "user_id")["nullable"]
+            assert any(
+                fk["constrained_columns"] == ["user_id"]
+                and fk["referred_table"] == "users"
+                and fk["options"].get("ondelete") == "RESTRICT"
+                for fk in schema.get_foreign_keys(table)
+            )
 
 
 def test_provenance_review_publication_and_usage_rows_round_trip(snapshot_db) -> None:

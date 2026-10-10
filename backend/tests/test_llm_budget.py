@@ -11,6 +11,7 @@ import pytest
 from sqlalchemy import create_engine, delete
 from sqlalchemy.orm import sessionmaker
 
+from app.auth.models import AuthUser
 from app.llm.budget import BudgetRejected, PostgresTokenBudget
 from app.llm.models import LLMUsage
 
@@ -29,6 +30,27 @@ def budget_factory():
     engine.dispose()
 
 
+@pytest.fixture
+def budget_users(budget_factory):
+    ids = [str(uuid4()), str(uuid4())]
+    with budget_factory.begin() as session:
+        session.add_all(
+            [
+                AuthUser(
+                    id=user_id,
+                    login=f"budget-{user_id}@example.invalid",
+                    password_hash="synthetic disabled budget fixture",
+                    role="analyst",
+                    active=False,
+                )
+                for user_id in ids
+            ]
+        )
+    yield ids
+    with budget_factory.begin() as session:
+        session.execute(delete(AuthUser).where(AuthUser.id.in_(ids)))
+
+
 def reserve(budget: PostgresTokenBudget, request_id, user_id: str, tokens: int = 100) -> bool:
     try:
         asyncio.run(budget.reserve(request_id, user_id, tokens, "openai/gpt-oss-120b"))
@@ -37,9 +59,12 @@ def reserve(budget: PostgresTokenBudget, request_id, user_id: str, tokens: int =
         return False
 
 
-def test_concurrent_reservations_are_serialized_per_global_ceiling(budget_factory) -> None:
+def test_concurrent_reservations_are_serialized_per_global_ceiling(
+    budget_factory,
+    budget_users,
+) -> None:
     ids = [uuid4(), uuid4()]
-    users = [str(uuid4()), str(uuid4())]
+    users = budget_users
     budget = PostgresTokenBudget(
         budget_factory, daily_token_limit=10_000, global_concurrency=1, user_concurrency=1
     )
@@ -56,9 +81,10 @@ def test_concurrent_reservations_are_serialized_per_global_ceiling(budget_factor
 
 def test_unknown_usage_keeps_daily_reservation_and_crashed_reservation_releases_concurrency(
     budget_factory,
+    budget_users,
 ) -> None:
     unknown_id, crash_id, next_id, next_id2 = uuid4(), uuid4(), uuid4(), uuid4()
-    user = str(uuid4())
+    user = budget_users[0]
     budget = PostgresTokenBudget(
         budget_factory, daily_token_limit=100, global_concurrency=1, user_concurrency=1
     )
@@ -73,9 +99,11 @@ def test_unknown_usage_keeps_daily_reservation_and_crashed_reservation_releases_
             session.execute(delete(LLMUsage).where(LLMUsage.request_id == str(unknown_id)))
             now = datetime.now(UTC)
             old = now - timedelta(minutes=3)
-            window_start = now.astimezone(ZoneInfo("Europe/Moscow")).replace(
-                hour=0, minute=0, second=0, microsecond=0
-            ).astimezone(UTC)
+            window_start = (
+                now.astimezone(ZoneInfo("Europe/Moscow"))
+                .replace(hour=0, minute=0, second=0, microsecond=0)
+                .astimezone(UTC)
+            )
             session.add(
                 LLMUsage(
                     request_id=str(crash_id),
@@ -108,7 +136,9 @@ def test_unknown_usage_keeps_daily_reservation_and_crashed_reservation_releases_
 def test_short_window_request_ceiling_survives_reservation_release(budget_factory):
     first, second = uuid4(), uuid4()
     budget = PostgresTokenBudget(
-        budget_factory, daily_token_limit=10_000, minute_request_limit=2,
+        budget_factory,
+        daily_token_limit=10_000,
+        minute_request_limit=2,
     )
     try:
         asyncio.run(budget.reserve(first, None, 50, "openai/gpt-oss-120b"))
@@ -117,6 +147,6 @@ def test_short_window_request_ceiling_survives_reservation_release(budget_factor
             asyncio.run(budget.reserve(second, None, 50, "openai/gpt-oss-120b"))
     finally:
         with budget_factory.begin() as session:
-            session.execute(delete(LLMUsage).where(
-                LLMUsage.request_id.in_([str(first), str(second)])
-            ))
+            session.execute(
+                delete(LLMUsage).where(LLMUsage.request_id.in_([str(first), str(second)]))
+            )

@@ -1,7 +1,7 @@
 """Add closed-application users, one-time tokens, sessions, and audit.
 
 Revision ID: 0005_auth
-Revises: 0004_snapshot_core
+Revises: 0004a_corpus_gates
 """
 
 from collections.abc import Sequence
@@ -12,7 +12,7 @@ from sqlalchemy.dialects import postgresql
 from alembic import op
 
 revision: str = "0005_auth"
-down_revision: str | None = "0004_snapshot_core"
+down_revision: str | None = "0004a_corpus_gates"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
@@ -106,9 +106,27 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(["actor_id"], ["users.id"], ondelete="SET NULL"),
     )
     op.create_index("ix_auth_audit_created_at", "auth_audit", ["created_at"])
+    op.create_foreign_key(
+        "fk_fact_reviews_user_id",
+        "fact_reviews",
+        "users",
+        ["user_id"],
+        ["id"],
+        ondelete="RESTRICT",
+    )
+    op.create_foreign_key(
+        "fk_llm_usage_user_id",
+        "llm_usage",
+        "users",
+        ["user_id"],
+        ["id"],
+        ondelete="RESTRICT",
+    )
 
 
 def downgrade() -> None:
+    op.drop_constraint("fk_llm_usage_user_id", "llm_usage", type_="foreignkey")
+    op.drop_constraint("fk_fact_reviews_user_id", "fact_reviews", type_="foreignkey")
     op.drop_index("ix_auth_audit_created_at", table_name="auth_audit")
     op.drop_table("auth_audit")
     op.drop_index("ix_sessions_user_active", table_name="sessions")

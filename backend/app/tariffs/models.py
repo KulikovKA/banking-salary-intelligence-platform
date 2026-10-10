@@ -101,6 +101,9 @@ class FactReview(Base):
     __tablename__ = "fact_reviews"
     __table_args__ = (
         ForeignKeyConstraint(["candidate_id"], ["tariff_candidates.id"], ondelete="RESTRICT"),
+        ForeignKeyConstraint(
+            ["user_id"], ["users.id"], name="fk_fact_reviews_user_id", ondelete="RESTRICT"
+        ),
         CheckConstraint(
             "decision in ('approved', 'rejected', 'needs_review')", name="ck_fact_reviews_decision"
         ),

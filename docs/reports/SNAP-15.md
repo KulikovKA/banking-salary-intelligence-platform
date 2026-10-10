@@ -8,7 +8,7 @@
 
 **Report commit:** `9dae3cd`
 
-**Status:** implementation scaffold is reviewable; final integration remains pending the shared dependency and schema-owner changes listed below.
+**Status:** integrator corrections and offline verification complete; GitHub merge remains blocked by integration API 403. The original findings below are historical and are resolved by the integrator section at the end.
 
 ## Implemented
 
@@ -100,3 +100,77 @@ The browser automation fallback could not connect to its Windows native pipe
 after the prescribed retry/reset (`file not found`, OS error 2). No PR was
 created. Open the [compare page](https://github.com/KulikovKA/banking-salary-intelligence-platform/compare/main...codex/snap-15-auth?expand=1)
 to create the draft PR; use the blockers above as its review checklist.
+
+## Integrator completion (2026-10-10)
+
+Base main remains `504c71f`; GitHub API denied merge of PR #9 with 403. To make
+PR #8 reviewable against the intended combined result, the reviewed corpus, HTML,
+Groq and XLSX branch heads were merged locally into the auth review branch without
+rewriting history. These are preparation merges, not claims of main integration.
+Use the merge order #9, #10, #6, #7, #8; use merge commits to retain shared ancestry.
+
+### Resolved shared blockers
+
+- `argon2-cffi` is declared and locked, preserving pdfplumber/openpyxl and stubs.
+- `0005_auth` follows additive `0004a_corpus_gates`, with matching nullable RESTRICT
+  user FKs on fact_reviews and llm_usage; no historical user is invented.
+- PostgreSQL schema tests assert head 0005, PostgreSQL 18, nullable columns and
+  actual FK targets/delete behavior. Budget tests now create explicit disabled
+  synthetic identities rather than random nonexistent FK values.
+- Strict mypy passes from a locked environment; auth uses the post-SNAP-13 Settings.
+
+### Security review and corrections
+
+Argon2id uses t=3, m=65536 KiB, p=4, 12..128-character passwords and random
+256-bit invite/reset/session tokens. Only token hashes are persisted. The
+[official parameter guidance](https://argon2-cffi.readthedocs.io/en/stable/parameters.html)
+was rechecked on 2026-10-10. No default production password is provided.
+
+Login/invite/reset previously checked only Origin. The router now exposes
+`GET /api/v1/auth/csrf`, issuing a signed 10-minute browser challenge with no-store.
+These anonymous mutations require its matching cookie and X-CSRF-Token plus exact
+Origin. Authenticated mutations keep session-bound CSRF. Production sessions are
+__Host-session, Secure/HttpOnly/Lax/Path=/ without Domain; production rejects an
+HTTP Origin override. Validation errors omit credential/token input values.
+
+Successful login/invite/reset revokes the previous browser session and creates
+new session/CSRF secrets. Idle 8h and absolute 24h expiry remain; session touch is
+flushed before detached identity return. AuthContext exposes reusable user/admin/
+CSRF dependencies for SNAP-16. Mutations recheck current admin role/active state
+inside their transaction. Last-admin advisory locking survives concurrent demotion.
+Reset consumption locks user before reset rows, matching issuance/revocation order
+and preventing reverse-order deadlocks. Invite/reset same-token races allow one
+consumer. The login limiter retains 5/account and 20/IP per minute with bounded
+buckets/deques and fails closed when active key capacity is full.
+
+Tests cover production cookies, session touch/rotation, CSRF, credential canaries,
+stale admin identity, reset race, last-admin race and login-burst memory bounds.
+The HTTP fixation fixture uses the browser's host-scoped cookie rather than a
+TestClient-only domainless duplicate.
+
+### Final validation
+
+- Locked sync, Ruff, strict mypy (54 source files), docs validator: PASS.
+- Full backend + TLS-tool pytest on dedicated PostgreSQL 18 bsi_wave2_test:
+  **268 passed, 0 failed, 0 skipped**, no warnings.
+- Alembic upgrade/check: PASS on bsi_wave2_test; upgrade from 0004 and check on
+  bsi_e2e: PASS. 0001?0004 files are unchanged.
+- Source recovery E2E: PASS_SYNTHETIC_ONLY, network_requests=0; evidence is copied
+  to the wave-two integration report. This is not the deferred SNAP-08 pipeline.
+- Frontend lint/typecheck/build: PASS. Browser E2E NOT RUN: no UI implementation
+  changed and the closed assistant interface remains SNAP-17.
+- New integration test verifies authenticated identity -> actual PG user FK and
+  quota reservation -> mocked Groq settlement, plus Fake compatibility.
+- Live Groq/real bank acquisition/S1: NOT RUN/BLOCKED; no credentials/payload
+  approval or source-specific real acquisition/storage/reuse decision supplied.
+
+### Concrete downstream handoff
+
+SNAP-16 must fetch the anonymous CSRF challenge before login/invite/reset, supply
+X-CSRF-Token, mount the router/dependencies, bind authenticated user to Groq budget,
+and close the reused Groq client in lifespan. Existing public DTO/Protocols and
+main.py are unchanged. SNAP-08 consumes CorpusService.read_draft_document on a
+staged manifest; final SnapshotMember is added only after successful extraction.
+
+MASTER_PLAN/TASKS statuses remain unchanged until verified main merge. S1 BLOCKED,
+S2/S3 NOT EVALUATED and G1/G2 NOT PASSED. No new task implementation was started.

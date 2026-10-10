@@ -333,15 +333,16 @@ def test_http_origin_csrf_session_fixation_and_role_enforcement(auth_db):
         )
     )
     client = TestClient(app)
-    client.cookies.set("bsi-session", "attacker-fixed-session")
+    challenge = client.get("/api/v1/auth/csrf").json()["csrf_token"]
+    client.cookies.set("bsi-session", "attacker-fixed-session", domain="testserver.local")
     invalid_user = client.post(
         "/api/v1/auth/login",
-        headers={"Origin": "http://testserver"},
+        headers={"Origin": "http://testserver", "X-CSRF-Token": challenge},
         json={"login": f"missing-{uuid4().hex}@example.invalid", "password": "bad password"},
     )
     invalid_password = client.post(
         "/api/v1/auth/login",
-        headers={"Origin": "http://testserver"},
+        headers={"Origin": "http://testserver", "X-CSRF-Token": challenge},
         json={"login": login, "password": "wrong password"},
     )
     assert invalid_user.status_code == invalid_password.status_code == 401
@@ -354,7 +355,7 @@ def test_http_origin_csrf_session_fixation_and_role_enforcement(auth_db):
     assert response.status_code == 403
     response = client.post(
         "/api/v1/auth/login",
-        headers={"Origin": "http://testserver"},
+        headers={"Origin": "http://testserver", "X-CSRF-Token": challenge},
         json={"login": login, "password": "A-very-long synthetic password 1!"},
     )
     assert response.status_code == 200
@@ -364,13 +365,13 @@ def test_http_origin_csrf_session_fixation_and_role_enforcement(auth_db):
     response = client.post(
         "/api/v1/auth/admin/invitations",
         headers={"Origin": "http://testserver", "X-CSRF-Token": "wrong"},
-        json={"login": f"analyst-{uuid4().hex}@example.invalid", "role": "analyst"},
+        json={"login": f"{login}.http-analyst", "role": "analyst"},
     )
     assert response.status_code == 403
     response = client.post(
         "/api/v1/auth/admin/invitations",
         headers={"Origin": "http://testserver", "X-CSRF-Token": csrf},
-        json={"login": f"analyst-{uuid4().hex}@example.invalid", "role": "analyst"},
+        json={"login": f"{login}.http-analyst", "role": "analyst"},
     )
     assert response.status_code == 201
     raw_invite = response.json()["token"]
@@ -382,7 +383,7 @@ def test_http_origin_csrf_session_fixation_and_role_enforcement(auth_db):
         assert raw_invite not in invite.token_hash
     response = client.post(
         "/api/v1/auth/accept-invite",
-        headers={"Origin": "http://testserver"},
+        headers={"Origin": "http://testserver", "X-CSRF-Token": challenge},
         json={"token": raw_invite, "password": "A valid analyst password 5!"},
     )
     assert response.status_code == 200
@@ -401,3 +402,200 @@ def test_http_origin_csrf_session_fixation_and_role_enforcement(auth_db):
     )
     assert response.status_code == 200
     assert client.get("/api/v1/auth/me").status_code == 401
+
+
+def test_anonymous_mutations_require_signed_csrf_and_hide_credentials(auth_db, caplog):
+    factory, passwords, _, login = auth_db
+    app = FastAPI()
+    app.include_router(
+        create_auth_router(
+            factory,
+            Settings(app_env="test"),
+            expected_origin="http://testserver",
+            passwords=passwords,
+        )
+    )
+    client = TestClient(app)
+    body = {"login": login, "password": "A-very-long synthetic password 1!"}
+    assert (
+        client.post(
+            "/api/v1/auth/login", headers={"Origin": "http://testserver"}, json=body
+        ).status_code
+        == 403
+    )
+    for path in ("accept-invite", "password-reset"):
+        assert (
+            client.post(
+                f"/api/v1/auth/{path}",
+                headers={"Origin": "http://testserver"},
+                json={"token": "x" * 43, "password": body["password"]},
+            ).status_code
+            == 403
+        )
+    challenge = client.get("/api/v1/auth/csrf")
+    assert challenge.headers["cache-control"] == "no-store"
+    headers = {"Origin": "http://testserver", "X-CSRF-Token": challenge.json()["csrf_token"]}
+    bad = client.post(
+        "/api/v1/auth/login",
+        headers=headers,
+        json={"login": login, "password": "SECRET-CANARY" * 20},
+    )
+    assert bad.status_code == 422
+    assert "SECRET-CANARY" not in bad.text + caplog.text
+    result = client.post("/api/v1/auth/login", headers=headers, json=body)
+    assert result.status_code == 200
+    old_hash = token_digest(result.cookies["bsi-session"])
+    result2 = client.post("/api/v1/auth/login", headers=headers, json=body)
+    assert result2.status_code == 200
+    assert result2.cookies["bsi-session"] != result.cookies["bsi-session"]
+    with factory() as db:
+        assert db.scalar(select(AuthSession.revoked_at).where(AuthSession.token_hash == old_hash))
+    assert client.get("/api/v1/auth/me").status_code == 200
+
+
+def test_same_reset_token_race_consumes_it_once(auth_db):
+    factory, passwords, admin_id, _ = auth_db
+    now = datetime.now(UTC)
+    with factory.begin() as db:
+        _, token = issue_password_reset(
+            db, issuer=db.get(AuthUser, admin_id), user_id=admin_id, now=now
+        )
+    barrier = Barrier(2)
+
+    def reset_once(_):
+        barrier.wait(timeout=5)
+        try:
+            with factory.begin() as db:
+                return rotate_password(
+                    db,
+                    reset_token=token,
+                    password="Concurrent reset password!",
+                    passwords=passwords,
+                    now=now,
+                )[0].id
+        except AuthError as exc:
+            return exc.code
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        outcomes = list(pool.map(reset_once, range(2)))
+    assert outcomes.count(admin_id) == 1
+    assert outcomes.count("RESET_INVALID") == 1
+
+
+def test_admin_role_is_rechecked_inside_mutation_transaction(auth_db):
+    factory, _, admin_id, login = auth_db
+    with factory() as db:
+        stale_actor = db.get(AuthUser, admin_id)
+    with factory.begin() as db:
+        db.get(AuthUser, admin_id).role = "analyst"
+    with factory.begin() as db, pytest.raises(AuthError, match="ROLE_REQUIRED"):
+        create_invitation(
+            db, issuer=stale_actor, login=f"{login}.rejected", role="analyst", now=datetime.now(UTC)
+        )
+
+
+def test_denied_login_burst_has_bounded_memory():
+    limiter = LoginLimiter()
+    for _ in range(10000):
+        limiter.check_and_record("account", "192.0.2.1", now=1)
+    assert len(limiter._accounts["account"]) == 5
+    assert len(limiter._ips["192.0.2.1"]) == 20
+
+
+def test_two_admin_demotions_cannot_remove_the_last_admin(auth_db):
+    from app.auth.service import change_user_access
+
+    factory, passwords, admin_id, login = auth_db
+    with factory.begin() as db:
+        second = AuthUser(
+            login=f"{login}.second-admin",
+            role="admin",
+            password_hash=passwords.hash("Second synthetic admin password!"),
+        )
+        db.add(second)
+        db.flush()
+        second_id = second.id
+    barrier = Barrier(2)
+
+    def demote(user_id):
+        barrier.wait(timeout=5)
+        try:
+            with factory.begin() as db:
+                change_user_access(
+                    db,
+                    actor=db.get(AuthUser, user_id),
+                    user_id=user_id,
+                    role="analyst",
+                    active=None,
+                    now=datetime.now(UTC),
+                )
+            return "changed"
+        except AuthError as exc:
+            return exc.code
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        outcomes = list(pool.map(demote, [admin_id, second_id]))
+    assert sorted(outcomes) == ["LAST_ADMIN", "changed"]
+    with factory() as db:
+        assert (
+            db.scalar(
+                select(func.count())
+                .select_from(AuthUser)
+                .where(
+                    AuthUser.id.in_([admin_id, second_id]),
+                    AuthUser.active.is_(True),
+                    AuthUser.role == "admin",
+                )
+            )
+            == 1
+        )
+
+
+def test_production_cookies_origin_and_session_touch(auth_db, tmp_path):
+    factory, passwords, admin_id, login = auth_db
+    settings = Settings.from_environment(
+        {
+            "APP_ENV": "production",
+            "DATABASE_URL": os.environ["TEST_DATABASE_URL"],
+            "STORAGE_ROOT": str(tmp_path.resolve()),
+            "PUBLIC_BASE_URL": "https://example.test",
+            "SESSION_SECRET": "synthetic-session-signing-key-" * 2,
+            "AUTH_ENABLED": "true",
+            "FAKE_IDENTITY": "false",
+            "SECURE_COOKIES": "true",
+        }
+    )
+    app = FastAPI()
+    app.include_router(create_auth_router(factory, settings, passwords=passwords))
+    client = TestClient(app, base_url="https://example.test")
+    challenge = client.get("/api/v1/auth/csrf").json()["csrf_token"]
+    response = client.post(
+        "/api/v1/auth/login",
+        json={
+            "login": login,
+            "password": "A-very-long synthetic password 1!",
+        },
+        headers={"Origin": "https://example.test", "X-CSRF-Token": challenge},
+    )
+    assert response.status_code == 200
+    cookie = next(
+        value
+        for value in response.headers.get_list("set-cookie")
+        if value.startswith("__Host-session=")
+    )
+    assert "Secure" in cookie and "HttpOnly" in cookie and "SameSite=lax" in cookie
+    assert "Path=/" in cookie and "Domain=" not in cookie
+    with factory.begin() as db:
+        session = db.scalar(select(AuthSession).where(AuthSession.user_id == admin_id))
+        session.last_seen_at = datetime.now(UTC) - timedelta(hours=1)
+    assert client.get("/api/v1/auth/me").status_code == 200
+    with factory() as db:
+        assert db.scalar(
+            select(AuthSession.last_seen_at).where(
+                AuthSession.user_id == admin_id,
+            )
+        ) > datetime.now(UTC) - timedelta(minutes=1)
+    with pytest.raises(ValueError, match="AUTH_ORIGIN_INVALID"):
+        create_auth_router(
+            factory, settings, expected_origin="http://example.test", passwords=passwords
+        )
