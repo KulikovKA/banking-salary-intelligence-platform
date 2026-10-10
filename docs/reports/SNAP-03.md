@@ -33,4 +33,4 @@
 
 Synthetic PostgreSQL harness подтверждает composition/freeze/read invariants и не доказывает качество реальных данных, законность acquisition/reuse или readiness S1. S1 остаётся `BLOCKED`, G1/G2 — `NOT PASSED`. Текущая schema SNAP-02 не хранит полный manifest JSON в PostgreSQL: база фиксирует membership и hash, оператор сохраняет manifest как immutable run artifact.
 
-**Implementation commit:** `5c71909035930b33e4063c6140138c37095520f5`. **PR:** будет добавлен после публикации.
+**Implementation commit:** `194fd03da7465ed16dbe97461c2ac5ba6505179d`. **PR:** будет добавлен после публикации.
