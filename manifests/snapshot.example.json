@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "snapshot_id": "8d6251ae-1c31-48ed-98e1-f9087414cda6",
+  "revision": 1,
+  "corpus_kind": "synthetic",
+  "region": "RU-KDA",
+  "employer_segment": "SME",
+  "documents": [
+    {
+      "bank_code": "sber",
+      "source_id": "94a5af6d-46f0-44b6-9b46-b0fa88787bef",
+      "source_version_id": "0140a756-ec6b-4424-8242-35e8c7c072c5",
+      "source_fetch_id": "054b644b-f6d0-4c88-9f59-1e3fb754ef0a",
+      "policy_id": "c9880b48-26db-49ae-a265-6f0b0f2ddc17",
+      "extraction_run_id": "88fbbba6-7be5-4ab5-bf6a-677b8325b883",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "acquisition_method": "automatic",
+      "original_url": "https://example.com/synthetic-salary-terms.pdf",
+      "final_url": "https://example.com/synthetic-salary-terms.pdf",
+      "acquired_at": "2026-10-10T10:00:00Z",
+      "scope": {"region": "RU-KDA", "segment": "SME"},
+      "effective_date": null,
+      "document_type": "synthetic_salary_terms"
+    }
+  ],
+  "missing_documents": [
+    {"bank_code": "vtb", "document_type": "salary_project_terms", "reason": "Synthetic fixture intentionally omits this bank.", "basis_reference": "synthetic-fixture"},
+    {"bank_code": "alfa", "document_type": "salary_project_terms", "reason": "Synthetic fixture intentionally omits this bank.", "basis_reference": "synthetic-fixture"},
+    {"bank_code": "kuban_credit", "document_type": "salary_project_terms", "reason": "Synthetic fixture intentionally omits this bank.", "basis_reference": "synthetic-fixture"}
+  ]
+}
