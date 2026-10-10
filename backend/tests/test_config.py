@@ -38,11 +38,11 @@ def test_production_requires_secure_complete_configuration(environment: dict[str
         Settings.from_environment(environment)
 
 
-def test_production_rejects_fake_identity_and_insecure_cookies() -> None:
+def test_production_rejects_fake_identity_and_insecure_cookies(tmp_path) -> None:
     values = {
         "APP_ENV": "production",
         "DATABASE_URL": "postgresql+psycopg://user:password@db/bsi",
-        "STORAGE_ROOT": "C:\\var\\lib\\bsi",
+        "STORAGE_ROOT": str(tmp_path.resolve()),
         "PUBLIC_BASE_URL": "https://example.test",
         "SESSION_SECRET": "s" * 40,
         "AUTH_ENABLED": "true",
@@ -51,6 +51,22 @@ def test_production_rejects_fake_identity_and_insecure_cookies() -> None:
     }
     with pytest.raises(SettingsError, match="CONFIG_PRODUCTION_AUTH_INVALID"):
         Settings.from_environment(values)
+
+
+def test_production_accepts_native_absolute_storage_root(tmp_path) -> None:
+    settings = Settings.from_environment(
+        {
+            "APP_ENV": "production",
+            "DATABASE_URL": "postgresql+psycopg://user:password@db/bsi",
+            "STORAGE_ROOT": str(tmp_path.resolve()),
+            "PUBLIC_BASE_URL": "https://example.test",
+            "SESSION_SECRET": "s" * 40,
+            "AUTH_ENABLED": "true",
+            "FAKE_IDENTITY": "false",
+            "SECURE_COOKIES": "true",
+        }
+    )
+    assert settings.storage_root.is_absolute()
 
 
 def test_provider_requires_model_key_and_https_base() -> None:
