@@ -347,7 +347,9 @@ def _extract_blocks(request: ParseRequest, root: _Node) -> list[ParsedBlock]:
                         if anchor.tag == "a" and _nearest(anchor, "table") is node:
                             anchor_href = anchor.attrs.get("href") or ""
                             rel.append({
-                                "type": "footnote_reference" if anchor_href.startswith("#") else "link",
+                                "type": (
+                                    "footnote_reference" if anchor_href.startswith("#") else "link"
+                                ),
                                 "href": anchor_href,
                                 "element_path": anchor.path,
                                 "review_required": "true",
