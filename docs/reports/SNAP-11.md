@@ -2,6 +2,7 @@
 
 Date: 2026-10-11. Base: `790347c` (`origin/dev`, SNAP-09 acceptance merge).
 Branch: `codex/snap-11-comparison`; isolated worktree `C:/Users/Kirill/Desktop/sber-snap-11`.
+Implementation commit: `c4ce3912ab70ea38e88174bad10d5236961d2caa`.
 Implementation delivered for independent review; **not DONE**. No SNAP-14 work.
 
 ## Dependency and scope evidence
