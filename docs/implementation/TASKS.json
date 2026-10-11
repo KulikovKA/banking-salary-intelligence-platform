@@ -157,7 +157,7 @@
         "SNAP-06",
         "SNAP-07"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "high",
       "owned_paths": [
         "backend/app/parsing/runner.py",
