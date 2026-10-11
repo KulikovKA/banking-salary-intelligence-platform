@@ -216,7 +216,7 @@
       "deps": [
         "SNAP-09"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "high",
       "owned_paths": [
         "backend/app/comparison/service.py",
