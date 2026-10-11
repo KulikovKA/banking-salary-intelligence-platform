@@ -7,6 +7,9 @@ assistant and must not be marked DONE.
 Base main: `af807da2725edc1ac87e067c05b89722ef8fc99f`.
 Branch/worktree: `codex/snap-14-assistant`, separate from the user's dirty workspace.
 Implementation SHA: `e399ccacbf5f6baa27200c900cf97cc23268ae27`.
+Draft pull request: [#23](https://github.com/KulikovKA/banking-salary-intelligence-platform/pull/23).
+Branch pushed; no merge performed. The connector could not create a PR (integration
+403); the existing authorized Git credential successfully created the draft via API.
 
 ## Dependency verification
 
@@ -110,7 +113,9 @@ other task DBs. All existing Alembic migrations applied through `0005_auth`.
   The existing `/proc` process-state check is Linux-specific and skipped on Windows;
   this is an explicit platform skip, not PASS for that check. All PG tests ran.
 - `uv run python tools/validate_docs.py`: PASS, 19 prompts, links, DAG/status checks.
-- Base CI: PASS on the exact base commit linked above; new branch CI pending push.
+- Base CI: PASS on the exact base commit linked above. At this report update,
+  [branch CI](https://github.com/KulikovKA/banking-salary-intelligence-platform/actions/runs/38155051033)
+  for `95d254d13fd1b59da9c008e85f54fa07b88ed8f3` is in progress, not claimed PASS.
 - `git diff --cached --check`: PASS; staged paths are exactly the five owned files.
 
 Development failures were corrected before review: an inferred status needed a
