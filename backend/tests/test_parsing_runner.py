@@ -61,9 +61,30 @@ def _alive_non_zombie(pid: int) -> bool:
         return False
     stat_path = Path(f"/proc/{pid}/stat")
     if stat_path.exists():
-        fields = stat_path.read_text(encoding="ascii").split()
+        try:
+            fields = stat_path.read_text(encoding="ascii").split()
+        except FileNotFoundError:
+            # The process can exit after exists() succeeds but before the
+            # procfs file is opened. Treat that race as an exited process.
+            return False
         return len(fields) < 3 or fields[2] != "Z"
     return True
+
+
+@pytest.mark.skipif(
+    not (os.name == "posix" and runner.sys.platform.startswith("linux")),
+    reason="/proc process state is Linux-specific",
+)
+def test_alive_non_zombie_handles_procfs_exit_race(monkeypatch) -> None:
+    monkeypatch.setattr(os, "kill", lambda _pid, _signal: None)
+    monkeypatch.setattr(Path, "exists", lambda _path: True)
+
+    def read_disappeared_stat(_path, *args, **kwargs):
+        raise FileNotFoundError("process exited before procfs read")
+
+    monkeypatch.setattr(Path, "read_text", read_disappeared_stat)
+
+    assert not _alive_non_zombie(12345)
 
 
 def test_worker_environment_excludes_application_secrets(monkeypatch) -> None:
