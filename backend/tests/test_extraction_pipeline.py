@@ -509,8 +509,10 @@ def test_unknown_value_and_invalid_mapping_remain_diagnostics(pipeline_db) -> No
         operator_mapping=invalid,
         context=_CONTEXT,
     )
-    # Independent automatic extraction remains available.
-    assert failed_mapping.candidate_count == 1
+    # Invalid operator input must not finalize a chain that cannot be repaired.
+    assert failed_mapping.status == "failed"
+    assert failed_mapping.extraction_id is None
+    assert failed_mapping.candidate_count == 0
     assert any(
         item.code == "OPERATOR_MAPPING_REFERENCE_MISSING"
         for item in failed_mapping.diagnostics

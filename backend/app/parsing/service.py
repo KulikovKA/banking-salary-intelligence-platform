@@ -187,6 +187,19 @@ class ExtractionPipeline:
             raise ExtractionPipelineError("EXTRACTION_VALIDATION_FAILED") from exc
         diagnostics.update(_safe_code(item.code) for item in parsed.diagnostics)
 
+        if not candidates or any(
+            code.startswith("OPERATOR_MAPPING_") and code != "OPERATOR_MAPPING_REQUIRES_REVIEW"
+            or code in {"PAYER_UNKNOWN", "OPERATION_UNKNOWN"}
+            for code in diagnostics
+        ):
+            # Operator input must be repairable without changing the actual parser
+            # version or overwriting an immutable extraction/candidate chain.
+            if not diagnostics:
+                diagnostics["CANDIDATE_MAPPING_REQUIRED"] += 1
+            return ExtractionPipelineResult(
+                None, "failed", 0, 0, _diagnostic_counts(diagnostics)
+            )
+
         try:
             idempotent = self._persist(
                 manifest, item, bank_code, parsed, run_id, candidates

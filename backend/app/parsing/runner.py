@@ -259,8 +259,10 @@ def run_bounded_parse(
         finally:
             if job_handle is not None:
                 _close_windows_handle(job_handle)
-            if process is not None and process.poll() is None:
-                _terminate_process(process, job_handle)
+                job_handle = None
+            if process is not None and (os.name == "posix" or process.poll() is None):
+                # An exited POSIX leader can still have live descendants.
+                _terminate_process(process, None)
 
 
 def _validate_limits(timeout: float, memory: int, output: int) -> None:
