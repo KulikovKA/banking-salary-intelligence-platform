@@ -13,6 +13,7 @@ import pytest
 from app.contracts.parsing import ParseRequest
 from app.parsing import runner
 from app.parsing.runner import (
+    BoundedParseCrash,
     BoundedParseOutputError,
     BoundedParseResourceError,
     BoundedParseTimeout,
@@ -143,3 +144,45 @@ def test_timeout_terminates_worker_and_descendant(tmp_path, monkeypatch) -> None
     while _alive_non_zombie(child_pid) and time.monotonic() < deadline:
         time.sleep(0.05)
     assert not _alive_non_zombie(child_pid)
+
+
+@pytest.mark.parametrize("crash", [False, True])
+@pytest.mark.skipif(
+    not (os.name == "nt" or (os.name == "posix" and runner.sys.platform.startswith("linux"))),
+    reason="process-group and Windows Job Object termination are platform-specific",
+)
+def test_completed_worker_also_terminates_descendants(tmp_path, monkeypatch, crash) -> None:
+    original = tmp_path / "input.html"
+    original.write_text("<html><body><p>synthetic</p></body></html>", encoding="utf-8")
+    pid_file = tmp_path / "completed-child.pid"
+    target = "request = ParseRequest.model_validate_json(request_bytes)"
+    injected = (
+        target
+        + "\nimport subprocess\n"
+        + 'child = subprocess.Popen([sys.executable, "-c", '
+        + '"import time; time.sleep(30)"])\n'
+        + f"open({str(pid_file)!r}, 'w', encoding='ascii').write(str(child.pid))\n"
+        + ("raise SystemExit(2)\n" if crash else "")
+    )
+    monkeypatch.setattr(
+        runner, "_WORKER_BOOTSTRAP", runner._WORKER_BOOTSTRAP.replace(target, injected)
+    )
+    try:
+        if crash:
+            with pytest.raises(BoundedParseCrash):
+                run_bounded_parse(_request(original), original)
+        else:
+            assert run_bounded_parse(_request(original), original).status == "ok"
+        assert pid_file.exists()
+        child_pid = int(pid_file.read_text(encoding="ascii"))
+        deadline = time.monotonic() + 5
+        while _alive_non_zombie(child_pid) and time.monotonic() < deadline:
+            time.sleep(0.05)
+        assert not _alive_non_zombie(child_pid)
+    finally:
+        if pid_file.exists():
+            child_pid = int(pid_file.read_text(encoding="ascii"))
+            if _alive_non_zombie(child_pid):
+                import signal
+
+                os.kill(child_pid, getattr(signal, "SIGKILL", signal.SIGTERM))

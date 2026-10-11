@@ -30,7 +30,7 @@ from app.contracts.parsing import (
 from app.ingestion.errors import IngestionError
 from app.ingestion.formats import check_format
 
-PARSER_VERSION = "openpyxl/2"
+PARSER_VERSION = "openpyxl/3"
 MAX_FILE_BYTES = 50 * 1024 * 1024
 MAX_SHEETS = 100
 MAX_CELLS = 200_000
@@ -370,6 +370,9 @@ class XlsxParser(Parser):
                         )
                     )
             diagnostics.extend(_link_footnotes(sheet_blocks))
+            # Linking replaces frozen DTOs; propagate replacements before hashing.
+            if sheet_blocks:
+                blocks[-len(sheet_blocks):] = sheet_blocks
 
         if not blocks:
             return self._result(request, "failed", "XLSX_NO_EXTRACTABLE_CELLS")

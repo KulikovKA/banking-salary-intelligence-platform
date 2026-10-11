@@ -10,6 +10,7 @@ import uuid
 from dataclasses import dataclass, field
 from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import unquote
 
 from app.contracts.parsing import (
     HtmlLocator,
@@ -20,7 +21,7 @@ from app.contracts.parsing import (
     ParseResult,
 )
 
-PARSER_VERSION = "stdlib-html/2"
+PARSER_VERSION = "stdlib-html/3"
 MAX_FILE_BYTES = 50 * 1024 * 1024
 MAX_TEXT_CHARS = 10_000_000
 _VOID = {
@@ -252,6 +253,7 @@ class HtmlParser(Parser):
 
 def _extract_blocks(request: ParseRequest, root: _Node) -> list[ParsedBlock]:
     blocks: list[ParsedBlock] = []
+    node_blocks: dict[str, uuid.UUID] = {}
     active_heading: str | None = None
     table_number = 0
 
@@ -280,6 +282,7 @@ def _extract_blocks(request: ParseRequest, root: _Node) -> list[ParsedBlock]:
                 relations=relations,
             )
         )
+        node_blocks[node.path] = block_id
 
     def visit(node: _Node, current_heading: str | None) -> str | None:
         nonlocal table_number
@@ -396,7 +399,14 @@ def _extract_blocks(request: ParseRequest, root: _Node) -> list[ParsedBlock]:
                     or _FOOTNOTE.match(text)
                     else "text"
                 )
-                add(node, text, heading=current_heading, relations=({"type": role},))
+                references = tuple(
+                    {"type": "footnote_reference", "href": str(child.attrs["href"]),
+                     "review_required": "true"}
+                    for child in _descendants(node)
+                    if child.tag == "a" and (child.attrs.get("href") or "").startswith("#")
+                )
+                add(node, text, heading=current_heading,
+                    relations=({"type": role},) + references)
         for child in node.children:
             if isinstance(child, _Node):
                 current_heading = visit(child, current_heading)
@@ -405,6 +415,27 @@ def _extract_blocks(request: ParseRequest, root: _Node) -> list[ParsedBlock]:
     for child in root.children:
         if isinstance(child, _Node):
             active_heading = visit(child, active_heading)
+    targets: dict[str, list[uuid.UUID | None]] = {}
+    for node in _descendants(root):
+        target_id = node.attrs.get("id")
+        if target_id:
+            # A fragment may point to a span inside an extracted paragraph/cell.
+            owner: _Node | None = node
+            while owner is not None and owner.path not in node_blocks:
+                owner = owner.parent
+            targets.setdefault(target_id, []).append(
+                node_blocks[owner.path] if owner is not None else None
+            )
+    for index, block in enumerate(blocks):
+        linked = []
+        for relation in block.relations:
+            relation = dict(relation)
+            if relation.get("type") == "footnote_reference":
+                matches = targets.get(unquote(relation.get("href", "")[1:]), [])
+                if len(matches) == 1 and matches[0] is not None:
+                    relation["related_block_id"] = str(matches[0])
+            linked.append(relation)
+        blocks[index] = block.model_copy(update={"relations": tuple(linked)})
     return blocks
 
 

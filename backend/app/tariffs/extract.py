@@ -30,6 +30,15 @@ _FREE = re.compile(r"\bбесплатно\b|без\s+комиссии|\bfree\b",
 _INDIVIDUAL = re.compile(r"индивидуальн\w*|по\s+согласован\w*|по\s+запросу", re.I)
 _CONDITION = re.compile(r"\b(?:при|если|только\s+при|за\s+исключением|кроме)\b", re.I)
 _DATE = re.compile(r"\b(?:с|по|до|действует\s+с)\s+\d{1,2}[.\-/]\d{1,2}[.\-/]\d{4}\b", re.I)
+_BOUND = re.compile(
+    r"\b(?:от|до|не\s+менее|не\s+более|минимум|максимум|from|up\s+to)\s+\d"
+    r"|[<>≥≤]\s*=?\s*\d|\d\s*[–—−/-]\s*\d", re.I
+)
+_NEGATED_FREE = re.compile(
+    r"\b(?:не\s+(?:бесплатно|free)|не\s+без\s+комиссии|not\s+free|бесплатно\s+не)\b",
+    re.I,
+)
+_SIGNED_NUMBER = re.compile(r"(?<!\w)[−-]\s*\d")
 
 
 @dataclass(frozen=True, slots=True)
@@ -234,6 +243,14 @@ def _mapped_rule(
     value_support = next((s for s in supports if s.role == "value"), None)
     if value_support is None:
         return _diagnostic_suggestion("OPERATOR_MAPPING_VALUE_REQUIRED", context, index, metric)
+    error = _unsafe_value(value_support.quote)
+    if error:
+        return _diagnostic_suggestion(error, context, index, metric, value_support.block)
+    supports, _ = _with_linked_footnotes(supports, by_id)
+    if _unresolved_footnote(supports, by_id):
+        return _diagnostic_suggestion(
+            "FOOTNOTE_REFERENCE_UNRESOLVED", context, index, metric, value_support.block
+        )
     return _make_suggestion(
         metric, value_support.quote, supports, context, index, forced_review=True
     )
@@ -322,6 +339,14 @@ def _extract_table(
             )
             continue
         start, end, raw_value = value_match
+        unsafe = next(
+            (unsafe_code for cell in cells if (unsafe_code := _unsafe_value(cell.text))), None
+        )
+        if unsafe:
+            result.append(_diagnostic_suggestion(
+                unsafe, context, table_id + ":" + row, metric, value_block
+            ))
+            continue
         supports = [_Support(value_block, "value", start, end)]
         unit_support = _inline_unit(value_block, start, end)
         if unit_support is not None:
@@ -331,12 +356,35 @@ def _extract_table(
             for block in cells
             if _relation_value(block, "column_header") or _relation_value(block, "merged_header")
         ]
+        # Retain row labels and actual immutable headers, not relation text with
+        # a value-cell locator. Ambiguous header matches require operator mapping.
+        header_supports, headers_valid = _header_supports(cells, by_id)
+        if not headers_valid:
+            result.append(_diagnostic_suggestion(
+                "HEADER_REFERENCE_AMBIGUOUS", context, table_id + ":" + row, metric, value_block
+            ))
+            continue
+        supports.extend(header_supports)
+        for block in cells:
+            if block is not value_block:
+                supports.append(_Support(block, "scope"))
+        if metric_from_table_header:
+            supports.extend(
+                _Support(block, "scope") for block in blocks
+                if _metric_for(block.text) == metric
+            )
         for block in cells:
             if _CONDITION.search(block.text):
                 supports.append(_Support(block, "condition"))
             if _DATE.search(block.text):
                 supports.append(_Support(block, "date"))
         supports, linked_review = _with_linked_footnotes(supports, by_id)
+        if _unresolved_footnote(supports, by_id):
+            result.append(_diagnostic_suggestion(
+                "FOOTNOTE_REFERENCE_UNRESOLVED", context, table_id + ":" + row,
+                metric, value_block,
+            ))
+            continue
         # Header associations are parser-derived and explicitly review-required.
         review = (
             metric_from_table_header
@@ -360,6 +408,9 @@ def _extract_text(
     metric = _metric_for((block.heading or "") + " " + block.text)
     if metric is None:
         return None
+    unsafe = _unsafe_value(block.text)
+    if unsafe:
+        return _diagnostic_suggestion(unsafe, context, block.block_id, metric, block)
     matches = _value_matches(block.text)
     if len(matches) > 1:
         return _diagnostic_suggestion(
@@ -370,6 +421,7 @@ def _extract_text(
         return _diagnostic_suggestion("TEXT_VALUE_UNKNOWN", context, block.block_id, metric, block)
     start, end, raw_value = match
     supports = [_Support(block, "value", start, end)]
+    supports.append(_Support(block, "scope"))
     unit_support = _inline_unit(block, start, end)
     if unit_support is not None:
         supports.append(unit_support)
@@ -384,6 +436,10 @@ def _extract_text(
         if basis:
             supports.append(_Support(block, "basis", basis.start(), basis.end()))
     supports, linked_review = _with_linked_footnotes(supports, by_id)
+    if _unresolved_footnote(supports, by_id):
+        return _diagnostic_suggestion(
+            "FOOTNOTE_REFERENCE_UNRESOLVED", context, block.block_id, metric, block
+        )
     return _make_suggestion(
         metric, raw_value, supports, context, block.block_id, forced_review=linked_review
     )
@@ -395,7 +451,10 @@ def _with_linked_footnotes(
     expanded = list(supports)
     review_required = False
     seen = {item.block.block_id for item in expanded}
-    for item in supports:
+    index = 0
+    while index < len(expanded):
+        item = expanded[index]
+        index += 1
         for relation in item.block.relations:
             if relation.get("type") != "footnote_reference":
                 continue
@@ -406,6 +465,54 @@ def _with_linked_footnotes(
                 expanded.append(_Support(related, "condition"))
                 seen.add(related.block_id)
     return expanded, review_required
+
+
+def _unresolved_footnote(
+    supports: Sequence[_Support], by_id: Mapping[str, ParsedBlock]
+) -> bool:
+    return any(
+        relation.get("related_block_id") not in by_id
+        for item in supports for relation in item.block.relations
+        if relation.get("type") == "footnote_reference"
+    )
+
+
+def _header_supports(
+    cells: Sequence[ParsedBlock], by_id: Mapping[str, ParsedBlock]
+) -> tuple[list[_Support], bool]:
+    supports: dict[uuid.UUID, _Support] = {}
+    for cell in cells:
+        for relation in cell.relations:
+            if relation.get("type") not in {"column_header", "merged_header"}:
+                continue
+            matches = [
+                block for block in by_id.values()
+                if block.text == relation.get("value")
+                and block.locator.kind == cell.locator.kind
+                and (
+                    (block.locator.kind == "xlsx" and cell.locator.kind == "xlsx"
+                     and block.locator.sheet == cell.locator.sheet)
+                    or (block.locator.kind == "pdf" and cell.locator.kind == "pdf"
+                        and block.table_id == cell.table_id)
+                )
+            ]
+            if len(matches) != 1:
+                return [], False
+            supports[matches[0].block_id] = _Support(matches[0], "scope")
+    return list(supports.values()), True
+
+
+def _unsafe_value(text: str) -> str | None:
+    """Reject qualifiers the exact-value recognizer cannot represent safely."""
+    if _NEGATED_FREE.search(text):
+        return "VALUE_NEGATED"
+    if _SIGNED_NUMBER.search(text):
+        return "VALUE_SIGN_REQUIRES_REVIEW"
+    if _BOUND.search(text):
+        return "VALUE_BOUND_REQUIRES_REVIEW"
+    if len(_value_matches(text)) > 1:
+        return "VALUE_AMBIGUOUS"
+    return None
 
 
 def _make_suggestion(
