@@ -26,6 +26,7 @@ SQL-параметры; input ограничен контрактом в 1000 с
 - `docs/reports/SNAP-10.md` — результаты критериев и проверки.
 
 Base commit: `790347c` (`origin/dev`, merge SNAP-09 PR #18).
+Implementation commit: `f5f54910d5f8766c3f7f5c46cbaab3d1aab354dd`.
 Реализация использует только существующий FTS/GIN и модели; схемы, контракты,
 migrations, shared config и TASKS/MASTER_PLAN не изменялись.
 
