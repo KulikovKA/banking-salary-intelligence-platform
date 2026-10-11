@@ -178,7 +178,7 @@
       "deps": [
         "SNAP-08"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "high",
       "owned_paths": [
         "backend/app/evidence/validation.py",
