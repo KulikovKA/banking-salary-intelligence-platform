@@ -5,7 +5,9 @@ Base commit: `09006c635b4f35f5070beb58ce8b9b19dfafc781`.
 Ветка/worktree: `codex/snap-09-evidence`,
 `C:/Users/Kirill/Desktop/sber-ai-snap-09-evidence`.
 Результат: implementation complete and ready for independent review; checks ниже.
-Commit/push не выполнялись. TASKS.json/MASTER_PLAN и product gates не менялись.
+Implementation commit: `609482fd2b59fd3cb749d24b301c0951cbc245b2`.
+По отдельному поручению пользователя commit/push выполнены в ветку
+`codex/snap-09-evidence`. TASKS.json/MASTER_PLAN и product gates не менялись.
 
 SNAP-08 действительно merged через PR #15/#16; исходный report сопоставлен с
 кодом. Прочитаны AGENTS, README, MASTER_PLAN, SNAP-09 prompt, архитектурные
@@ -159,7 +161,8 @@ Docker network без внешнего egress. Test originals synthetic, бан�
 Временный Linux DB container и его внутренняя network удалены после проверки;
 existing app DB/container не менялись.
 
-NOT RUN: GitHub CI новой revision (нет commit/push), реальные acquisition/provider/
+NOT RUN на момент локальной валидации до commit/push: GitHub CI новой revision,
+реальные acquisition/provider/
 corpus/gold evaluations, frontend lint/typecheck/build/browser E2E (frontend не менялся),
 нагрузочная оценка на реальном corpus. Полный S0 и продуктовая готовность не заявлены.
 Повтор existing source-recovery E2E не требовался: ingestion не менялся; общий regression
