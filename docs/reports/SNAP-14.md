@@ -6,7 +6,7 @@ assistant and must not be marked DONE.
 
 Base main: `af807da2725edc1ac87e067c05b89722ef8fc99f`.
 Branch/worktree: `codex/snap-14-assistant`, separate from the user's dirty workspace.
-Implementation SHA: recorded after the implementation commit below.
+Implementation SHA: `e399ccacbf5f6baa27200c900cf97cc23268ae27`.
 
 ## Dependency verification
 
