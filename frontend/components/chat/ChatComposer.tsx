@@ -8,6 +8,8 @@ export function ChatComposer({
   onDraft,
   onSend,
   onStop,
+  disabled = false,
+  demo = true,
 }: {
   draft: string;
   generating: boolean;
@@ -15,6 +17,8 @@ export function ChatComposer({
   onDraft: (text: string) => void;
   onSend: () => void;
   onStop: () => void;
+  disabled?: boolean;
+  demo?: boolean;
 }) {
   const input = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
@@ -43,6 +47,7 @@ export function ChatComposer({
           aria-label="Сообщение"
           maxLength={2000}
           rows={1}
+          disabled={disabled}
           onKeyDown={(e) => {
             if (
               e.key === "Enter" &&
@@ -77,7 +82,7 @@ export function ChatComposer({
               <button
                 className="send-button"
                 type="submit"
-                disabled={!draft.trim()}
+                disabled={disabled || !draft.trim()}
                 aria-label="Отправить сообщение"
                 title="Отправить сообщение"
               >
@@ -88,7 +93,7 @@ export function ChatComposer({
         </div>
       </form>
       <p className="composer-footnote">
-        DEMO · Синтетические данные. Не является банковским предложением.
+        {demo ? "DEMO · Синтетические данные. Не является банковским предложением." : "Ответ по выбранному snapshot. Не вводите ФИО, реквизиты и зарплатные ведомости."}
         <span>Shift + Enter — новая строка</span>
       </p>
     </div>

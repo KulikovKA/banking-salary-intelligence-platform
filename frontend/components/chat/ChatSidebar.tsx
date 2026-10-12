@@ -117,7 +117,7 @@ export function ChatSidebar({
               <span className="workspace-avatar">AI</span>
               <div>
                 <strong>Рабочее пространство</strong>
-                <span>Демонстрационный режим</span>
+                <span>Зарплатные проекты</span>
               </div>
             </div>
           </div>

@@ -19,7 +19,7 @@ export function ResponseTable({
           <Icon name="table" size={18} />
           {table.title}
         </span>
-        {table.synthetic && <span className="demo-tag">DEMO · синтетика</span>}
+        {table.synthetic && <span className="demo-tag">Синтетические данные</span>}
       </div>
       <div className="table-scroll">
         <table>

@@ -33,6 +33,12 @@ export function safeOriginalPath(path?: string): string | undefined {
     ? path
     : undefined;
 }
+export function formatTimestamp(value?: string | null): string {
+  if (!value) return "дата неизвестна";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "дата неизвестна";
+  return new Intl.DateTimeFormat("ru-RU", { timeZone: "Europe/Moscow", dateStyle: "short", timeStyle: "short" }).format(date) + " МСК";
+}
 export function messagePlainText(message: ChatMessageModel): string {
   return message.blocks
     .map((block) => {
