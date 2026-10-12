@@ -60,6 +60,16 @@ transaction. It rolls back and never upgrades the application DB. Its private
 output must be inside an ignored `.local` directory. SQL failure messages are
 replaced with exception classes. A missing table is NOT RUN, not a zero count.
 
+`diagnose --file ... --bank ... --allow-local-research-diagnostic --private-output
+.local/...json` runs an explicitly admitted isolated research smoke via the existing
+bounded socket-disabled parser. It records parser blocks, extraction suggestions,
+normalization flags and quote substring checks only in private local JSON. Summary
+counts may be shared; original text/quotes/paths remain private. No global payer,
+operation or applicability context is inferred. Diagnostic request UUIDs are not
+SourceVersion/ExtractionRun DB IDs. This command neither verifies application
+source admission nor creates approval/review/publication/snapshot rows. Input bytes
+are verified unchanged; the output cannot overwrite the original.
+
 Run from the worktree in PowerShell:
 
 ```powershell

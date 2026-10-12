@@ -18,16 +18,23 @@ Groq/Fake, auth, API и desktop chat. Источник состояния — me
 В registered worktrees и настроенном storage проверено **87 файлов, 25 уникальных
 SHA-256**: 16 PDF и 71 HTML. Это synthetic test originals, parsing fixtures и
 HTML test reports; реальные банковские originals в этих каталогах не найдены.
-XLSX в проверенных каталогах не найден. Это ограниченная инвентаризация проекта,
-не заявление об отсутствии документов на всём компьютере. Конкретный каталог
-реальных документов запрошен у пользователя; ответа на момент отчёта нет.
+После ответа пользователя дополнительно проверены два указанных research каталога:
+**найдены 6 реальных банковских originals (3 PDF + 3 HTML)** и один посторонний HTML
+с сертификатами, исключённый из banking corpus. XLSX нет. Оба ожидаемых SHA-256
+PDF Кубань Кредит совпали точно; hashes остальных четырёх совпали с сохранёнными
+probe JSON/source manifest. Каталоги не изменились, расширенный Windows search
+не потребовался. Итоговая инвентаризация ограничена названными roots.
 
-Два известных research-only SHA-256 Кубань Кредит из SOURCE_STATUS также не найдены.
-Research archive не импортировался. Файл/robots/HTTP200 не трактуется как permission.
+Research archive не импортировался. Локальную диагностику пользователь разрешил
+отдельным follow-up; это не source-specific application approval.
+Файл/robots/HTTP200 не трактуется как permission.
 Имена, полные пути, размеры и hashes всех найденных файлов сохранены только в
 приватном `.local/snap18/private-audit.json` исходного checkout. Публичный
 [safe summary](evidence/snapshot-evaluation/local-audit-summary.json) содержит
-проверяемые агрегаты, без путей/секретов/текста originals.
+проверяемые агрегаты, без путей/секретов/текста originals. Новый
+[research diagnostic summary](evidence/snapshot-evaluation/research-diagnostics.json)
+содержит только безопасные metadata/counts. Полные новые parse outputs/цитаты и
+пути находятся в `.local/research-diagnostic/` worktree SNAP-18.
 
 Существующий `.env` прочитан без shell execution, копирования или публикации.
 Настроенный LocalBlobStore **отсутствует**. PostgreSQL подключён успешно;
@@ -35,12 +42,12 @@ Research archive не импортировался. Файл/robots/HTTP200 не
 Application DB находится на **0002_source_recovery**, не на main head 0005_auth.
 Рабочая DB не мигрировалась и не изменялась.
 
-| Банк | Найденные real originals | Accepted versions | Real parsed/published доступно | Frozen real |
+| Банк | Найденные real research originals | Accepted versions | Локально parsed / published в DB | Frozen real |
 |---|---:|---:|---|---|
-| Сбер | 0 в проверенных roots | 0 | Нет | Нет |
-| ВТБ | 0 в проверенных roots | 0 | Нет | Нет |
-| Альфа-Банк | 0 в проверенных roots | 0 | Нет | Нет |
-| Кубань Кредит | 0; известные research hashes не найдены | 0 | Нет | Нет |
+| Сбер | 0 в проверенных roots | 0 | 0 / 0 | Нет |
+| ВТБ | 2 HTML | 0 | 2 / 0 | Нет |
+| Альфа-Банк | 0 в проверенных roots | 0 | 0 / 0 | Нет |
+| Кубань Кредит | 3 PDF + product HTML | 0 | 4 / 0 | Нет |
 
 `sources`, `source_versions`, `source_fetches`, `source_policies` — **0 rows**.
 Следовательно, цепочка остановилась до регистрации источников/import; отсутствие
@@ -48,7 +55,32 @@ Application DB находится на **0002_source_recovery**, не на main 
 `tariff_candidates`, `evidence_refs`, `fact_reviews`, `published_facts`, `snapshots`,
 `snapshot_members` отсутствуют: подсчёты **NOT RUN / TABLE_ABSENT**, а не фиктивный
 нулевой результат SQL. Доступных реальных документов/фактов для чата — **0**.
-Нельзя открыть извлечённые банковские chunks/цитаты, которых здесь ещё нет.
+Рабочих DB chunks/цитат ещё нет; новые диагностические blocks/quotes можно
+просмотреть в приватных локальных JSON, без права использовать их в чате.
+
+| Research original | Bytes | Локальные blocks | Suggestions | Diagnostic quotes |
+|---|---:|---:|---:|---:|
+| kk-tariff.pdf | 648631 | 25 | 4 | 13 |
+| kk-conditions.pdf | 757961 | 880 | 92 | 71 |
+| Questions_answers.pdf | 2300172 | 497 | 14 | 10 |
+| vtb-product.html | 480810 | 315 | 46 | 50 |
+| vtb-tariff-index.html | 323270 | 255 | 0 | 0 |
+| kk-product.html | 464782 | 682 | 46 | 47 |
+
+**6/6 parsed ok; 2654 blocks, 202 suggestions, 191 diagnostic quotes.** Parser
+versions: pdfplumber/1 и stdlib-html/3; extraction hashes в safe summary, исходные
+SHA-256/URL каждого файла там же. PDF содержат 1/16/32 страницы соответственно.
+Дата исследовательской записи пяти investigations files — 10.10.2026; FAQ имеет
+исторический checked_at 09.10.2026, который не подменяет acquired_at. Точное время
+получения bytes неизвестно. Напечатанные effective dates tariff/terms — 01.06.2024
+и 29.06.2026; они не подтверждают сегодняшнюю applicability. FAQ metadata/год
+издания — не effective tariff date.
+
+Все **202 suggestions не нормализованы**: `PAYER_UNKNOWN`, глобальный payer/operation
+не угадывался. Это диагностические предложения, не tariff_candidates DB rows.
+SourceVersion/ExtractionRun IDs, snapshot membership и review отсутствуют; 0 facts
+опубликовано. Quote offsets exact относительно parser chunks: **191/191**, это не
+100% original semantic/evidence linkage для S2. Ни approval, ни reviewer не создан.
 
 ## B. Что удалось проверить
 
@@ -94,7 +126,7 @@ env ключ **задан**, model — `openai/gpt-oss-120b`, mode — **fake**.
 
 | Blocker / evidence | Действие ответственного | Необходимое подтверждение |
 |---|---|---|
-| Реальные файлы не найдены в worktrees/configured storage | Пользователь сообщает каталог и provenance; оператор сопоставляет hashes/URLs/dates | Хранение и local diagnostic reuse конкретных originals |
+| Файлы найдены только в research archive; Сбер/Альфа отсутствуют, ВТБ пока product/index HTML | Оператор связывает provenance с реальными approvals и получает отсутствующие employer tariff originals разрешённым методом | Application acquisition/storage/reuse конкретных originals; local diagnostic admission уже дан |
 | 0 sources/policies; SOURCE_STATUS содержит pending/BLOCKED | Ответственный reviewer фиксирует exact URLs/method, acquisition/storage/reuse basis, scope/expiry/revocation | Source-specific решение настоящего reviewer; Codex не создаёт его |
 | DB 0002, отсутствуют pipeline tables, storage отсутствует | Владелец окружения отдельно обновляет app DB после backup/recovery проверки и восстанавливает правильный storage | Отдельное поручение на изменение рабочей DB/settings/storage |
 | 0 accepted versions/extractions/reviews/publications/frozen members | После допуска оператор import → accept_content → manifest → parsing → manual review/publication → freeze | Реальные content/review решения, immutable provenance |
@@ -111,6 +143,16 @@ MISSING_CONDITION, UNKNOWN_SCOPE, UNKNOWN_DATE, CONFLICTING_TARIFFS.
 Для runtime real corpus все **NOT RUN**: нет originals/import/extraction rows.
 Причины исторического parsing не выдумывались; diagnostic persistence требует
 schema-owner follow-up, а не новых API/DB statuses в этом PR.
+Новая isolated research диагностика: PARSE_FAILED/NEEDS_OCR — 0 по parser statuses;
+ZERO_CANDIDATES — 0 suggestions у VTB index, normalized candidates 0 везде из-за
+missing payer context. PDF unverified footnote diagnostics: tariff 8, terms 19,
+FAQ 130; это неподтверждённые relations, не доказанные потерянные сноски. Terms
+имеют 4 unassigned table text blocks на физических страницах 11/14, FAQ — 2 на
+17/27. Визуально это формы/справочный текст/screenshots, а не новые tariff facts.
+KK HTML: 18 HTML_MALFORMED diagnostics с parse ok. Scope/date/условия требуют
+review; rejected/conflicting publications не исследовались, поскольку их нет.
+Рендеры representative PDF pages просмотрены локально; complete human quality
+labeling не выполнялось. Poppler font warnings были, inspected text читаем.
 
 ## D. Итоговые оценки и проверки
 
@@ -156,6 +198,17 @@ Get-Content .local/evaluation/synthetic.md
 $gold = Get-Content -Raw evaluation/fixtures/synthetic-gold.json | ConvertFrom-Json
 $gold.evidence | Select-Object chunk_id,quote,locator
 $gold.facts | Select-Object bank,metric,value,status,required_conditions
+
+# Private real research outputs from the follow-up, already generated locally:
+$diagnostic = Get-Content -Raw .local/research-diagnostic/kk-tariff.json | ConvertFrom-Json
+$diagnostic.summary | Format-List
+$diagnostic.parse_result.blocks | Select-Object block_id,text,locator
+$diagnostic.suggestions | Select-Object metric_code,diagnostics,normalization_flags,evidence
+# Explicit admitted local smoke, never DB import/publication:
+$researchRoot = Read-Host 'Полный путь к подтверждённому research каталогу'
+uv run python tools/evaluate_snapshot.py diagnose `
+  --file (Join-Path $researchRoot 'kk-tariff.pdf') --bank kuban_credit `
+  --allow-local-research-diagnostic --private-output .local/research-diagnostic/kk-tariff.json
 ```
 
 `audit` не загружает env в shell и не запускает DB migrations. При известном ином
@@ -170,6 +223,7 @@ inspection использует существующий `app.evidence.cli inspe
 
 READY FOR REVIEW относится к коду harness и safe evidence. Four-bank release
 BLOCKED. Merge и task statuses — интегратор; этот PR их не меняет. Пользователю
-нужно прежде всего указать каталог real originals/правильное окружение, затем
-обеспечить настоящие approvals/review/gold. Env/DB/storage изменений и provider run
+нужно определить правильное рабочее окружение, обеспечить настоящие application
+approvals/review/gold и документы Сбера/Альфы/ВТБ с employer tariff conditions.
+Каталоги research originals уже подтверждены. Env/DB/storage изменений и provider run
 в этом поручении не выполнялось. Subagents не запускались, чужие изменения сохранены.

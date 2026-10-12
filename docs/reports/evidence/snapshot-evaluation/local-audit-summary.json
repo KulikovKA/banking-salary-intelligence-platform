@@ -95,6 +95,13 @@
     "model": "openai/gpt-oss-120b"
   },
   "real_namespace_files": 0,
+  "research_followup": {
+    "additional_other_html_files": 1,
+    "banking_documents_found": 6,
+    "registered_worktree_files_remain": 87,
+    "report": "research-diagnostics.json",
+    "supersedes_initial_real_document_discovery": true
+  },
   "scope": "Registered worktrees and configured storage; not a whole-computer search",
   "storage_exists": false,
   "unique_hashes": 25

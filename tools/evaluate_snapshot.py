@@ -12,10 +12,13 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "backend")]
 
 from evaluation.audit import write_private_audit  # noqa: E402
+from evaluation.diagnostics import diagnose_research  # noqa: E402
 from evaluation.engine import run_comparison  # noqa: E402
 from evaluation.io import load_gold, load_observations, write_json  # noqa: E402
 from evaluation.metrics import evaluate, markdown  # noqa: E402
 from evaluation.schema import ObservedComparison  # noqa: E402
+
+from app.parsing.runner import BoundedParseError  # noqa: E402
 
 
 def main(argv=None) -> int:
@@ -25,6 +28,13 @@ def main(argv=None) -> int:
     audit.add_argument("--env-file", type=Path, required=True)
     audit.add_argument("--root", type=Path, action="append", required=True)
     audit.add_argument("--output", type=Path, required=True)
+    diagnostic = sub.add_parser("diagnose", help="admitted local research smoke; private output")
+    diagnostic.add_argument("--file", type=Path, required=True)
+    diagnostic.add_argument(
+        "--bank", choices=("sber", "vtb", "alfa", "kuban_credit"), required=True
+    )
+    diagnostic.add_argument("--private-output", type=Path, required=True)
+    diagnostic.add_argument("--allow-local-research-diagnostic", action="store_true")
     for name in ("run", "compare"):
         run = sub.add_parser(name)
         run.add_argument("--gold", type=Path, required=True)
@@ -38,6 +48,15 @@ def main(argv=None) -> int:
         )
     args = parser.parse_args(argv)
     try:
+        if args.command == "diagnose":
+            summary = diagnose_research(
+                args.file,
+                args.bank,
+                args.private_output,
+                admitted=args.allow_local_research_diagnostic,
+            )
+            print(json.dumps(summary, sort_keys=True))
+            return 0 if summary["parse_status"] == "ok" else 1
         if args.command == "audit":
             # Require an ignored local directory; never write private reports into owned PR paths.
             if ".local" not in args.output.resolve().parts:
@@ -78,7 +97,7 @@ def main(argv=None) -> int:
             bool(result["missing"])
             or any(metric["status"] == "FAIL" for metric in result["metrics"].values())
         )
-    except (OSError, ValueError, ValidationError) as exc:
+    except (OSError, ValueError, ValidationError, BoundedParseError) as exc:
         # Do not print validation payloads, private contents or connection strings.
         code = str(exc) if type(exc) is ValueError and str(exc).isupper() else type(exc).__name__
         print(f"Evaluation refused: {code}", file=sys.stderr)

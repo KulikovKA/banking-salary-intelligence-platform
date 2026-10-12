@@ -15,6 +15,7 @@ S2/S3 NOT EVALUATED; полный S0 отдельно от компонента 
 - [Faulty measured JSON](evidence/snapshot-evaluation/synthetic-faulty.json),
   [Markdown](evidence/snapshot-evaluation/synthetic-faulty.md)
 - [Private audit safe summary](evidence/snapshot-evaluation/local-audit-summary.json)
+- [Research originals / isolated diagnostic safe summary](evidence/snapshot-evaluation/research-diagnostics.json)
 
 Gold/schema/capture hashes записаны в JSON. Comparison output имеет собственный
 effective capture hash; исходный input capture hash сохранён отдельно. Два запуска
@@ -70,7 +71,8 @@ NOT EVALUATED. Minimum human reviewed facts/per-bank floors показывают
 | Docs validator / whitespace | PASS |
 | Gold portability / Git blob hash | PASS: byte-pinned LF preserved across Windows/Linux |
 | Frontend lint/typecheck/build/browser E2E | NOT RUN: frontend/API/contracts не менялись |
-| Real parser/real tariff/real gold | NOT RUN: 0 sources/versions, нет допущенных originals |
+| Real local research parser smoke | PASS_DIAGNOSTIC_ONLY: 6/6 originals, 2654 blocks; 0 normalized/published facts |
+| Real working corpus / tariff quality / human gold | NOT RUN: 0 sources/versions, нет application admission/review |
 | Live Groq / >=20 real-model evaluation | NOT RUN: admission/run authorization нет, env caps invalid |
 | Remote PR CI | NOT RUN локально / status не проверялся; local validation выше |
 | Load/recovery/full S0/S3 | NOT RUN: отдельная SNAP-19 приёмка |
@@ -100,6 +102,23 @@ Windows и Linux. Gold/captures/evidence regenerated до финальных run
 oracles и product thresholds не изменялось.
 
 ## Приёмка
+
+Follow-up пользователя дал точные research directories и разрешил изолированную
+локальную диагностику. Добавлены `evaluation/diagnostics.py`, synthetic boundary
+tests и explicit CLI `diagnose`; full text/raw proposals/quotes только в ignored
+`.local`. Safe summary не содержит original text, тарифных чисел или private paths.
+Новый relevant suite: **82 passed, 1 skipped, 0 failed (11.99s)**: 42 evaluation
+tests (37 retained + 5 new) и 40 PDF/HTML/normalization/runner cases. Skip тот же
+Windows `/proc`. Ruff и mypy (74 files) PASS; docs validator после обновления reports.
+Исторический full backend результат 564/1 выше сохраняется отдельно и не суммируется;
+backend runtime не менялся, повтор полного suite не требовался.
+
+PDF/HTML parsing успех не означает качество тарифов: 202 suggestions не
+нормализовались из-за отсутствующего payer context, required scopes/conditions не
+угаданы. 191/191 quote substring checks — локальная проверка parser chunks, не S2
+original linkage metric. Real XLSX smoke NOT RUN: XLSX не найден. Из существующей
+DB снова read-only подтверждены 0002 и 0 sources/versions/policies; 0 accepted,
+reviewed, published/frozen real facts. Real S1–S3 не изменились.
 
 Harness **READY FOR REVIEW**, product **BLOCKED**.
 S0 NOT EVALUATED целиком; S1 BLOCKED; S2/S3 NOT EVALUATED. Полный порядок

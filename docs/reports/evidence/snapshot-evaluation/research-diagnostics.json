@@ -1,0 +1,437 @@
+{
+  "audit_date": "2026-10-13",
+  "banking_documents": 6,
+  "database": {
+    "broken_evidence": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "candidates": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "chunk_counts": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "evidence_counts": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "extractions": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "fetches": [],
+    "members": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "migration": [
+      {
+        "version_num": "0002_source_recovery"
+      }
+    ],
+    "policies": [],
+    "published": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "read_only": "on",
+    "reviews": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "schemas": [
+      {
+        "schema_name": "public"
+      }
+    ],
+    "snapshots": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "sources": [],
+    "tables": [
+      {
+        "table_name": "alembic_version"
+      },
+      {
+        "table_name": "banks"
+      },
+      {
+        "table_name": "blobs"
+      },
+      {
+        "table_name": "job_runs"
+      },
+      {
+        "table_name": "source_fetches"
+      },
+      {
+        "table_name": "source_policies"
+      },
+      {
+        "table_name": "source_versions"
+      },
+      {
+        "table_name": "sources"
+      }
+    ],
+    "versions": []
+  },
+  "documents": [
+    {
+      "accepted_content": false,
+      "application_source_approval": "NOT CONFIRMED",
+      "bank": "kuban_credit",
+      "blocks": 25,
+      "byte_size": 648631,
+      "corpus_kind": "real",
+      "current_applicability_confirmed": false,
+      "diagnostic_evidence_quotes": 13,
+      "diagnostic_only": true,
+      "effective_date_printed": "2024-06-01",
+      "exact_acquired_at": null,
+      "extraction_sha256": "f8e9c2cb84cc0c8564ed9bee22c067dbc2e44ea1e2853b0398b7b6fe3571666f",
+      "format": "pdf",
+      "heading_blocks": 25,
+      "historical_hash_match": true,
+      "invalid_chunk_quote_offsets": 0,
+      "local_diagnostic_authorization": "User follow-up explicitly permits isolated local parsing",
+      "name": "kk-tariff.pdf",
+      "normalization_flags": {
+        "PAYER_UNKNOWN": 4
+      },
+      "normalized_candidates": 0,
+      "note": "Research smoke only; quote offsets verify parser chunks, not semantic tariff support or admission to a working corpus.",
+      "pages": 1,
+      "parse_status": "ok",
+      "parser_diagnostics": {
+        "PDF_FOOTNOTE_RELATION_UNVERIFIED": 8
+      },
+      "parser_version": "pdfplumber/1",
+      "persisted_extraction_run_id": null,
+      "persisted_source_version_id": null,
+      "publication_count": 0,
+      "raw_sha256": "db9c856a67767b6d1c290a48162d107fa6c99d8905b395d3b113ec1920b57bec",
+      "relations": {
+        "footnote": 2,
+        "footnote_reference": 6,
+        "table_cell": 18
+      },
+      "relevance": "employer_tariff_relevant",
+      "research_record_date": "2026-10-10",
+      "review": "NOT PERFORMED",
+      "schema_version": 1,
+      "snapshot_membership": null,
+      "source_url": "https://kk.ru/upload/iblock/3cf/2aukz7j463jptle27m62oo8frs1x862x.pdf",
+      "suggestion_diagnostics": {
+        "CONDITIONS_UNPARSED": 1,
+        "CONTEXT_MISSING:payer,operation": 2,
+        "OPERATOR_MAPPING_REQUIRES_REVIEW": 1,
+        "SCOPE_NEEDS_REVIEW": 2,
+        "TABLE_METRIC_AMBIGUOUS": 1,
+        "TABLE_VALUE_UNKNOWN": 1,
+        "ZERO_FEE_CONDITIONS_UNKNOWN": 1
+      },
+      "suggestions": 4,
+      "table_blocks": 18,
+      "tables": 1
+    },
+    {
+      "accepted_content": false,
+      "application_source_approval": "NOT CONFIRMED",
+      "bank": "kuban_credit",
+      "blocks": 880,
+      "byte_size": 757961,
+      "corpus_kind": "real",
+      "current_applicability_confirmed": false,
+      "diagnostic_evidence_quotes": 71,
+      "diagnostic_only": true,
+      "effective_date_printed": "2026-06-29",
+      "exact_acquired_at": null,
+      "extraction_sha256": "a54bd9264e815f5138a90bf78627c6effc4aed18e27e2924c8eb54d964ad7107",
+      "format": "pdf",
+      "heading_blocks": 880,
+      "historical_hash_match": true,
+      "invalid_chunk_quote_offsets": 0,
+      "local_diagnostic_authorization": "User follow-up explicitly permits isolated local parsing",
+      "name": "kk-conditions.pdf",
+      "normalization_flags": {
+        "PAYER_UNKNOWN": 92
+      },
+      "normalized_candidates": 0,
+      "note": "Research smoke only; quote offsets verify parser chunks, not semantic tariff support or admission to a working corpus.",
+      "pages": 16,
+      "parse_status": "ok",
+      "parser_diagnostics": {
+        "PDF_FOOTNOTE_RELATION_UNVERIFIED": 19,
+        "PDF_TABLE_TEXT_UNASSIGNED": 4
+      },
+      "parser_version": "pdfplumber/1",
+      "persisted_extraction_run_id": null,
+      "persisted_source_version_id": null,
+      "publication_count": 0,
+      "raw_sha256": "4f935428de5678c4a4b176ff1f7c34e5ed0d635d30502a878d272fbac32e8ecb",
+      "relations": {
+        "column_header": 112,
+        "footnote": 19,
+        "printed_page_label": 3,
+        "table_cell": 213,
+        "table_header": 32,
+        "unmatched_table_text": 4
+      },
+      "relevance": "employer_terms_relevant_not_standalone_tariff",
+      "research_record_date": "2026-10-10",
+      "review": "NOT PERFORMED",
+      "schema_version": 1,
+      "snapshot_membership": null,
+      "source_url": "https://kk.ru/upload/iblock/973/96i8chqk1f794ldm6umaie424qnvoxhb.pdf",
+      "suggestion_diagnostics": {
+        "TABLE_METRIC_UNKNOWN": 6,
+        "TABLE_VALUE_UNKNOWN": 15,
+        "TEXT_VALUE_UNKNOWN": 71
+      },
+      "suggestions": 92,
+      "table_blocks": 213,
+      "tables": 21
+    },
+    {
+      "accepted_content": false,
+      "application_source_approval": "NOT CONFIRMED",
+      "bank": "vtb",
+      "blocks": 315,
+      "byte_size": 480810,
+      "corpus_kind": "real",
+      "current_applicability_confirmed": false,
+      "diagnostic_evidence_quotes": 50,
+      "diagnostic_only": true,
+      "effective_date_printed": null,
+      "exact_acquired_at": null,
+      "extraction_sha256": "ec36d9165a25e8fba61c556abbd2944702ba51aaa7ec492a15b500aafdaf6eea",
+      "format": "html",
+      "heading_blocks": 314,
+      "historical_hash_match": true,
+      "invalid_chunk_quote_offsets": 0,
+      "local_diagnostic_authorization": "User follow-up explicitly permits isolated local parsing",
+      "name": "vtb-product.html",
+      "normalization_flags": {
+        "PAYER_UNKNOWN": 46
+      },
+      "normalized_candidates": 0,
+      "note": "Research smoke only; quote offsets verify parser chunks, not semantic tariff support or admission to a working corpus.",
+      "pages": null,
+      "parse_status": "ok",
+      "parser_diagnostics": {},
+      "parser_version": "stdlib-html/3",
+      "persisted_extraction_run_id": null,
+      "persisted_source_version_id": null,
+      "publication_count": 0,
+      "raw_sha256": "b28e55055e56ff0ec56b36c79471fb2b7718902867044d184d2373d9ad11f983",
+      "relations": {
+        "link": 189,
+        "text": 117
+      },
+      "relevance": "product_page_not_accepted_tariff",
+      "research_record_date": "2026-10-10",
+      "review": "NOT PERFORMED",
+      "schema_version": 1,
+      "snapshot_membership": null,
+      "source_url": "https://www.vtb.ru/malyj-biznes/zarplatniy-proekt/",
+      "suggestion_diagnostics": {
+        "CONTEXT_MISSING:payer,operation": 3,
+        "SCOPE_NEEDS_REVIEW": 3,
+        "TEXT_VALUE_UNKNOWN": 36,
+        "VALUE_BOUND_REQUIRES_REVIEW": 7,
+        "ZERO_FEE_CONDITIONS_UNKNOWN": 2
+      },
+      "suggestions": 46,
+      "table_blocks": 0,
+      "tables": 0
+    },
+    {
+      "accepted_content": false,
+      "application_source_approval": "NOT CONFIRMED",
+      "bank": "vtb",
+      "blocks": 255,
+      "byte_size": 323270,
+      "corpus_kind": "real",
+      "current_applicability_confirmed": false,
+      "diagnostic_evidence_quotes": 0,
+      "diagnostic_only": true,
+      "effective_date_printed": null,
+      "exact_acquired_at": null,
+      "extraction_sha256": "53ce32e3877af4535df2814d8af2fe4efb93303ff5e2f56c2228cfa19328f557",
+      "format": "html",
+      "heading_blocks": 241,
+      "historical_hash_match": true,
+      "invalid_chunk_quote_offsets": 0,
+      "local_diagnostic_authorization": "User follow-up explicitly permits isolated local parsing",
+      "name": "vtb-tariff-index.html",
+      "normalization_flags": {},
+      "normalized_candidates": 0,
+      "note": "Research smoke only; quote offsets verify parser chunks, not semantic tariff support or admission to a working corpus.",
+      "pages": null,
+      "parse_status": "ok",
+      "parser_diagnostics": {},
+      "parser_version": "stdlib-html/3",
+      "persisted_extraction_run_id": null,
+      "persisted_source_version_id": null,
+      "publication_count": 0,
+      "raw_sha256": "34523d1f3951b627f7e53f053633c3e8e0727a4b0afbdd1943fac618e15963cd",
+      "relations": {
+        "link": 180,
+        "text": 67
+      },
+      "relevance": "document_index_links_not_tariff_originals",
+      "research_record_date": "2026-10-10",
+      "review": "NOT PERFORMED",
+      "schema_version": 1,
+      "snapshot_membership": null,
+      "source_url": "https://www.vtb.ru/malyj-biznes/tarify-i-komissii/",
+      "suggestion_diagnostics": {},
+      "suggestions": 0,
+      "table_blocks": 0,
+      "tables": 0
+    },
+    {
+      "accepted_content": false,
+      "application_source_approval": "NOT CONFIRMED",
+      "bank": "kuban_credit",
+      "blocks": 682,
+      "byte_size": 464782,
+      "corpus_kind": "real",
+      "current_applicability_confirmed": false,
+      "diagnostic_evidence_quotes": 47,
+      "diagnostic_only": true,
+      "effective_date_printed": null,
+      "exact_acquired_at": null,
+      "extraction_sha256": "34ff8f1a9f2d1161131d691e1e60887ce3fe151301197eb37886ff599725f9cc",
+      "format": "html",
+      "heading_blocks": 677,
+      "historical_hash_match": true,
+      "invalid_chunk_quote_offsets": 0,
+      "local_diagnostic_authorization": "User follow-up explicitly permits isolated local parsing",
+      "name": "kk-product.html",
+      "normalization_flags": {
+        "PAYER_UNKNOWN": 46
+      },
+      "normalized_candidates": 0,
+      "note": "Research smoke only; quote offsets verify parser chunks, not semantic tariff support or admission to a working corpus.",
+      "pages": null,
+      "parse_status": "ok",
+      "parser_diagnostics": {
+        "HTML_MALFORMED": 18
+      },
+      "parser_version": "stdlib-html/3",
+      "persisted_extraction_run_id": null,
+      "persisted_source_version_id": null,
+      "publication_count": 0,
+      "raw_sha256": "fa7b8acd9efa86f94a746eee3a16af15f88a51bd2e13d1384da52fc008c2cd6d",
+      "relations": {
+        "footnote": 34,
+        "link": 289,
+        "text": 334
+      },
+      "relevance": "product_page_not_accepted_tariff",
+      "research_record_date": "2026-10-10",
+      "review": "NOT PERFORMED",
+      "schema_version": 1,
+      "snapshot_membership": null,
+      "source_url": "https://kk.ru/business/solutions/zp-project/",
+      "suggestion_diagnostics": {
+        "CONTEXT_MISSING:payer,operation": 1,
+        "SCOPE_NEEDS_REVIEW": 1,
+        "TEXT_VALUE_UNKNOWN": 40,
+        "VALUE_BOUND_REQUIRES_REVIEW": 5,
+        "ZERO_FEE_CONDITIONS_UNKNOWN": 1
+      },
+      "suggestions": 46,
+      "table_blocks": 0,
+      "tables": 0
+    },
+    {
+      "accepted_content": false,
+      "application_source_approval": "NOT CONFIRMED",
+      "bank": "kuban_credit",
+      "blocks": 497,
+      "byte_size": 2300172,
+      "corpus_kind": "real",
+      "current_applicability_confirmed": false,
+      "diagnostic_evidence_quotes": 10,
+      "diagnostic_only": true,
+      "effective_date_printed": null,
+      "exact_acquired_at": null,
+      "extraction_sha256": "91167914d1e5b30da068c54ac0a9fe2309ba88b792a392bc9a881e980fb805b3",
+      "format": "pdf",
+      "heading_blocks": 497,
+      "historical_hash_match": true,
+      "invalid_chunk_quote_offsets": 0,
+      "local_diagnostic_authorization": "User follow-up explicitly permits isolated local parsing",
+      "name": "Questions_answers.pdf",
+      "normalization_flags": {
+        "PAYER_UNKNOWN": 14
+      },
+      "normalized_candidates": 0,
+      "note": "Research smoke only; quote offsets verify parser chunks, not semantic tariff support or admission to a working corpus.",
+      "pages": 32,
+      "parse_status": "ok",
+      "parser_diagnostics": {
+        "PDF_FOOTNOTE_RELATION_UNVERIFIED": 130,
+        "PDF_TABLE_TEXT_UNASSIGNED": 2
+      },
+      "parser_version": "pdfplumber/1",
+      "persisted_extraction_run_id": null,
+      "persisted_source_version_id": null,
+      "publication_count": 0,
+      "raw_sha256": "08ced4b035c1a6b396a5d7143e1c635ac8ea20ed09c1f0726b60549df391a144",
+      "relations": {
+        "column_header": 20,
+        "footnote": 128,
+        "footnote_marker": 2,
+        "printed_page_label": 32,
+        "table_cell": 42,
+        "table_header": 12,
+        "unmatched_table_text": 2
+      },
+      "relevance": "dbo_faq_reference_not_employer_tariff",
+      "research_record_date": null,
+      "review": "NOT PERFORMED",
+      "schema_version": 1,
+      "snapshot_membership": null,
+      "source_url": "https://kb.kk.bank/docs/Questions_answers.pdf",
+      "suggestion_diagnostics": {
+        "TABLE_METRIC_UNKNOWN": 3,
+        "TABLE_VALUE_UNKNOWN": 1,
+        "TEXT_VALUE_UNKNOWN": 10
+      },
+      "suggestions": 14,
+      "table_blocks": 42,
+      "tables": 13
+    }
+  ],
+  "gates": {
+    "S0": "NOT EVALUATED",
+    "S1": "BLOCKED",
+    "S2": "NOT EVALUATED",
+    "S3": "NOT EVALUATED"
+  },
+  "limitations": [
+    "Research parsing is not import/content acceptance/manual approval/publication/freeze.",
+    "Quote offset checks validate parser chunk substrings, not semantic tariff correctness or verified original locators.",
+    "No payer/operation/region/package/date applicability context was inferred.",
+    "Real gold/FTS/comparison/Groq evaluations remain NOT EVALUATED.",
+    "No XLSX discovered in the supplied research roots; real XLSX diagnostics NOT RUN."
+  ],
+  "other_html_files_excluded": 1,
+  "scope": "User-identified research originals, separate from application corpus",
+  "totals": {
+    "blocks": 2654,
+    "diagnostic_evidence_quotes": 191,
+    "invalid_chunk_quote_offsets": 0,
+    "normalized_candidates": 0,
+    "publication_count": 0,
+    "suggestions": 202
+  }
+}
