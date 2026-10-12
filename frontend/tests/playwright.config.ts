@@ -4,6 +4,7 @@ import path from "node:path";
 export default defineConfig({
   testDir: ".",
   testMatch: /.*\.spec\.tsx?$/,
+  testIgnore: "backend-browser.spec.ts",
   outputDir: path.resolve(
     __dirname,
     "../../.local/frontend-chat-mvp/test-results",
@@ -34,6 +35,6 @@ export default defineConfig({
     command: "npm run start -- --hostname 127.0.0.1 --port 3100",
     url: "http://127.0.0.1:3100",
     reuseExistingServer: false,
-    env: { NEXT_TELEMETRY_DISABLED: "1" },
+    env: { NEXT_TELEMETRY_DISABLED: "1", CHAT_DEMO_MODE: "true", APP_ENV: "test" },
   },
 });

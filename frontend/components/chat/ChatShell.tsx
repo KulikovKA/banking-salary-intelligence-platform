@@ -11,11 +11,14 @@ import { ChatMessage } from "./ChatMessage";
 import { ChatComposer } from "./ChatComposer";
 import { ChatWelcome } from "./ChatWelcome";
 import { Icon } from "./Icon";
+import { ApiClientError } from "@/lib/client";
 const demoTransport = new DemoChatTransport();
 export function ChatShell({
   transport = demoTransport,
+  disabled = false,
 }: {
   transport?: ChatTransport;
+  disabled?: boolean;
 }) {
   const [state, dispatch] = useReducer(chatReducer, undefined, initialState);
   const [collapsed, setCollapsed] = useState(false);
@@ -71,7 +74,7 @@ export function ChatShell({
   }
   async function send(suggestion?: string) {
     const question = (suggestion ?? active.draft).trim();
-    if (!question || question.length > 2000 || requests.current.has(active.id))
+    if (disabled || !question || question.length > 2000 || requests.current.has(active.id))
       return;
     const id = active.id,
       messageId = crypto.randomUUID(),
@@ -107,7 +110,7 @@ export function ChatShell({
           id,
           messageId,
           error:
-            error instanceof ChatTransportError && error.code === "incomplete"
+            error instanceof ApiClientError ? error.message : error instanceof ChatTransportError && error.code === "incomplete"
               ? "Ответ завершился раньше времени."
               : "Не удалось завершить ответ: ошибка соединения.",
         });
@@ -135,7 +138,7 @@ export function ChatShell({
           </div>
           <span className="mode-pill">
             <span />
-            DEMO-режим
+            {transport.mode === "demo" ? "DEMO-режим" : "Доказательный ответ"}
           </span>
         </header>
         <div
@@ -164,7 +167,7 @@ export function ChatShell({
                   <span>История доступна только в этой вкладке</span>
                 </div>
                 {active.messages.map((message) => (
-                  <ChatMessage key={message.id} message={message} />
+                  <ChatMessage key={message.id} message={message} demo={transport.mode === "demo"} />
                 ))}
               </>
             ) : (
@@ -188,6 +191,8 @@ export function ChatShell({
           onDraft={(text) => dispatch({ type: "draft", id: active.id, text })}
           onSend={() => void send()}
           onStop={stop}
+          disabled={disabled}
+          demo={transport.mode === "demo"}
         />
       </main>
     </div>
