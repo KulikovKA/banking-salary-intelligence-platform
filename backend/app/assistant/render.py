@@ -8,16 +8,16 @@ current rights. No client or model may supply comparison/manifest/evidence here.
 from __future__ import annotations
 
 import json
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from html import escape
 from typing import Literal
 from uuid import UUID, uuid5
 
 from app.contracts.api import AnswerEnvelope, AnswerSource
-from app.contracts.comparison import ComparisonResult
+from app.contracts.comparison import Claim, ComparisonResult
 from app.contracts.evidence import EvidenceRef
 from app.contracts.llm import ExplainResult
-from app.contracts.tariffs import MoneyValue, PercentValue, Value
+from app.contracts.tariffs import MoneyValue, PercentValue, Scenario, TariffCandidate, Value
 from app.corpus.service import SnapshotManifest
 
 _NAMESPACE = UUID("06888728-ae2a-4c1b-ad71-257da02dcf2c")
@@ -197,4 +197,176 @@ def render_comparison(
         limitations=tuple(limitations),
         data_as_of=comparison.scenario_echo.as_of,
         generated_at=generated_at or datetime.now(UTC),
+    )
+
+
+def render_notice(
+    manifest: SnapshotManifest,
+    as_of: date,
+    text: str,
+    *,
+    status: Literal["clarification", "insufficient"] = "clarification",
+) -> AnswerEnvelope:
+    return AnswerEnvelope(
+        id=uuid5(_NAMESPACE, f"{manifest.manifest_sha256}:{status}:{text}"),
+        status=status,
+        snapshot_id=manifest.snapshot_id,
+        corpus_revision=manifest.revision,
+        text=f"Корпус: {manifest.corpus_kind}; revision: {manifest.revision}.\n{text}",
+        data_as_of=as_of,
+        generated_at=datetime.now(UTC),
+    )
+
+
+def render_facts(
+    manifest: SnapshotManifest,
+    scenario: Scenario,
+    facts: tuple[tuple[UUID, TariffCandidate, bool], ...],
+    evidence: tuple[EvidenceRef, ...],
+    *,
+    documents: bool = False,
+    fallback: bool = False,
+    explanation: ExplainResult | None = None,
+    fact_limitations: tuple[str, ...] = (),
+) -> AnswerEnvelope:
+    """Published source values, never a scenario price or LLM-authored prose."""
+    from app.comparison.calculations import Truth, applicability
+
+    refs = {ref.id: ref for ref in evidence}
+    docs = {doc.source_version_id: doc for doc in manifest.documents}
+    claims = []
+    lines = [
+        f"Корпус: {manifest.corpus_kind}; revision: {manifest.revision}; "
+        f"дата сценария: {scenario.as_of.isoformat()}."
+    ]
+    limitations = [
+        "Значения из опубликованных документов; полная стоимость и общий рейтинг не заявлены."
+    ]
+    limitations.extend(fact_limitations)
+    used: set[UUID] = set()
+    partial = False
+    signatures: dict[tuple[str, str], set[str]] = {}
+    for _, candidate, eligible in facts:
+        checked = candidate.model_copy(update={"requires_manual_interpretation": False})
+        truth, _ = applicability(checked, scenario)
+        if eligible and truth is Truth.TRUE:
+            signatures.setdefault((candidate.bank_code, candidate.metric_code), set()).add(
+                candidate.value.model_dump_json()
+            )
+    for fact_id, candidate, eligible in facts:
+        if candidate.corpus_kind != manifest.corpus_kind:
+            raise ValueError("ASSISTANT_CORPUS_KIND_MISMATCH")
+        for ref_id in candidate.evidence_ids:
+            ref = refs.get(ref_id)
+            doc = docs.get(ref.source_version_id) if ref else None
+            if (
+                ref is None
+                or doc is None
+                or (
+                    ref.raw_sha256 != doc.sha256
+                    or ref.extraction_run_id != doc.extraction_run_id
+                    or ref.original_url != doc.original_url
+                    or ref.acquired_at != doc.acquired_at
+                )
+            ):
+                return render_notice(
+                    manifest,
+                    scenario.as_of,
+                    "Недостаточно проверенных доказательств.",
+                    status="insufficient",
+                )
+        checked = (
+            candidate.model_copy(update={"requires_manual_interpretation": False})
+            if eligible
+            else candidate
+        )
+        truth, missing = applicability(checked, scenario)
+        conflicting = len(signatures.get((candidate.bank_code, candidate.metric_code), set())) > 1
+        partial |= truth is not Truth.TRUE or not eligible or conflicting
+        detail = candidate.model_dump(mode="json")
+        detail["applicability_status"] = truth.value
+        detail["missing_inputs"] = list(missing)
+        detail["conflict"] = conflicting
+        claim = Claim(
+            id=uuid5(
+                _NAMESPACE, f"{manifest.manifest_sha256}:{fact_id}:{scenario.model_dump_json()}"
+            ),
+            kind="fact",
+            text=json.dumps(detail, ensure_ascii=False, sort_keys=True),
+            fact_ids=(fact_id,),
+            evidence_ids=candidate.evidence_ids,
+        )
+        claims.append(claim)
+        used.update(candidate.evidence_ids)
+        lines.append(
+            f"{_BANKS[candidate.bank_code]}: опубликованное значение "
+            f"{_plain(candidate.metric_code)}."
+        )
+        if conflicting:
+            lines.append(
+                "Конфликт опубликованных значений; выбор тарифа и победитель не определены."
+            )
+        if not documents:
+            lines.append("Значение в документе: " + _value(candidate.value) + ".")
+        lines.append(
+            "Применимость: "
+            + (
+                "подтверждена"
+                if truth is Truth.TRUE and eligible
+                else "не применимо к сценарию"
+                if truth is Truth.FALSE
+                else "неизвестна"
+            )
+            + "."
+        )
+        # Preserve all source scope/date/conditions, with no clipping for budget.
+        context = {
+            key: value
+            for key, value in detail.items()
+            if key not in {"value", "id", "evidence_ids"}
+        }
+        lines.append(
+            "Условия, область и даты: "
+            + _plain(json.dumps(context, ensure_ascii=False, sort_keys=True))
+        )
+    if not claims:
+        return render_notice(
+            manifest,
+            scenario.as_of,
+            "В выбранном корпусе не найдено подтверждённых сведений.",
+            status="insufficient",
+        )
+    if explanation:
+        order = {value: index for index, value in enumerate(explanation.ordered_claim_ids)}
+        claims.sort(key=lambda claim: order.get(claim.id, len(order)))
+    if fallback:
+        limitations.append("LLM недоступна или её ответ отклонён; использован серверный fallback.")
+    if manifest.missing_documents:
+        limitations.append(
+            "Корпус неполный; отсутствуют документы банков: "
+            + ", ".join(_BANKS[item.bank_code] for item in manifest.missing_documents)
+            + "."
+        )
+    lines.extend("Ограничение: " + _plain(item) for item in limitations)
+    return AnswerEnvelope(
+        id=uuid5(
+            _NAMESPACE,
+            f"{manifest.manifest_sha256}:{scenario.model_dump_json()}:"
+            f"{[str(c.id) for c in claims]}",
+        ),
+        status="fallback" if fallback else "partial" if partial else "answered",
+        snapshot_id=manifest.snapshot_id,
+        corpus_revision=manifest.revision,
+        text="\n".join(lines),
+        claims=tuple(claims),
+        sources=tuple(
+            AnswerSource(
+                evidence=refs[key],
+                download_url=f"/api/v1/documents/{refs[key].source_version_id}/original",
+            )
+            for key in sorted(used, key=str)
+        ),
+        limitations=tuple(limitations),
+        data_as_of=scenario.as_of,
+        generated_at=datetime.now(UTC),
     )
