@@ -134,8 +134,11 @@ migrations applied through 0005_auth. No migration changes.
   Existing SNAP-10 search cases: **15 PASS, 0 SKIP**. Counts overlap the full run
   and are not added to it.
 - Docs validator: PASS, 19 prompts/links/DAG/statuses including the completion report.
-- New PR CI: executed after publication; confirmed outcome supplied in the final
-  response and PR checks. No baseline CI is counted as validation of these changes.
+- New PR CI: **PASS** on `5ab68c9d83c93cf5bd5d6f3d2b9eb0b4bcb24309`,
+  [run 38285921435](https://github.com/KulikovKA/banking-salary-intelligence-platform/actions/runs/38285921435).
+  Backend and frontend jobs both completed successfully. This validates the
+  main-based branch with explicit missing-search skips, not SNAP-10 acceptance.
+  Later commits update only this report; final HEAD checks remain visible on PR #25.
 
 Development test failures corrected before final regression: fixture revision is
 not fixed at 1; immutable DB edits are tested as refusal rather than disabling a
@@ -143,7 +146,8 @@ trigger, corruption uses a temporary synthetic original; MockTransport budget
 assertions follow actual max_tokens/shared dispatch ceilings. Partial runs are
 not added to final counts.
 
-NOT RUN: real bank/Groq/model-quality evaluation; frontend/browser E2E (unchanged);
+NOT RUN: real bank/Groq/model-quality evaluation; local frontend/browser E2E
+(unchanged; frontend lint/typecheck/build PASS in the remote CI job);
 SNAP-16 protected HTTP E2E (out of scope); standalone source-recovery E2E repeat
 (ingestion unchanged; full existing regression included).
 S0 for the full API/UI product remains incomplete. **S1 BLOCKED; S2/S3 NOT
