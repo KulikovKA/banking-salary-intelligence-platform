@@ -6,6 +6,9 @@ acceptance remain required. No automatic merge or task-status update performed.
 
 Base: `b440534` (fetched origin/main; merged API PR #28).
 Branch: `codex/snap-17-desktop-integration`.
+Implementation SHA: `de2fe9496f1dcd2b6022e8dd18067751dbae9e0c`.
+Implementation PR: [#30](https://github.com/KulikovKA/banking-salary-intelligence-platform/pull/30).
+Scope PR: [#29](https://github.com/KulikovKA/banking-salary-intelligence-platform/pull/29).
 Worktree: `C:/Users/Kirill/Desktop/sber-snap-17-chat`.
 Scope commit: `0adadd8`, separately proposed in
 [PR #29](https://github.com/KulikovKA/banking-salary-intelligence-platform/pull/29).
