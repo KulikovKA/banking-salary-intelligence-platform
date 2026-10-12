@@ -198,7 +198,7 @@
       "deps": [
         "SNAP-09"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "medium",
       "owned_paths": [
         "backend/app/search/service.py",
@@ -280,7 +280,7 @@
         "SNAP-11",
         "SNAP-13"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "high",
       "owned_paths": [
         "backend/app/assistant/service.py",

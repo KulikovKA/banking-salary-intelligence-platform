@@ -28,11 +28,14 @@ Engine; Groq `openai/gpt-oss-120b` и evidence-first AI-ассистент; ав
 Каталог/0001/0002/0003, config, FetchGateway/TLS/robots/transport, immutable BlobStore,
 operator fetch/import/accept_content, discoveries ВТБ/Кубань Кредит, evidence DTO,
 synthetic PG E2E и CI уже существуют. Не переписывать их.
-Стартовый API/UI есть, бизнес-сервисы ещё нет. New tasks TODO — не утверждение,
-что уже работающие ingestion компоненты отсутствуют.
+В main реализованы SNAP-01–SNAP-15: frozen corpus и extraction pipeline, ручная
+проверка/publication, PostgreSQL search, Comparison Engine, Fake/Groq adapters,
+Evidence-first AssistantService и auth. HTTP composition остаётся задачей SNAP-16.
+Desktop chat MVP из PR #24 использует локальный demo; это не API-интеграция
+и не подтверждённая приёмка внешнего frontend по FE-01–FE-04.
 Ни один новый real source grant этой итерацией не выдан. Официальный corpus
 четырёх банков не принят. Historical G1/G2 NOT PASSED. S1 BLOCKED,
-S2/S3 NOT EVALUATED; полный S0 ждёт реализации нового pipeline.
+S2/S3 NOT EVALUATED; полный S0 ждёт API/UI интеграции и сквозной приёмки.
 
 ## Задачи и последовательность
 
@@ -51,11 +54,11 @@ S2/S3 NOT EVALUATED; полный S0 ждёт реализации нового 
 | [SNAP-07](prompts/SNAP-07.md) | Нормализация тарифов и registry метрик | SNAP-01 | high | DONE |
 | [SNAP-08](prompts/SNAP-08.md) | Последовательный parsing/extraction pipeline | SNAP-03, SNAP-04, SNAP-05, SNAP-06, SNAP-07 | high | DONE |
 | [SNAP-09](prompts/SNAP-09.md) | Evidence validation, manual review и publication | SNAP-08 | high | DONE |
-| [SNAP-10](prompts/SNAP-10.md) | PostgreSQL FTS по frozen corpus | SNAP-09 | medium | TODO |
+| [SNAP-10](prompts/SNAP-10.md) | PostgreSQL FTS по frozen corpus | SNAP-09 | medium | DONE |
 | [SNAP-11](prompts/SNAP-11.md) | Детерминированный Comparison Engine | SNAP-09 | high | DONE |
 | [SNAP-12](prompts/SNAP-12.md) | LLM Protocol, Fake и bounded renderer inputs | SNAP-01 | medium | DONE |
 | [SNAP-13](prompts/SNAP-13.md) | GroqCloud Free adapter и quotas | SNAP-02, SNAP-12 | high | DONE |
-| [SNAP-14](prompts/SNAP-14.md) | Evidence-first ассистент и renderer | SNAP-10, SNAP-11, SNAP-13 | high | TODO |
+| [SNAP-14](prompts/SNAP-14.md) | Evidence-first ассистент и renderer | SNAP-10, SNAP-11, SNAP-13 | high | DONE |
 | [SNAP-15](prompts/SNAP-15.md) | Приглашения, auth и server sessions | SNAP-02 | high | DONE |
 | [SNAP-16](prompts/SNAP-16.md) | FastAPI routers и composition root | SNAP-03, SNAP-09, SNAP-14, SNAP-15 | high | TODO |
 | [SNAP-17](prompts/SNAP-17.md) | Интеграция и адаптация внешнего frontend | SNAP-16 | medium | TODO |
@@ -66,7 +69,7 @@ S2/S3 NOT EVALUATED; полный S0 ждёт реализации нового 
 их одним commit после принятого отчёта; валидатор проверяет совпадение и DAG.
 DONE модуля не означает S1/S2/S3 PASS. При data blocker module harness можно
 закончить, а real acceptance остаётся NOT EVALUATED/BLOCKED в report.
-Всего 13 DONE; SNAP-17 остаётся TODO до отдельного поручения и выполнения
+Всего 15 DONE; SNAP-16–SNAP-19 остаются TODO. SNAP-17 ждёт отдельного поручения и выполнения
 входных условий. Отсутствие внешних исходников блокирует FE-подзадачи, но не
 независимую разработку Backend + AI.
 
@@ -105,17 +108,28 @@ CI/compose/README изменяет 19 в финальной волне.
 
 ## Что запускать сейчас
 
-SNAP-08 принят после merge исправлений PR #15; [решение приёмки](../reports/SNAP-08-accepted.md).
-SNAP-09 merged через PR #17; [решение приёмки](../reports/SNAP-09-accepted.md).
+SNAP-08 принят после merge исправлений PR #15; [решение приёмки](https://github.com/KulikovKA/banking-salary-intelligence-platform/blob/main/docs/reports/SNAP-08-accepted.md).
+SNAP-09 merged через PR #17; [решение приёмки](https://github.com/KulikovKA/banking-salary-intelligence-platform/blob/main/docs/reports/SNAP-09-accepted.md).
 SNAP-11 merged через PR #20 в main и закрыт по поручению пользователя;
-[запись закрытия](../reports/SNAP-11-accepted.md). Ограничения frozen contract сохраняются.
-Следующая доступная кодовая задача — **SNAP-10**; SNAP-14 ждёт его приёмки.
-Draft original доступен до extraction через проверяемый операторский manifest;
-final freeze выполняется после reviewed publication. SNAP-09 следует за 08,
-SNAP-10 и 11 — за 09, SNAP-14 — за 10+11+13, SNAP-16 — после 14 и остальных
-зависимостей. Приоритет: **10 -> 14 -> 16**. После переданных
-исходников и готового API: **17 / FE-01 -> FE-02 -> FE-03 -> FE-04**; финальная
-приёмка **19** ждёт **17 и 18**. Новые задачи требуют отдельного поручения.
+[запись закрытия](https://github.com/KulikovKA/banking-salary-intelligence-platform/blob/main/docs/reports/SNAP-11-accepted.md). Ограничения frozen contract сохраняются.
+SNAP-10 merged через [PR #26](https://github.com/KulikovKA/banking-salary-intelligence-platform/pull/26),
+SNAP-14 — через [PR #25](https://github.com/KulikovKA/banking-salary-intelligence-platform/pull/25).
+Проверенная база на 12.10.2026: `413fa45c30728a663907a64ffe4d1824ccb77a5c`.
+Post-merge regression на dedicated PostgreSQL: **535 passed, 1 skipped**;
+пропуск — Linux-specific `/proc` на Windows. Все **83 assistant cases** и
+**15 search cases** выполнены; missing-search skips отсутствуют. Ruff, mypy,
+Alembic upgrade/check и docs validator — PASS;
+[CI main](https://github.com/KulikovKA/banking-salary-intelligence-platform/actions/runs/38287587403) — PASS.
+Исторический BLOCKED в отчёте SNAP-14 относится к базе до merge SNAP-10;
+этот dependency blocker снят merged-кодом и повторными проверками.
+
+Следующая доступная кодовая задача — **SNAP-16**: все её зависимости merged.
+Нужно подключить существующие services/auth к FastAPI, защищённые originals,
+OpenAPI/TS DTO и synthetic примеры для внешнего frontend; страницы не создавать.
+После merged SNAP-16 и подтверждённой передачи исходников:
+**17 / FE-01 -> FE-02 -> FE-03 -> FE-04**. SNAP-18 может готовить независимый
+evaluation harness; реальные S1/S2/Groq runs ждут разрешений, корпуса и разметки.
+Финальная приёмка **19** ждёт **17 и 18**. Новые задачи требуют отдельного поручения.
 Human source review можно готовить независимо; real bytes остаются blocked до
 source-specific acquisition/storage/reuse допуска. G1/G2 и S1/S2/S3 не изменяются
 от технических synthetic проверок.
