@@ -5,7 +5,7 @@ import { messagePlainText } from "@/lib/chat/format";
 import { Icon } from "./Icon";
 import { ResponseTable } from "./ResponseTable";
 import { StreamingIndicator } from "./StreamingIndicator";
-export function ChatMessage({ message }: { message: ChatMessageModel }) {
+export function ChatMessage({ message, demo = true }: { message: ChatMessageModel; demo?: boolean }) {
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">(
     "idle",
   );
@@ -41,7 +41,7 @@ export function ChatMessage({ message }: { message: ChatMessageModel }) {
       <div className="message-body">
         {assistant && (
           <div className="message-author">
-            Ассистент<span>DEMO</span>
+            Ассистент{demo && <span>DEMO</span>}
           </div>
         )}
         <div className="message-content">
@@ -64,7 +64,7 @@ export function ChatMessage({ message }: { message: ChatMessageModel }) {
         )}
         {message.status === "stopped" && (
           <p className="message-state" role="status">
-            Генерация остановлена. Показана полученная часть ответа.
+            {demo ? "Генерация остановлена. Показана полученная часть ответа." : "Клиентский запрос остановлен. Backend может продолжить обработку."}
           </p>
         )}
         {message.status === "error" && (

@@ -25,7 +25,7 @@ test.beforeEach(async ({ page }) => {
       throw new Error(`Unexpected egress: ${url.hostname}`);
     return route.continue();
   });
-  await page.goto("/");
+  await page.goto("/?demo=1");
 });
 test("desktop welcome and progressive comparison, copy and collapse", async ({
   page,
@@ -61,7 +61,7 @@ test("desktop welcome and progressive comparison, copy and collapse", async ({
   ).toBeVisible();
   await expect(answer.getByText("0,30 %", { exact: true })).toBeVisible();
   await expect(
-    answer.getByText("DEMO · синтетика", { exact: true }),
+    answer.getByText("Синтетические данные", { exact: true }),
   ).toBeVisible();
   await expect(answer.getByRole("link")).toHaveCount(0);
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);

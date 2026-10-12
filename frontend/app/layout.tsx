@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Зарплатный AI — банковская аналитика",
   description:
-    "Desktop-чат для сравнения условий зарплатных проектов. Демонстрационный режим с синтетическими данными.",
+    "Desktop-чат для доказательного сравнения условий зарплатных проектов по выбранному набору документов.",
 };
 
 export default function RootLayout({

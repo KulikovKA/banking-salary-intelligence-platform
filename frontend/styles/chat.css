@@ -939,3 +939,19 @@ h1 > span {
     transition: none !important;
   }
 }
+/* Compact API controls reuse the existing desktop chat palette. */
+.backend-workspace { display: flex; flex-direction: column; height: 100dvh; overflow: hidden; min-width: 1000px; }
+.backend-workspace > .chat-shell { flex: 1; min-height: 0; height: auto; }
+.backend-workspace > .backend-controls { flex-shrink: 0; max-height: 40dvh; overflow: auto; }
+.backend-controls { padding: 14px 24px; background: #fff; border-bottom: 1px solid #e8ebea; color: #293d35; }
+.backend-controls label { display: inline-flex; gap: 8px; align-items: center; margin: 5px 12px 5px 0; }
+.backend-controls input:not([type=checkbox]), .backend-controls select { border: 1px solid #cad5cf; border-radius: 8px; padding: 8px; max-width: 600px; }
+.backend-controls button { padding: 8px 14px; margin: 4px; border: 1px solid #cad5cf; border-radius: 8px; background: #f3f8f5; cursor: pointer; }
+.backend-controls p { font-size: 13px; margin: 8px 0; }
+.backend-controls [role=alert] { color: #a12c33; }
+.backend-controls summary { cursor: pointer; font-size: 14px; }
+.question-controls { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 8px; }
+.question-controls fieldset { border: 1px solid #cad5cf; border-radius: 8px; }
+.session-controls { display: flex; justify-content: space-between; align-items: center; }
+.login-form { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.backend-placeholder { padding: 60px; text-align: center; color: #607168; }
