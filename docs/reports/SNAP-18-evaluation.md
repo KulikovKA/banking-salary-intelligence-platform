@@ -72,6 +72,7 @@ NOT EVALUATED. Minimum human reviewed facts/per-bank floors показывают
 | Frontend lint/typecheck/build/browser E2E | NOT RUN: frontend/API/contracts не менялись |
 | Real parser/real tariff/real gold | NOT RUN: 0 sources/versions, нет допущенных originals |
 | Live Groq / >=20 real-model evaluation | NOT RUN: admission/run authorization нет, env caps invalid |
+| Remote PR CI | NOT RUN локально / status не проверялся; local validation выше |
 | Load/recovery/full S0/S3 | NOT RUN: отдельная SNAP-19 приёмка |
 
 Test DB создана отдельно с именем `bsi_snap18_test_*`; runtime database, policies,

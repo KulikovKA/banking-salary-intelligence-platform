@@ -3,6 +3,10 @@
 Дата: 13.10.2026, Europe/Moscow. Base main: `688877d` после `git fetch origin --prune`.
 Ветка: `codex/snap-18-evaluation`. **READY FOR REVIEW для независимого harness;
 реальная приёмка BLOCKED.** MASTER_PLAN/TASKS и SNAP-01–17 не изменены.
+Implementation: `9e8c67146c9ccdf04d17087b97a0942305f8d081`.
+Отдельный [PR #33 в main](https://github.com/KulikovKA/banking-salary-intelligence-platform/pull/33)
+создан, merge не выполнялся. GitHub connector creation вернул 403; PR успешно
+создан через существующую GitHub Git-авторизацию, использованную для push.
 
 ## A. Что есть прямо сейчас
 
