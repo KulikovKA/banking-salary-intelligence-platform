@@ -4,7 +4,8 @@ Date: 2026-10-12 (Europe/Moscow). Verdict: **READY FOR REVIEW**; remote CI recor
 Base: `ba6c3cfc317f49b929f38c59491741ea9ee6107a` (`origin/main`).
 Branch: `codex/snap-16-api`; worktree: `C:/Users/Kirill/Desktop/sber-snap-16-api`.
 Implementation SHA: `d538928177620dc99c9d9e115b459fd411970e37`.
-PR: recorded below after push. No merge is authorized or performed.
+PR: [#28](https://github.com/KulikovKA/banking-salary-intelligence-platform/pull/28).
+No merge is authorized or performed.
 
 ## Dependency verification and scope
 
@@ -304,7 +305,7 @@ existing migrated transaction fixture. All originals/users/decisions are synthet
 | Frontend lint/typecheck/build | PASS; repeated after final DTO generation |
 | Uvicorn launch with existing .env and process overrides | PASS; health ok, OpenAPI 17 paths; Fake/offline; no .env edits |
 | Existing source-recovery synthetic E2E | PASS_SYNTHETIC_ONLY; run `3d6e335563b9445ca83c52795ff61610`; 0 network requests, 0 missing/orphan blobs |
-| GitHub CI | NOT RUN at this report draft; branch will be pushed for required CI |
+| GitHub CI | PASS, backend and frontend, [run 38294533951](https://github.com/KulikovKA/banking-salary-intelligence-platform/actions/runs/38294533951) on `72485eb336936f87f44122d1da379e63b6f04061`; **565 passed, 0 skipped, 0 failed**, 135.08s; offline E2E PASS_SYNTHETIC_ONLY with 0 network requests |
 | Live Groq/bank acquisition/real corpus evaluation | NOT RUN; no source/provider admission |
 | Browser E2E of API-connected UI | NOT RUN; this task changes only DTOs, SNAP-17 owns UI integration |
 
@@ -324,6 +325,13 @@ on Windows. No missing PostgreSQL/search/API tests were skipped. The standalone
 source-recovery harness ran on separately migrated `bsi_snap16_e2e_test` through
 its existing callable (the CLI's fixed DB-name allowlist was not edited). Its
 ignored local artifact is `.local/snap16-source-e2e/3d6e335563b9445ca83c52795ff61610/result.json`.
+
+The GitHub Linux run executes the `/proc` check too, hence 565 passed with no skip.
+Frontend lint/typecheck/build and all backend CI steps, including synthetic E2E
+and artifact upload, completed successfully. This final report-only commit leaves
+the verified implementation unchanged; current HEAD checks remain visible on PR #28.
+The connector denied PR creation with integration 403; the already authorized Git
+credential created the PR through GitHub REST, without exposing/persisting secrets.
 
 ## Limitations and exact follow-ups
 
