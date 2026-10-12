@@ -1,11 +1,9 @@
-> Scope proposal for separate integrator review (12.10.2026): SNAP-17 integrates
-> the existing desktop chat from merged PR #24 with the merged SNAP-16 API (PR #28,
-> main b440534). No external frontend handoff, dashboard, admin review UI, personal
-> cabinet or mobile adaptation is required for this revised task. The historical
-> FE-01?FE-04 criteria below are not automatically satisfied. The proposed chat-only
-> criteria in FRONTEND_HANDOFF must be agreed and merged separately before closure.
-> SNAP-16 status remains integrator-owned pending report/CI acceptance; SNAP-17
-> remains TODO pending implementation and independent acceptance.
+> SNAP-16 и SNAP-17 закрыты как DONE по явному поручению пользователя 12.10.2026
+> после merge и успешного CI main `155c3bd`; [запись закрытия](../reports/SNAP-16-17-accepted.md).
+> Chat-only scope принят отдельным merge PR #29; интеграция существующего desktop
+> чата из PR #24 с API PR #28 находится в main после PR #31. Внешняя передача,
+> dashboard, admin review UI, кабинет и мобильная адаптация не входят в этот scope.
+> Исторические FE-01–FE-04 не объявляются выполненными; product gates независимы.
 
 # MASTER PLAN — snapshot v1
 
@@ -22,26 +20,23 @@ WORK/TASK/luna пакетов в main нет: они сохранены в ве�
 Engine; Groq `openai/gpt-oss-120b` и evidence-first AI-ассистент; авторизация,
 безопасность, API, backend и интеграционные тесты.
 
-Внешний frontend-разработчик: дизайн, страницы и компоненты, личный кабинет,
-страницы сравнения банков, UI чата и визуализация ответов, адаптивность и
-пользовательские сценарии. Он может создавать frontend параллельно backend.
-Наша команда позже принимает, при необходимости адаптирует и подключает этот
-код к FastAPI в существующей Next.js архитектуре; второй frontend с нуля не создаёт.
-
-Передача исходников пока не подтверждена. [FRONTEND_HANDOFF.md](FRONTEND_HANDOFF.md)
-содержит FE-01–FE-04 как отслеживаемые подзадачи SNAP-17, их владельцев,
-входные зависимости, блокеры и AC. Это не новые SNAP-ID: остаются ровно 19 задач.
+Текущий frontend scope — собственный desktop AI-chat из PR #24, подключённый
+нашей командой к FastAPI в SNAP-17. Второй UI, кабинет, dashboard, admin review
+экраны и мобильная адаптация не создаются. [FRONTEND_HANDOFF.md](FRONTEND_HANDOFF.md)
+содержит принятые chat-only критерии и отдельно исторический план внешней передачи
+FE-01–FE-04. Исторические FE-подзадачи не подменяются выполненными chat-only AC.
+Количество SNAP-ID остаётся 19.
 
 ## Реализованная основа и blockers
 
 Каталог/0001/0002/0003, config, FetchGateway/TLS/robots/transport, immutable BlobStore,
 operator fetch/import/accept_content, discoveries ВТБ/Кубань Кредит, evidence DTO,
 synthetic PG E2E и CI уже существуют. Не переписывать их.
-В main реализованы SNAP-01–SNAP-15: frozen corpus и extraction pipeline, ручная
+В main реализованы SNAP-01–SNAP-17: frozen corpus и extraction pipeline, ручная
 проверка/publication, PostgreSQL search, Comparison Engine, Fake/Groq adapters,
-Evidence-first AssistantService и auth. HTTP composition остаётся задачей SNAP-16.
-Desktop chat MVP из PR #24 использует локальный demo; это не API-интеграция
-и не подтверждённая приёмка внешнего frontend по FE-01–FE-04.
+Evidence-first AssistantService и auth, защищённый API и desktop chat интеграция.
+По умолчанию чат использует backend; demo доступен только при явном development
+opt-in. Это не подтверждение исторической внешней приёмки FE-01–FE-04.
 Ни один новый real source grant этой итерацией не выдан. Официальный corpus
 четырёх банков не принят. Historical G1/G2 NOT PASSED. S1 BLOCKED,
 S2/S3 NOT EVALUATED; полный S0 ждёт API/UI интеграции и сквозной приёмки.
@@ -69,8 +64,8 @@ S2/S3 NOT EVALUATED; полный S0 ждёт API/UI интеграции и с�
 | [SNAP-13](prompts/SNAP-13.md) | GroqCloud Free adapter и quotas | SNAP-02, SNAP-12 | high | DONE |
 | [SNAP-14](prompts/SNAP-14.md) | Evidence-first ассистент и renderer | SNAP-10, SNAP-11, SNAP-13 | high | DONE |
 | [SNAP-15](prompts/SNAP-15.md) | Приглашения, auth и server sessions | SNAP-02 | high | DONE |
-| [SNAP-16](prompts/SNAP-16.md) | FastAPI routers и composition root | SNAP-03, SNAP-09, SNAP-14, SNAP-15 | high | TODO |
-| [SNAP-17](prompts/SNAP-17.md) | Desktop Chat ? FastAPI Integration | SNAP-16 | high | TODO |
+| [SNAP-16](prompts/SNAP-16.md) | FastAPI routers и composition root | SNAP-03, SNAP-09, SNAP-14, SNAP-15 | high | DONE |
+| [SNAP-17](prompts/SNAP-17.md) | Desktop Chat ? FastAPI Integration | SNAP-16 | high | DONE |
 | [SNAP-18](prompts/SNAP-18.md) | Реальный corpus gold и оценка S1/S2/Groq | SNAP-03, SNAP-09, SNAP-11, SNAP-14 | high | TODO |
 | [SNAP-19](prompts/SNAP-19.md) | Сквозная приёмка и минимальная эксплуатация | SNAP-17, SNAP-18 | high | TODO |
 
@@ -78,9 +73,9 @@ S2/S3 NOT EVALUATED; полный S0 ждёт API/UI интеграции и с�
 их одним commit после принятого отчёта; валидатор проверяет совпадение и DAG.
 DONE модуля не означает S1/S2/S3 PASS. При data blocker module harness можно
 закончить, а real acceptance остаётся NOT EVALUATED/BLOCKED в report.
-Всего 15 DONE; SNAP-16–SNAP-19 остаются TODO. SNAP-17 ждёт отдельного поручения и выполнения
-входных условий. Отсутствие внешних исходников блокирует FE-подзадачи, но не
-независимую разработку Backend + AI.
+Всего 17 DONE; SNAP-18 и SNAP-19 остаются TODO. SNAP-16/17 закрыты после merge
+по поручению пользователя; следующее независимое поручение — SNAP-18 harness.
+Real evaluation по-прежнему требует разрешений, корпуса и human-reviewed gold.
 
 ## Параллельные волны без конфликтов
 
@@ -132,13 +127,18 @@ Alembic upgrade/check и docs validator — PASS;
 Исторический BLOCKED в отчёте SNAP-14 относится к базе до merge SNAP-10;
 этот dependency blocker снят merged-кодом и повторными проверками.
 
-Следующая доступная кодовая задача — **SNAP-16**: все её зависимости merged.
-Нужно подключить существующие services/auth к FastAPI, защищённые originals,
-OpenAPI/TS DTO и synthetic примеры для внешнего frontend; страницы не создавать.
-После merged SNAP-16 и подтверждённой передачи исходников:
-**17 / FE-01 -> FE-02 -> FE-03 -> FE-04**. SNAP-18 может готовить независимый
-evaluation harness; реальные S1/S2/Groq runs ждут разрешений, корпуса и разметки.
-Финальная приёмка **19** ждёт **17 и 18**. Новые задачи требуют отдельного поручения.
+SNAP-16 merged через PR #28; chat-only scope — через PR #29, SNAP-17 интеграция —
+через PR #31. Актуальная проверенная база: `155c3bde04e1d433b511d812c57669474c8ed2ce`.
+[CI main](https://github.com/KulikovKA/banking-salary-intelligence-platform/actions/runs/38301764578)
+— PASS: **565 passed, 0 skipped**, migrations/Ruff/mypy/docs/frontend build и
+offline source E2E PASS, network requests = 0. На совпадающем дереве кода локально
+пройдены **23 frontend tests** и **8 real browser synthetic E2E**; сведения и
+сохранённые ограничения — в [записи закрытия](../reports/SNAP-16-17-accepted.md).
+
+Следующая доступная кодовая задача — **SNAP-18**: независимый evaluation harness;
+реальные S1/S2/Groq runs ждут разрешений, корпуса и разметки.
+Финальная приёмка **19** ждёт **18**; merged **17** уже доступен.
+Новые задачи требуют отдельного поручения.
 Human source review можно готовить независимо; real bytes остаются blocked до
 source-specific acquisition/storage/reuse допуска. G1/G2 и S1/S2/S3 не изменяются
 от технических synthetic проверок.
