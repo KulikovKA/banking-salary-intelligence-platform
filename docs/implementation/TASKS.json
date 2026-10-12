@@ -341,12 +341,12 @@
     },
     {
       "id": "SNAP-17",
-      "title": "Интеграция и адаптация внешнего frontend",
+      "title": "Desktop Chat ? FastAPI Integration",
       "deps": [
         "SNAP-16"
       ],
       "status": "TODO",
-      "reasoning_effort": "medium",
+      "reasoning_effort": "high",
       "owned_paths": [
         "frontend/app/**",
         "frontend/components/**",
@@ -358,12 +358,13 @@
         "frontend/eslint.config.mjs",
         "frontend/tests/**",
         "frontend/package.json",
-        "frontend/package-lock.json"
+        "frontend/package-lock.json",
+        "frontend/lib/chat/**"
       ],
-      "outcome": "Принятый и адаптированный внешний frontend в Next.js, подключённый к FastAPI; FE-01–FE-04 закрыты с evidence и рабочими browser flows login/invite, snapshot/scenario, поиск/сравнение/ассистент/источники и admin review.",
-      "implementation": "Выполни FE-01–FE-04 по FRONTEND_HANDOFF: проверь переданный exact revision, зависимости/лицензии/качество/безопасность и матрицу экран -> API; перенеси предоставленный код в существующую Next.js архитектуру с сохранением согласованного дизайна/компонентов и минимальным переписыванием. Удали временные клиентские расчёты тарифов, approvals и небезопасные решения. Замени product mocks типизированными FastAPI вызовами frozen TS DTO SNAP-16: auth, snapshots, search, comparison, documents, assistant, admin review/freeze. Same-origin proxy, server sessions/HttpOnly cookie, корректный Origin/CSRF; без auth token localStorage, Groq key только на backend. Покажи revision/date/coverage/missing banks/synthetic/evidence/unknown/conflict/individual/conditions/scope/fallback и typed errors 429/503. Protected originals, escaped snippets, scenario без payroll personal data. Память диалога только текущий UI, logout очищает её. Недостающие сценарии возвращай внешнему разработчику как конкретные follow-up; public API/DTO changes только через владельца SNAP-16. Второй UI с нуля и monitoring/notifications не создавать. Playwright dev dependency только для meaningful E2E.",
-      "acceptance": "FE-01–FE-04 имеют принятые отчёты с exact revision и evidence каждого AC; lint/typecheck/build green. Browser E2E на реальном FastAPI + dedicated PostgreSQL с migrations + frozen synthetic corpus + Fake: invite/login/logout, выбор snapshot/scenario, поиск, сравнение, вопросы ассистенту, открытие protected originals и admin review/freeze. Проверены RBAC/CSRF/XSS, истечение сессии, fallback/429/503/missing-input/unknown/conflict/individual и очистка диалога при logout. Bank/Groq network = 0; API integration реальная, не только mocks. Нет client secrets/тарифных расчётов/approvals; отчёт готовности фиксирует limitations и NOT RUN, synthetic не считается S1/S2/S3 PASS.",
-      "parallelism": "Внешний разработчик создаёт UI параллельно Backend + AI в своём репозитории; наша команда не создаёт второй frontend. SNAP-17 начинает FE-01–FE-04 только после передачи исходников и merged SNAP-16, единолично владеет переносом frontend tree/package-lock. Новые внешние revisions принимать последовательно без перезаписи соседних изменений. Backend и api-contracts.ts read-only; API/DTO follow-up владельцу SNAP-16, FE-статусы интегратору. SNAP-18 может идти параллельно на disjoint paths.",
+      "outcome": "Existing PR #24 desktop chat connected to SNAP-16; proposed chat-only criteria pending separate integrator agreement/merge and independent acceptance.",
+      "implementation": "Reuse existing ChatShell/sidebar/messages/composer/table/reducer. Server-only same-origin proxy; login/invite/logout/expiry/CSRF; explicit frozen snapshot; typed BackendChatTransport and evidence-preserving AnswerEnvelope/ComparisonResult adapter. Demo only explicit development mode. No second UI, dashboard, admin review UI, cabinet or mobile adaptation. Backend/frozen DTO read-only.",
+      "acceptance": "Proposed chat-only AC in FRONTEND_HANDOFF require separate agreement/merge before formal closure. Real browser Next.js -> FastAPI -> dedicated migrated PostgreSQL -> synthetic frozen snapshot -> Fake E2E: auth/CSRF/Origin/snapshot/question/table/documents/fallback/empty/errors/XSS. Lint/typecheck/build, regression and docs checks; no secrets or bank/Groq network. Historical FE criteria are not automatically DONE.",
+      "parallelism": "Single frontend owner, isolated branch/worktree; no subagents. Existing merged PR #24 replaces external handoff requirement under user-approved scope. Backend/api-contracts.ts read-only. Integrator owns task statuses after acceptance.",
       "prompt": "prompts/SNAP-17.md"
     },
     {
