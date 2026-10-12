@@ -1,0 +1,633 @@
+{
+  "blocked": [
+    "S1 requires independent source approvals, accepted originals and frozen review",
+    "S2 requires admitted real corpus and independent human-reviewed gold",
+    "S3 requires explicit provider run authorization/admission and >=20 real questions"
+  ],
+  "corpus_kind": "synthetic",
+  "corpus_revision": 1,
+  "counts": {
+    "comparisons": 30,
+    "facts": 44,
+    "human_reviewed": 0,
+    "per_bank": {
+      "alfa": {
+        "facts": 11,
+        "questions": 7
+      },
+      "kuban_credit": {
+        "facts": 11,
+        "questions": 7
+      },
+      "sber": {
+        "facts": 11,
+        "questions": 7
+      },
+      "vtb": {
+        "facts": 11,
+        "questions": 7
+      }
+    },
+    "per_pair": {
+      "alfa/kuban_credit": 2,
+      "sber/alfa": 2,
+      "sber/kuban_credit": 2,
+      "sber/vtb": 2,
+      "vtb/alfa": 2,
+      "vtb/kuban_credit": 2
+    },
+    "questions": 40
+  },
+  "coverage": {
+    "alfa/kuban_credit": {
+      "comparable": 1,
+      "numeric_employer_cost": 1,
+      "status": "BLOCKED"
+    },
+    "sber/alfa": {
+      "comparable": 1,
+      "numeric_employer_cost": 1,
+      "status": "BLOCKED"
+    },
+    "sber/kuban_credit": {
+      "comparable": 1,
+      "numeric_employer_cost": 1,
+      "status": "BLOCKED"
+    },
+    "sber/vtb": {
+      "comparable": 1,
+      "numeric_employer_cost": 1,
+      "status": "BLOCKED"
+    },
+    "vtb/alfa": {
+      "comparable": 1,
+      "numeric_employer_cost": 1,
+      "status": "BLOCKED"
+    },
+    "vtb/kuban_credit": {
+      "comparable": 1,
+      "numeric_employer_cost": 1,
+      "status": "BLOCKED"
+    }
+  },
+  "effective_observations_sha256": "17afacccc50fee61b30c61b1db39a5ee7a3eed90408840089335493d74453526",
+  "gates": {
+    "S0": "NOT EVALUATED",
+    "S1": "BLOCKED",
+    "S2": "NOT EVALUATED",
+    "S3": "NOT EVALUATED"
+  },
+  "gold_sha256": "ca3b3693006ceb0cb4c84000fea9d58fe2abfa597c31fb3243321a4e23b152d8",
+  "metrics": {
+    "conditions_recall": {
+      "denominator": 40,
+      "numerator": 37,
+      "status": "FAIL",
+      "threshold": "95/100"
+    },
+    "deterministic_comparisons": {
+      "denominator": 30,
+      "numerator": 27,
+      "status": "FAIL",
+      "threshold": "100/100"
+    },
+    "evidence_linkage": {
+      "denominator": 40,
+      "numerator": 39,
+      "status": "FAIL",
+      "threshold": "100/100"
+    },
+    "intent_accuracy": {
+      "denominator": 36,
+      "numerator": 36,
+      "status": "PASS",
+      "threshold": "90/100"
+    },
+    "retrieval_recall_at_10": {
+      "denominator": 48,
+      "numerator": 42,
+      "status": "FAIL",
+      "threshold": "90/100"
+    },
+    "unsupported_claims": {
+      "denominator": 36,
+      "numerator": 2,
+      "status": "FAIL",
+      "threshold": "0"
+    },
+    "value_unit_basis_period": {
+      "denominator": 40,
+      "numerator": 38,
+      "status": "FAIL",
+      "threshold": "98/100"
+    }
+  },
+  "missing": [],
+  "note": "Metrics score captured structured observations; they do not issue admissions.",
+  "observation_mode": "offline_replay",
+  "observations_sha256": "46a5ea6a2fd01c84c0cd94086ffa787ffdd3fe3bd9eaab2d95433c0a4ed4fc2f",
+  "per_bank": {
+    "alfa": {
+      "conditions_recall": {
+        "denominator": 10,
+        "numerator": 10,
+        "status": "PASS",
+        "threshold": "95/100"
+      },
+      "deterministic_comparisons": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "100/100"
+      },
+      "evidence_linkage": {
+        "denominator": 10,
+        "numerator": 10,
+        "status": "PASS",
+        "threshold": "100/100"
+      },
+      "intent_accuracy": {
+        "denominator": 6,
+        "numerator": 6,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "retrieval_recall_at_10": {
+        "denominator": 6,
+        "numerator": 6,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "unsupported_claims": {
+        "denominator": 6,
+        "numerator": 0,
+        "status": "PASS",
+        "threshold": "0"
+      },
+      "value_unit_basis_period": {
+        "denominator": 10,
+        "numerator": 10,
+        "status": "PASS",
+        "threshold": "98/100"
+      }
+    },
+    "kuban_credit": {
+      "conditions_recall": {
+        "denominator": 10,
+        "numerator": 10,
+        "status": "PASS",
+        "threshold": "95/100"
+      },
+      "deterministic_comparisons": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "100/100"
+      },
+      "evidence_linkage": {
+        "denominator": 10,
+        "numerator": 10,
+        "status": "PASS",
+        "threshold": "100/100"
+      },
+      "intent_accuracy": {
+        "denominator": 6,
+        "numerator": 6,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "retrieval_recall_at_10": {
+        "denominator": 6,
+        "numerator": 6,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "unsupported_claims": {
+        "denominator": 6,
+        "numerator": 0,
+        "status": "PASS",
+        "threshold": "0"
+      },
+      "value_unit_basis_period": {
+        "denominator": 10,
+        "numerator": 10,
+        "status": "PASS",
+        "threshold": "98/100"
+      }
+    },
+    "sber": {
+      "conditions_recall": {
+        "denominator": 10,
+        "numerator": 7,
+        "status": "FAIL",
+        "threshold": "95/100"
+      },
+      "deterministic_comparisons": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "100/100"
+      },
+      "evidence_linkage": {
+        "denominator": 10,
+        "numerator": 9,
+        "status": "FAIL",
+        "threshold": "100/100"
+      },
+      "intent_accuracy": {
+        "denominator": 6,
+        "numerator": 6,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "retrieval_recall_at_10": {
+        "denominator": 6,
+        "numerator": 0,
+        "status": "FAIL",
+        "threshold": "90/100"
+      },
+      "unsupported_claims": {
+        "denominator": 6,
+        "numerator": 2,
+        "status": "FAIL",
+        "threshold": "0"
+      },
+      "value_unit_basis_period": {
+        "denominator": 10,
+        "numerator": 8,
+        "status": "FAIL",
+        "threshold": "98/100"
+      }
+    },
+    "vtb": {
+      "conditions_recall": {
+        "denominator": 10,
+        "numerator": 10,
+        "status": "PASS",
+        "threshold": "95/100"
+      },
+      "deterministic_comparisons": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "100/100"
+      },
+      "evidence_linkage": {
+        "denominator": 10,
+        "numerator": 10,
+        "status": "PASS",
+        "threshold": "100/100"
+      },
+      "intent_accuracy": {
+        "denominator": 6,
+        "numerator": 6,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "retrieval_recall_at_10": {
+        "denominator": 6,
+        "numerator": 6,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "unsupported_claims": {
+        "denominator": 6,
+        "numerator": 0,
+        "status": "PASS",
+        "threshold": "0"
+      },
+      "value_unit_basis_period": {
+        "denominator": 10,
+        "numerator": 10,
+        "status": "PASS",
+        "threshold": "98/100"
+      }
+    }
+  },
+  "per_pair": {
+    "alfa/kuban_credit": {
+      "conditions_recall": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "95/100"
+      },
+      "deterministic_comparisons": {
+        "denominator": 5,
+        "numerator": 5,
+        "status": "PASS",
+        "threshold": "100/100"
+      },
+      "evidence_linkage": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "100/100"
+      },
+      "intent_accuracy": {
+        "denominator": 2,
+        "numerator": 2,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "retrieval_recall_at_10": {
+        "denominator": 4,
+        "numerator": 4,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "unsupported_claims": {
+        "denominator": 2,
+        "numerator": 0,
+        "status": "PASS",
+        "threshold": "0"
+      },
+      "value_unit_basis_period": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "98/100"
+      }
+    },
+    "sber/alfa": {
+      "conditions_recall": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "95/100"
+      },
+      "deterministic_comparisons": {
+        "denominator": 5,
+        "numerator": 5,
+        "status": "PASS",
+        "threshold": "100/100"
+      },
+      "evidence_linkage": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "100/100"
+      },
+      "intent_accuracy": {
+        "denominator": 2,
+        "numerator": 2,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "retrieval_recall_at_10": {
+        "denominator": 4,
+        "numerator": 4,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "unsupported_claims": {
+        "denominator": 2,
+        "numerator": 0,
+        "status": "PASS",
+        "threshold": "0"
+      },
+      "value_unit_basis_period": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "98/100"
+      }
+    },
+    "sber/kuban_credit": {
+      "conditions_recall": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "95/100"
+      },
+      "deterministic_comparisons": {
+        "denominator": 5,
+        "numerator": 5,
+        "status": "PASS",
+        "threshold": "100/100"
+      },
+      "evidence_linkage": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "100/100"
+      },
+      "intent_accuracy": {
+        "denominator": 2,
+        "numerator": 2,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "retrieval_recall_at_10": {
+        "denominator": 4,
+        "numerator": 4,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "unsupported_claims": {
+        "denominator": 2,
+        "numerator": 0,
+        "status": "PASS",
+        "threshold": "0"
+      },
+      "value_unit_basis_period": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "98/100"
+      }
+    },
+    "sber/vtb": {
+      "conditions_recall": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "95/100"
+      },
+      "deterministic_comparisons": {
+        "denominator": 5,
+        "numerator": 2,
+        "status": "FAIL",
+        "threshold": "100/100"
+      },
+      "evidence_linkage": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "100/100"
+      },
+      "intent_accuracy": {
+        "denominator": 2,
+        "numerator": 2,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "retrieval_recall_at_10": {
+        "denominator": 4,
+        "numerator": 4,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "unsupported_claims": {
+        "denominator": 2,
+        "numerator": 0,
+        "status": "PASS",
+        "threshold": "0"
+      },
+      "value_unit_basis_period": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "98/100"
+      }
+    },
+    "vtb/alfa": {
+      "conditions_recall": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "95/100"
+      },
+      "deterministic_comparisons": {
+        "denominator": 5,
+        "numerator": 5,
+        "status": "PASS",
+        "threshold": "100/100"
+      },
+      "evidence_linkage": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "100/100"
+      },
+      "intent_accuracy": {
+        "denominator": 2,
+        "numerator": 2,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "retrieval_recall_at_10": {
+        "denominator": 4,
+        "numerator": 4,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "unsupported_claims": {
+        "denominator": 2,
+        "numerator": 0,
+        "status": "PASS",
+        "threshold": "0"
+      },
+      "value_unit_basis_period": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "98/100"
+      }
+    },
+    "vtb/kuban_credit": {
+      "conditions_recall": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "95/100"
+      },
+      "deterministic_comparisons": {
+        "denominator": 5,
+        "numerator": 5,
+        "status": "PASS",
+        "threshold": "100/100"
+      },
+      "evidence_linkage": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "100/100"
+      },
+      "intent_accuracy": {
+        "denominator": 2,
+        "numerator": 2,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "retrieval_recall_at_10": {
+        "denominator": 4,
+        "numerator": 4,
+        "status": "PASS",
+        "threshold": "90/100"
+      },
+      "unsupported_claims": {
+        "denominator": 2,
+        "numerator": 0,
+        "status": "PASS",
+        "threshold": "0"
+      },
+      "value_unit_basis_period": {
+        "denominator": 0,
+        "numerator": 0,
+        "status": "NOT EVALUATED",
+        "threshold": "98/100"
+      }
+    }
+  },
+  "provider": {
+    "attempted": 0,
+    "completion_tokens": 0,
+    "errors": 0,
+    "fallback_rate": {
+      "denominator": 0,
+      "numerator": 0
+    },
+    "fallbacks": 0,
+    "latency_p95_ms": null,
+    "latency_samples": 0,
+    "models": [],
+    "prompt_tokens": 0,
+    "rate_limit_errors": 0,
+    "usage_missing": 0
+  },
+  "sample_requirements": {
+    "bank_facts": {
+      "actual": 11,
+      "minimum": 10,
+      "status": "PASS"
+    },
+    "bank_questions": {
+      "actual": 7,
+      "minimum": 6,
+      "status": "PASS"
+    },
+    "family_split": {
+      "actual": 2,
+      "minimum": 2,
+      "status": "PASS"
+    },
+    "holdout_comparisons": {
+      "actual": 30,
+      "minimum": 30,
+      "status": "PASS"
+    },
+    "pair_questions": {
+      "actual": 2,
+      "minimum": 2,
+      "status": "PASS"
+    },
+    "reviewed_facts": {
+      "actual": 0,
+      "minimum": 40,
+      "status": "BLOCKED"
+    },
+    "reviewed_facts_per_bank": {
+      "actual": 0,
+      "minimum": 10,
+      "status": "BLOCKED"
+    }
+  },
+  "schema_version": 1,
+  "skipped": [
+    "Full product acceptance is outside metric replay",
+    "Tune cases excluded from holdout metrics"
+  ],
+  "snapshot_id": "1011be67-2332-5e44-96f1-ef5e29b24ec4",
+  "unsupported_claims": 2
+}

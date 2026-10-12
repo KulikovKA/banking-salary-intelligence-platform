@@ -1,0 +1,1176 @@
+{
+  "$defs": {
+    "BooleanValue": {
+      "additionalProperties": false,
+      "properties": {
+        "boolean_value": {
+          "title": "Boolean Value",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "boolean",
+          "title": "Kind",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "boolean_value"
+      ],
+      "title": "BooleanValue",
+      "type": "object"
+    },
+    "Comparison": {
+      "additionalProperties": false,
+      "properties": {
+        "banks": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "enum": [
+                "sber",
+                "vtb",
+                "alfa",
+                "kuban_credit"
+              ],
+              "type": "string"
+            },
+            {
+              "enum": [
+                "sber",
+                "vtb",
+                "alfa",
+                "kuban_credit"
+              ],
+              "type": "string"
+            }
+          ],
+          "title": "Banks",
+          "type": "array"
+        },
+        "expected": {
+          "additionalProperties": true,
+          "title": "Expected",
+          "type": "object"
+        },
+        "family": {
+          "minLength": 1,
+          "title": "Family",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "records": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Records",
+          "type": "array"
+        },
+        "request": {
+          "additionalProperties": true,
+          "title": "Request",
+          "type": "object"
+        },
+        "split": {
+          "enum": [
+            "tune",
+            "holdout"
+          ],
+          "title": "Split",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "banks",
+        "family",
+        "split",
+        "request",
+        "records",
+        "expected"
+      ],
+      "title": "Comparison",
+      "type": "object"
+    },
+    "CountValue": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "title": "Amount",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "count",
+          "title": "Kind",
+          "type": "string"
+        },
+        "period": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Period"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "amount",
+        "unit"
+      ],
+      "title": "CountValue",
+      "type": "object"
+    },
+    "Coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "banks": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "enum": [
+                "sber",
+                "vtb",
+                "alfa",
+                "kuban_credit"
+              ],
+              "type": "string"
+            },
+            {
+              "enum": [
+                "sber",
+                "vtb",
+                "alfa",
+                "kuban_credit"
+              ],
+              "type": "string"
+            }
+          ],
+          "title": "Banks",
+          "type": "array"
+        },
+        "comparable": {
+          "title": "Comparable",
+          "type": "boolean"
+        },
+        "fact_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "title": "Fact Ids",
+          "type": "array"
+        },
+        "metric": {
+          "minLength": 1,
+          "title": "Metric",
+          "type": "string"
+        },
+        "numeric_employer_cost": {
+          "title": "Numeric Employer Cost",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "banks",
+        "metric",
+        "fact_ids",
+        "comparable",
+        "numeric_employer_cost"
+      ],
+      "title": "Coverage",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "chunk_id": {
+          "minLength": 1,
+          "title": "Chunk Id",
+          "type": "string"
+        },
+        "chunk_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Chunk Sha256",
+          "type": "string"
+        },
+        "chunk_text": {
+          "title": "Chunk Text",
+          "type": "string"
+        },
+        "extraction_run_id": {
+          "minLength": 1,
+          "title": "Extraction Run Id",
+          "type": "string"
+        },
+        "extraction_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Extraction Sha256",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "locator": {
+          "discriminator": {
+            "mapping": {
+              "html": "#/$defs/HtmlLocator",
+              "pdf": "#/$defs/PdfLocator",
+              "xlsx": "#/$defs/XlsxLocator"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/PdfLocator"
+            },
+            {
+              "$ref": "#/$defs/XlsxLocator"
+            },
+            {
+              "$ref": "#/$defs/HtmlLocator"
+            }
+          ],
+          "title": "Locator"
+        },
+        "quote": {
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        },
+        "quote_end": {
+          "exclusiveMinimum": 0,
+          "title": "Quote End",
+          "type": "integer"
+        },
+        "quote_start": {
+          "minimum": 0,
+          "title": "Quote Start",
+          "type": "integer"
+        },
+        "raw_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Raw Sha256",
+          "type": "string"
+        },
+        "source_version_id": {
+          "minLength": 1,
+          "title": "Source Version Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "source_version_id",
+        "extraction_run_id",
+        "chunk_id",
+        "raw_sha256",
+        "extraction_sha256",
+        "chunk_sha256",
+        "chunk_text",
+        "quote",
+        "quote_start",
+        "quote_end",
+        "locator"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "Fact": {
+      "additionalProperties": false,
+      "properties": {
+        "bank": {
+          "enum": [
+            "sber",
+            "vtb",
+            "alfa",
+            "kuban_credit"
+          ],
+          "title": "Bank",
+          "type": "string"
+        },
+        "effective_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Effective Date"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "family": {
+          "minLength": 1,
+          "title": "Family",
+          "type": "string"
+        },
+        "human_review_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Human Review Id"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "metric": {
+          "minLength": 1,
+          "title": "Metric",
+          "type": "string"
+        },
+        "operation": {
+          "minLength": 1,
+          "title": "Operation",
+          "type": "string"
+        },
+        "payer": {
+          "enum": [
+            "employer",
+            "employee"
+          ],
+          "title": "Payer",
+          "type": "string"
+        },
+        "period": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Period"
+        },
+        "required_conditions": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Conditions",
+          "type": "array"
+        },
+        "scope": {
+          "additionalProperties": true,
+          "title": "Scope",
+          "type": "object"
+        },
+        "split": {
+          "enum": [
+            "tune",
+            "holdout"
+          ],
+          "title": "Split",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "unknown",
+            "individual",
+            "conflict",
+            "not_applicable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "boolean": "#/$defs/BooleanValue",
+                  "count": "#/$defs/CountValue",
+                  "formula": "#/$defs/FormulaValue",
+                  "individual": "#/$defs/IndividualValue",
+                  "money": "#/$defs/MoneyValue",
+                  "percent": "#/$defs/PercentValue",
+                  "range": "#/$defs/RangeValue",
+                  "text": "#/$defs/TextValue"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/MoneyValue"
+                },
+                {
+                  "$ref": "#/$defs/PercentValue"
+                },
+                {
+                  "$ref": "#/$defs/CountValue"
+                },
+                {
+                  "$ref": "#/$defs/BooleanValue"
+                },
+                {
+                  "$ref": "#/$defs/TextValue"
+                },
+                {
+                  "$ref": "#/$defs/RangeValue"
+                },
+                {
+                  "$ref": "#/$defs/FormulaValue"
+                },
+                {
+                  "$ref": "#/$defs/IndividualValue"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "id",
+        "bank",
+        "family",
+        "split",
+        "metric",
+        "status",
+        "payer",
+        "operation",
+        "period",
+        "scope",
+        "effective_date",
+        "evidence_ids"
+      ],
+      "title": "Fact",
+      "type": "object"
+    },
+    "FormulaValue": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Basis"
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z]{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Currency"
+        },
+        "formula": {
+          "enum": [
+            "constant",
+            "percentage",
+            "percentage_clamped"
+          ],
+          "title": "Formula",
+          "type": "string"
+        },
+        "kind": {
+          "const": "formula",
+          "title": "Kind",
+          "type": "string"
+        },
+        "parameters": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "title": "Parameters",
+          "type": "object"
+        },
+        "period": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Period"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "formula",
+        "parameters"
+      ],
+      "title": "FormulaValue",
+      "type": "object"
+    },
+    "HtmlLocator": {
+      "additionalProperties": false,
+      "properties": {
+        "element_path": {
+          "maxLength": 10000,
+          "minLength": 1,
+          "title": "Element Path",
+          "type": "string"
+        },
+        "heading": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Heading"
+        },
+        "kind": {
+          "const": "html",
+          "title": "Kind",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "element_path"
+      ],
+      "title": "HtmlLocator",
+      "type": "object"
+    },
+    "IndividualValue": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "individual",
+          "title": "Kind",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "text_value": {
+          "minLength": 1,
+          "title": "Text Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text_value"
+      ],
+      "title": "IndividualValue",
+      "type": "object"
+    },
+    "MoneyValue": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Amount"
+        },
+        "currency": {
+          "pattern": "^[A-Z]{3}$",
+          "title": "Currency",
+          "type": "string"
+        },
+        "kind": {
+          "const": "money",
+          "title": "Kind",
+          "type": "string"
+        },
+        "period": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Period"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "unit": {
+          "const": "currency",
+          "default": "currency",
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "amount",
+        "currency"
+      ],
+      "title": "MoneyValue",
+      "type": "object"
+    },
+    "PdfLocator": {
+      "additionalProperties": false,
+      "properties": {
+        "bbox": {
+          "anyOf": [
+            {
+              "maxItems": 4,
+              "minItems": 4,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bbox"
+        },
+        "kind": {
+          "const": "pdf",
+          "title": "Kind",
+          "type": "string"
+        },
+        "physical_page": {
+          "minimum": 1,
+          "title": "Physical Page",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "table_cell": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Table Cell"
+        }
+      },
+      "required": [
+        "kind",
+        "physical_page"
+      ],
+      "title": "PdfLocator",
+      "type": "object"
+    },
+    "PercentValue": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Amount"
+        },
+        "basis": {
+          "minLength": 1,
+          "title": "Basis",
+          "type": "string"
+        },
+        "kind": {
+          "const": "percent",
+          "title": "Kind",
+          "type": "string"
+        },
+        "period": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Period"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "unit": {
+          "const": "percent",
+          "default": "percent",
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "amount",
+        "basis"
+      ],
+      "title": "PercentValue",
+      "type": "object"
+    },
+    "Question": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_claims": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Claims",
+          "type": "array"
+        },
+        "allowed_numbers": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Numbers",
+          "type": "array"
+        },
+        "banks": {
+          "items": {
+            "enum": [
+              "sber",
+              "vtb",
+              "alfa",
+              "kuban_credit"
+            ],
+            "type": "string"
+          },
+          "maxItems": 2,
+          "minItems": 1,
+          "title": "Banks",
+          "type": "array"
+        },
+        "expected_intent": {
+          "enum": [
+            "compare",
+            "facts",
+            "documents",
+            "clarify"
+          ],
+          "title": "Expected Intent",
+          "type": "string"
+        },
+        "family": {
+          "minLength": 1,
+          "title": "Family",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "query": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Query",
+          "type": "string"
+        },
+        "relevant_chunk_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Relevant Chunk Ids",
+          "type": "array"
+        },
+        "split": {
+          "enum": [
+            "tune",
+            "holdout"
+          ],
+          "title": "Split",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "banks",
+        "family",
+        "split",
+        "query",
+        "relevant_chunk_ids",
+        "expected_intent"
+      ],
+      "title": "Question",
+      "type": "object"
+    },
+    "RangeValue": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Basis"
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z]{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Currency"
+        },
+        "kind": {
+          "const": "range",
+          "title": "Kind",
+          "type": "string"
+        },
+        "lower": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lower"
+        },
+        "lower_inclusive": {
+          "default": true,
+          "title": "Lower Inclusive",
+          "type": "boolean"
+        },
+        "period": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Period"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        },
+        "upper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Upper"
+        },
+        "upper_inclusive": {
+          "default": true,
+          "title": "Upper Inclusive",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "unit"
+      ],
+      "title": "RangeValue",
+      "type": "object"
+    },
+    "TextValue": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "text",
+          "title": "Kind",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "text_value": {
+          "title": "Text Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text_value"
+      ],
+      "title": "TextValue",
+      "type": "object"
+    },
+    "XlsxLocator": {
+      "additionalProperties": false,
+      "properties": {
+        "cached_value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cached Value"
+        },
+        "cell_range": {
+          "maxLength": 10000,
+          "minLength": 1,
+          "title": "Cell Range",
+          "type": "string"
+        },
+        "formula": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Formula"
+        },
+        "kind": {
+          "const": "xlsx",
+          "title": "Kind",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "sheet": {
+          "maxLength": 10000,
+          "minLength": 1,
+          "title": "Sheet",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "sheet",
+        "cell_range"
+      ],
+      "title": "XlsxLocator",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "comparisons": {
+      "items": {
+        "$ref": "#/$defs/Comparison"
+      },
+      "title": "Comparisons",
+      "type": "array"
+    },
+    "corpus_kind": {
+      "enum": [
+        "synthetic",
+        "real"
+      ],
+      "title": "Corpus Kind",
+      "type": "string"
+    },
+    "corpus_revision": {
+      "minimum": 1,
+      "title": "Corpus Revision",
+      "type": "integer"
+    },
+    "coverage": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Coverage"
+      },
+      "title": "Coverage",
+      "type": "array"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "facts": {
+      "items": {
+        "$ref": "#/$defs/Fact"
+      },
+      "title": "Facts",
+      "type": "array"
+    },
+    "questions": {
+      "items": {
+        "$ref": "#/$defs/Question"
+      },
+      "title": "Questions",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "snapshot_id": {
+      "minLength": 1,
+      "title": "Snapshot Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "corpus_kind",
+    "snapshot_id",
+    "corpus_revision",
+    "facts",
+    "evidence",
+    "questions",
+    "comparisons"
+  ],
+  "title": "Gold",
+  "type": "object"
+}

@@ -1,0 +1,101 @@
+{
+  "audit_date": "2026-10-13",
+  "bank_original_hashes_found": {
+    "4f935428de5678c4a4b176ff1f7c34e5ed0d635d30502a878d272fbac32e8ecb": false,
+    "db9c856a67767b6d1c290a48162d107fa6c99d8905b395d3b113ec1920b57bec": false
+  },
+  "database": {
+    "broken_evidence": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "candidates": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "chunk_counts": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "evidence_counts": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "extractions": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "fetches": [],
+    "members": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "migration": [
+      {
+        "version_num": "0002_source_recovery"
+      }
+    ],
+    "policies": [],
+    "published": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "read_only": "on",
+    "reviews": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "schemas": [
+      {
+        "schema_name": "public"
+      }
+    ],
+    "snapshots": {
+      "reason": "TABLE_ABSENT",
+      "status": "NOT RUN"
+    },
+    "sources": [],
+    "tables": [
+      {
+        "table_name": "alembic_version"
+      },
+      {
+        "table_name": "banks"
+      },
+      {
+        "table_name": "blobs"
+      },
+      {
+        "table_name": "job_runs"
+      },
+      {
+        "table_name": "source_fetches"
+      },
+      {
+        "table_name": "source_policies"
+      },
+      {
+        "table_name": "source_versions"
+      },
+      {
+        "table_name": "sources"
+      }
+    ],
+    "versions": []
+  },
+  "files": 87,
+  "formats": {
+    "html": 71,
+    "pdf": 16
+  },
+  "provider": {
+    "configuration_check": "INVALID_OR_INCOMPLETE",
+    "key_present": true,
+    "mode": "fake",
+    "model": "openai/gpt-oss-120b"
+  },
+  "real_namespace_files": 0,
+  "scope": "Registered worktrees and configured storage; not a whole-computer search",
+  "storage_exists": false,
+  "unique_hashes": 25
+}
