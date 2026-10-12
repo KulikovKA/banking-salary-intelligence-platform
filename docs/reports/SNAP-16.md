@@ -1,5 +1,9 @@
 # SNAP-16 — FastAPI API and composition root
 
+> Closed as DONE on the user's explicit post-merge instruction (12.10.2026).
+> [Closure evidence and retained limitations](SNAP-16-17-accepted.md).
+> The original readiness/merge statements below describe the implementation handoff.
+
 Date: 2026-10-12 (Europe/Moscow). Verdict: **READY FOR REVIEW**; remote CI recorded below.
 Base: `ba6c3cfc317f49b929f38c59491741ea9ee6107a` (`origin/main`).
 Branch: `codex/snap-16-api`; worktree: `C:/Users/Kirill/Desktop/sber-snap-16-api`.

@@ -1,5 +1,10 @@
 # SNAP-17 — Desktop Chat ↔ FastAPI Integration
 
+> Closed as DONE on the user's explicit post-merge instruction (12.10.2026).
+> Scope #29 and integration #31 are merged into main; CI passed.
+> [Closure evidence and retained limitations](SNAP-16-17-accepted.md).
+> The original pending verdict below describes the implementation handoff.
+
 Date: 12.10.2026, Europe/Moscow. Verdict: **READY FOR REVIEW**, synthetic technical
 checks passed; **not DONE**. Separate scope agreement/merge and independent
 acceptance remain required. No automatic merge or task-status update performed.

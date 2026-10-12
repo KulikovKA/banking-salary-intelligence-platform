@@ -1,5 +1,11 @@
 # Proposed SNAP-17 desktop chat scope (12.10.2026)
 
+> Current status: scope agreed/merged through PR #29; desktop integration in main
+> through PR #31. SNAP-16/17 closed DONE on explicit user instruction after CI PASS.
+> [Closure record](../reports/SNAP-16-17-accepted.md). The original proposal wording
+> and historical external FE tracker below are retained as history; they do not
+> mark historical FE-01–FE-04 passed or alter product gates.
+
 User-authorized implementation scope: reuse the repository's own desktop AI chat
 merged in PR #24; API merged in PR #28 (`b440534`). No external source package is
 awaited and no second UI is created. This is a separate scope proposal for the

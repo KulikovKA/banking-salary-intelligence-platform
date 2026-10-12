@@ -325,7 +325,7 @@
         "SNAP-14",
         "SNAP-15"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "high",
       "owned_paths": [
         "backend/app/api/**",
@@ -345,7 +345,7 @@
       "deps": [
         "SNAP-16"
       ],
-      "status": "TODO",
+      "status": "DONE",
       "reasoning_effort": "high",
       "owned_paths": [
         "frontend/app/**",
