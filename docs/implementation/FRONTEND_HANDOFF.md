@@ -1,3 +1,39 @@
+# Proposed SNAP-17 desktop chat scope (12.10.2026)
+
+User-authorized implementation scope: reuse the repository's own desktop AI chat
+merged in PR #24; API merged in PR #28 (`b440534`). No external source package is
+awaited and no second UI is created. This is a separate scope proposal for the
+integrator; historical FE-01?FE-04 below remain historical requirements and are
+not declared completed. Formal SNAP-17 closure requires separate agreement/merge
+of these criteria and independent review of implementation evidence.
+
+Proposed chat-only criteria:
+
+- CHAT-01: preserve existing visual components/reducer; record exact UI/API base,
+  frozen DTO revision and dependency/license inventory; no new services or UI.
+- CHAT-02: same-origin Next proxy using server-only backend URL, cookies and actual
+  browser Origin; anonymous CSRF, login/invite, me, session CSRF, logout/expiry;
+  HttpOnly sessions, in-memory CSRF/chat only, clear conversations on logout/expiry.
+- CHAT-03: explicit readable frozen snapshot selection with kind/revision/freeze
+  date (not tariff effective date) and missing-bank coverage; empty state blocks
+  questions. Real JSON assistant transport, client abort, safe table/source adapter;
+  all statuses/value unions/conditions/limitations/missing inputs/date preserved;
+  no client tariff calculation/winner. Demo only explicitly enabled development.
+- CHAT-04: real browser Next -> proxy -> FastAPI -> dedicated migrated PostgreSQL
+  -> original-backed synthetic frozen snapshot -> Fake. Auth/invite/logout/expiry,
+  Origin/CSRF, snapshots/questions/comparison/protected documents, fallback/empty,
+  typed 401/403/404/409/422/429 Retry-After/503/network/timeout, XSS and secret/egress
+  checks; lint/typecheck/build and regression/docs checks with exact counts.
+
+Search/admin review/freeze screens, dashboard, personal cabinet and mobile work
+are outside this task. Backend routes and existing gates remain unchanged.
+SNAP-16 status acceptance belongs to the integrator after report/CI verification.
+SNAP-17 status is not DONE. S1 BLOCKED; S2/S3 NOT EVALUATED; G1/G2 NOT PASSED.
+
+---
+
+Historical external-frontend plan (superseded for this implementation, not passed):
+
 # Передача внешнего frontend — SNAP-17 / FE-01–FE-04
 
 Родитель: [SNAP-17](prompts/SNAP-17.md),

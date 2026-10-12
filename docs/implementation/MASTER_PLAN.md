@@ -1,3 +1,12 @@
+> Scope proposal for separate integrator review (12.10.2026): SNAP-17 integrates
+> the existing desktop chat from merged PR #24 with the merged SNAP-16 API (PR #28,
+> main b440534). No external frontend handoff, dashboard, admin review UI, personal
+> cabinet or mobile adaptation is required for this revised task. The historical
+> FE-01?FE-04 criteria below are not automatically satisfied. The proposed chat-only
+> criteria in FRONTEND_HANDOFF must be agreed and merged separately before closure.
+> SNAP-16 status remains integrator-owned pending report/CI acceptance; SNAP-17
+> remains TODO pending implementation and independent acceptance.
+
 # MASTER PLAN — snapshot v1
 
 Цель: работающий closed AI-ассистент по четырём банкам на фиксированном официальном
@@ -61,7 +70,7 @@ S2/S3 NOT EVALUATED; полный S0 ждёт API/UI интеграции и с�
 | [SNAP-14](prompts/SNAP-14.md) | Evidence-first ассистент и renderer | SNAP-10, SNAP-11, SNAP-13 | high | DONE |
 | [SNAP-15](prompts/SNAP-15.md) | Приглашения, auth и server sessions | SNAP-02 | high | DONE |
 | [SNAP-16](prompts/SNAP-16.md) | FastAPI routers и composition root | SNAP-03, SNAP-09, SNAP-14, SNAP-15 | high | TODO |
-| [SNAP-17](prompts/SNAP-17.md) | Интеграция и адаптация внешнего frontend | SNAP-16 | medium | TODO |
+| [SNAP-17](prompts/SNAP-17.md) | Desktop Chat ? FastAPI Integration | SNAP-16 | high | TODO |
 | [SNAP-18](prompts/SNAP-18.md) | Реальный corpus gold и оценка S1/S2/Groq | SNAP-03, SNAP-09, SNAP-11, SNAP-14 | high | TODO |
 | [SNAP-19](prompts/SNAP-19.md) | Сквозная приёмка и минимальная эксплуатация | SNAP-17, SNAP-18 | high | TODO |
 

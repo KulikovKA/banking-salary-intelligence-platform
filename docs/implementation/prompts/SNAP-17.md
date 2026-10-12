@@ -1,84 +1,49 @@
-# SNAP-17 — Интеграция и адаптация внешнего frontend
+# SNAP-17 ? Desktop Chat ? FastAPI Integration
 
-Готовый исполнительский промпт: выдай весь этот файл Codex вместе с репозиторием.
-Рекомендуемый reasoning effort: **medium**; выбор модели свободный.
+Reasoning: high. Read README, MASTER_PLAN, API_CONTRACTS, SECURITY and acceptance
+criteria. User scope supersedes the historical external-frontend plan: reuse the
+merged PR #24 desktop chat and SNAP-16 API from PR #28; do not wait for an external
+frontend or build another UI. No dashboard/admin review UI/cabinet/mobile work.
 
-## Цель и ожидаемый результат
+Prepare the separate scope proposal in MASTER_PLAN/TASKS/FRONTEND_HANDOFF first;
+new chat-only criteria require agreement and separate merge before formal closure.
+Do not mark historical FE-01?FE-04 passed or SNAP-17 DONE. SNAP-16 acceptance/status
+belongs to the integrator after code/report/CI verification.
 
-Принятый и адаптированный внешний frontend в Next.js, подключённый к FastAPI; FE-01–FE-04 закрыты с evidence и рабочими browser flows login/invite, snapshot/scenario, поиск/сравнение/ассистент/источники и admin review.
+Owned paths: frontend/app/**, components/**, styles/**, lib/client.ts, lib/chat/**,
+tests/**, next.config.ts and existing frontend config/lockfiles when necessary;
+report docs/reports/SNAP-17.md. Backend and generated api-contracts.ts read-only.
+Public contract follow-up goes to SNAP-16 owner; no hidden DTO/schema fork.
 
-## Условия начала
+Implement server-only same-origin proxy preserving cookie and browser Origin.
+Compact login/invite/me/session-CSRF/logout/expiry; HttpOnly sessions, no stored
+browser credentials, clear chats on logout/expiry. Explicit frozen snapshot
+selection with corpus kind/revision/date/coverage; no implicit latest. Empty state
+blocks questions. BackendChatTransport POST questions -> AnswerEnvelope using
+frozen types; retain demo only explicit development. JSON is not SSE; abort only
+promises cancellation of client request. Preserve all bank/value/status unions,
+conditions/missing inputs/limitations/claims/safe protected originals/revision/date;
+no frontend tariff computation/winner and unknown is not zero. Typed safe errors
+401/403/404/409/422/429 Retry-After/503/timeout/network.
 
-Merged зависимости: SNAP-16. Дополнительный обязательный вход: проверяемая передача
-внешнего репозитория/исходников с exact revision, зависимостями и лицензиями по
-[FRONTEND_HANDOFF](../FRONTEND_HANDOFF.md). Передача пока не подтверждена.
-До получения исходников и merged backend/API не начинать FE-01–FE-04, перенос,
-переписывание UI или отдельный scaffold. Зафиксируй blocker и продолжай только
-независимую backend-задачу по отдельному поручению. Внешний разработчик может
-создавать свой frontend параллельно; эта задача не создаёт второй интерфейс.
+Retain existing tests and add real browser Next -> proxy -> FastAPI -> dedicated
+migrated PostgreSQL -> synthetic frozen corpus -> Fake E2E. Cover auth/invite,
+expiry/logout, Origin/CSRF, snapshots/question/table/originals/fallback/empty/error,
+XSS, zero bank/Groq calls and no frontend secrets. Run frontend lint/typecheck/build,
+ruff/mypy/relevant PG pytest and docs validator. Report exact counts and honest
+FAIL/SKIP/NOT RUN; synthetic never proves real gates.
 
-Прочитай AGENTS.md, docs/architecture/OVERVIEW.md, DOMAIN_CONTRACTS.md,
-DATABASE_DESIGN.md, API_CONTRACTS.md, SECURITY.md и docs/product/ACCEPTANCE_CRITERIA.md.
-Проверь актуальный код и отчёты зависимостей: DONE в плане без merged результата
-не считается условием начала. Исполни только эту задачу до reviewable результата.
-Работай offline с synthetic fixtures, если конкретный real/provider run не допущен.
-Не создавай фиктивные разрешения, тарифы, reviewer или PASS. Не запускай scheduler,
-recurring download, notifications, очереди, микросервисы или автоматический paid fallback.
-Сохрани FetchGateway, LocalBlobStore, operator source recovery, E2E и миграции 0001/0002/0003.
+Use isolated branch/worktree from current origin/main; no subagents or neighbor
+overwrite. Prepare scoped commits, push and PR without merge when authorized.
+Report base/revisions/architecture/local run/AC evidence/limitations; independent
+acceptance and separately merged criteria are required for DONE.
 
-## Файлы и ответственность
+## Registry fields (scope proposal)
 
-- `frontend/app/**`
-- `frontend/components/**`
-- `frontend/public/**`
-- `frontend/styles/**`
-- `frontend/lib/client.ts`
-- `frontend/next.config.ts`
-- `frontend/tsconfig.json`
-- `frontend/eslint.config.mjs`
-- `frontend/tests/**`
-- `frontend/package.json`
-- `frontend/package-lock.json`
+Existing PR #24 desktop chat connected to SNAP-16; proposed chat-only criteria pending separate integrator agreement/merge and independent acceptance.
 
-Владелец переноса — наша команда интеграции frontend; визуальное решение и
-исходные компоненты передаёт внешний frontend-разработчик. Backend и
-`frontend/lib/api-contracts.ts` read-only, владелец публичного API/TS DTO — SNAP-16.
-Расширение owned paths после FE-01 согласуется с интегратором до редактирования.
-Статусы FE и ссылки на evidence в FRONTEND_HANDOFF обновляет интегратор
-последовательно после принятого отчёта; исполнитель передаёт результаты FE-01–FE-04.
+Reuse existing ChatShell/sidebar/messages/composer/table/reducer. Server-only same-origin proxy; login/invite/logout/expiry/CSRF; explicit frozen snapshot; typed BackendChatTransport and evidence-preserving AnswerEnvelope/ComparisonResult adapter. Demo only explicit development mode. No second UI, dashboard, admin review UI, cabinet or mobile adaptation. Backend/frozen DTO read-only.
 
-Остальные модули read-only. Если требуется общий контракт/schema/config change,
-подготовь точный запрос владельцу и дождись sequential merge; не правь чужие
-файлы конкурентно. Report задачи — `docs/reports/SNAP-17.md`.
+Proposed chat-only AC in FRONTEND_HANDOFF require separate agreement/merge before formal closure. Real browser Next.js -> FastAPI -> dedicated migrated PostgreSQL -> synthetic frozen snapshot -> Fake E2E: auth/CSRF/Origin/snapshot/question/table/documents/fallback/empty/errors/XSS. Lint/typecheck/build, regression and docs checks; no secrets or bank/Groq network. Historical FE criteria are not automatically DONE.
 
-## Реализация и ограничения
-
-Выполни FE-01–FE-04 по FRONTEND_HANDOFF: проверь переданный exact revision, зависимости/лицензии/качество/безопасность и матрицу экран -> API; перенеси предоставленный код в существующую Next.js архитектуру с сохранением согласованного дизайна/компонентов и минимальным переписыванием. Удали временные клиентские расчёты тарифов, approvals и небезопасные решения. Замени product mocks типизированными FastAPI вызовами frozen TS DTO SNAP-16: auth, snapshots, search, comparison, documents, assistant, admin review/freeze. Same-origin proxy, server sessions/HttpOnly cookie, корректный Origin/CSRF; без auth token localStorage, Groq key только на backend. Покажи revision/date/coverage/missing banks/synthetic/evidence/unknown/conflict/individual/conditions/scope/fallback и typed errors 429/503. Protected originals, escaped snippets, scenario без payroll personal data. Память диалога только текущий UI, logout очищает её. Недостающие сценарии возвращай внешнему разработчику как конкретные follow-up; public API/DTO changes только через владельца SNAP-16. Второй UI с нуля и monitoring/notifications не создавать. Playwright dev dependency только для meaningful E2E.
-
-## Тесты и критерии приёмки
-
-FE-01–FE-04 имеют принятые отчёты с exact revision и evidence каждого AC; lint/typecheck/build green. Browser E2E на реальном FastAPI + dedicated PostgreSQL с migrations + frozen synthetic corpus + Fake: invite/login/logout, выбор snapshot/scenario, поиск, сравнение, вопросы ассистенту, открытие protected originals и admin review/freeze. Проверены RBAC/CSRF/XSS, истечение сессии, fallback/429/503/missing-input/unknown/conflict/individual и очистка диалога при logout. Bank/Groq network = 0; API integration реальная, не только mocks. Нет client secrets/тарифных расчётов/approvals; отчёт готовности фиксирует limitations и NOT RUN, synthetic не считается S1/S2/S3 PASS.
-
-Выполни ruff/mypy для backend и релевантные pytest (PG integration на dedicated
-DB с migrations); frontend lint/typecheck/build при изменении frontend. Проверь
-`python tools/validate_docs.py`. Пропуск проверки укажи как NOT RUN с причиной,
-не как PASS. Новые тесты проверяют риск/доменный контракт, а не копируют реализацию.
-
-## Параллелизм
-
-Внешний разработчик создаёт UI параллельно Backend + AI в своём репозитории; наша команда не создаёт второй frontend. SNAP-17 начинает FE-01–FE-04 только после передачи исходников и merged SNAP-16, единолично владеет переносом frontend tree/package-lock. Новые внешние revisions принимать последовательно без перезаписи соседних изменений. Backend и api-contracts.ts read-only; API/DTO follow-up владельцу SNAP-16, FE-статусы интегратору. SNAP-18 может идти параллельно на disjoint paths.
-
-Используй отдельную ветку/worktree при реальном параллельном запуске. Не spawn
-других агентов без отдельного поручения. Общие lockfiles/миграции/main.py интегрируй
-последовательно. Не коммить другой worktree или чужие незавершённые изменения.
-
-## Завершение и передача
-
-Сохрани report: итоговое поведение, изменённые файлы, проверки с числами и
-PASS/FAIL/NOT RUN, evidence для каждого AC, ограничения, следующий шаг.
-В report укажи base commit; commit результата добавить после commit если доступен.
-Не обновляй MASTER_PLAN/TASKS.json параллельно: передай интегратору итоговый статус.
-Интегратор обновляет только status задачи (DONE при всех её AC, иначе IN_PROGRESS
-или BLOCKED с причиной), сохраняет порядок/зависимости и запускает docs validator.
-Если задача уже выполнена, проверь AC и закрой только оставшиеся пробелы, без
-переписывания работающего кода. Product gates считаются отдельно от DONE модуля.
+Single frontend owner, isolated branch/worktree; no subagents. Existing merged PR #24 replaces external handoff requirement under user-approved scope. Backend/api-contracts.ts read-only. Integrator owns task statuses after acceptance.
