@@ -5,6 +5,11 @@
 > dashboard, admin review UI, кабинет и мобильная адаптация не входят в этот scope.
 > Исторические FE-01–FE-04 не объявляются выполненными; product gates независимы.
 
+> SNAP-18 закрыт как DONE по поручению пользователя 14.10.2026 после merge PR #33
+> и успешного CI main `bce9658`; [запись приёмки](../reports/SNAP-18-accepted.md).
+> Приняты независимый evaluation harness и аудит research originals; real gold,
+> frozen application corpus и Groq quality не приняты. S1 BLOCKED, S2/S3 NOT EVALUATED.
+
 # MASTER PLAN — snapshot v1
 
 Цель: работающий closed AI-ассистент по четырём банкам на фиксированном официальном
@@ -35,11 +40,13 @@ synthetic PG E2E и CI уже существуют. Не переписыват�
 В main реализованы SNAP-01–SNAP-17: frozen corpus и extraction pipeline, ручная
 проверка/publication, PostgreSQL search, Comparison Engine, Fake/Groq adapters,
 Evidence-first AssistantService и auth, защищённый API и desktop chat интеграция.
+SNAP-18 добавляет byte-pinned evaluation harness, adversarial synthetic fixtures,
+coverage/метрики и приватную локальную диагностику шести research originals.
 По умолчанию чат использует backend; demo доступен только при явном development
 opt-in. Это не подтверждение исторической внешней приёмки FE-01–FE-04.
 Ни один новый real source grant этой итерацией не выдан. Официальный corpus
 четырёх банков не принят. Historical G1/G2 NOT PASSED. S1 BLOCKED,
-S2/S3 NOT EVALUATED; полный S0 ждёт API/UI интеграции и сквозной приёмки.
+S2/S3 NOT EVALUATED; полный S0 ждёт независимой сквозной приёмки SNAP-19.
 
 ## Задачи и последовательность
 
@@ -66,15 +73,15 @@ S2/S3 NOT EVALUATED; полный S0 ждёт API/UI интеграции и с�
 | [SNAP-15](prompts/SNAP-15.md) | Приглашения, auth и server sessions | SNAP-02 | high | DONE |
 | [SNAP-16](prompts/SNAP-16.md) | FastAPI routers и composition root | SNAP-03, SNAP-09, SNAP-14, SNAP-15 | high | DONE |
 | [SNAP-17](prompts/SNAP-17.md) | Desktop Chat ? FastAPI Integration | SNAP-16 | high | DONE |
-| [SNAP-18](prompts/SNAP-18.md) | Реальный corpus gold и оценка S1/S2/Groq | SNAP-03, SNAP-09, SNAP-11, SNAP-14 | high | TODO |
+| [SNAP-18](prompts/SNAP-18.md) | Реальный corpus gold и оценка S1/S2/Groq | SNAP-03, SNAP-09, SNAP-11, SNAP-14 | high | DONE |
 | [SNAP-19](prompts/SNAP-19.md) | Сквозная приёмка и минимальная эксплуатация | SNAP-17, SNAP-18 | high | TODO |
 
 Только TASKS.json и эта таблица отражают активные статусы. Интегратор обновляет
 их одним commit после принятого отчёта; валидатор проверяет совпадение и DAG.
 DONE модуля не означает S1/S2/S3 PASS. При data blocker module harness можно
 закончить, а real acceptance остаётся NOT EVALUATED/BLOCKED в report.
-Всего 17 DONE; SNAP-18 и SNAP-19 остаются TODO. SNAP-16/17 закрыты после merge
-по поручению пользователя; следующее независимое поручение — SNAP-18 harness.
+Всего 18 DONE; только SNAP-19 остаётся TODO. SNAP-18 harness/audit принят после
+merge и post-merge проверки по поручению пользователя; real acceptance отдельно blocked.
 Real evaluation по-прежнему требует разрешений, корпуса и human-reviewed gold.
 
 ## Параллельные волны без конфликтов
@@ -135,11 +142,20 @@ offline source E2E PASS, network requests = 0. На совпадающем де�
 пройдены **23 frontend tests** и **8 real browser synthetic E2E**; сведения и
 сохранённые ограничения — в [записи закрытия](../reports/SNAP-16-17-accepted.md).
 
-Следующая доступная кодовая задача — **SNAP-18**: независимый evaluation harness;
-реальные S1/S2/Groq runs ждут разрешений, корпуса и разметки.
-Финальная приёмка **19** ждёт **18**; merged **17** уже доступен.
+SNAP-18 merged через [PR #33](https://github.com/KulikovKA/banking-salary-intelligence-platform/pull/33)
+в `bce9658c05ac12e8bb39b7e01ffd298bf6ef0990`.
+[CI main](https://github.com/KulikovKA/banking-salary-intelligence-platform/actions/runs/38552955101)
+— PASS: backend/PostgreSQL/migrations/source E2E и frontend lint/typecheck/build.
+Дополнительные post-merge evaluation tests: **42 passed, 0 skipped**;
+positive/faulty measured reports воспроизведены точно, Ruff/mypy PASS.
+[Приёмка и сохранённые data blockers](../reports/SNAP-18-accepted.md).
+
+Следующая доступная кодовая задача — **SNAP-19**: сквозная техническая приёмка,
+release CI/восстановление/эксплуатация на merged 17+18. Реальные S1/S2/Groq runs
+по-прежнему ждут application approvals, frozen корпуса и human-reviewed разметки.
 Новые задачи требуют отдельного поручения.
-Human source review можно готовить независимо; real bytes остаются blocked до
+Human source review можно готовить независимо; шесть real research originals найдены
+и проверены отдельно локально, их application import/reuse остаётся blocked до
 source-specific acquisition/storage/reuse допуска. G1/G2 и S1/S2/S3 не изменяются
 от технических synthetic проверок.
 
