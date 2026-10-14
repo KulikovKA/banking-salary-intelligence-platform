@@ -1,0 +1,3730 @@
+{
+  "comparisons": [
+    {
+      "id": "5c23434e-cd20-56da-8dcf-6cd5d8bcb65c",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "sber",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "100",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              },
+              {
+                "bank": "vtb",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": "-100",
+                "left": "sber",
+                "right": "vtb",
+                "status": "better"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "695c95e1-9817-510d-95f9-d20cc30c9be1",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "sber",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "0",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              },
+              {
+                "bank": "vtb",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": "-200",
+                "left": "sber",
+                "right": "vtb",
+                "status": "better"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "7204d759-2eb0-5768-aad4-640b5f4fa7e6",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "sber",
+                "missing_inputs": [],
+                "status": "unknown",
+                "value": null
+              },
+              {
+                "bank": "vtb",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "sber",
+                "right": "vtb",
+                "status": "insufficient"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "00b2c84c-22a1-5edb-98e2-ced0a2179429",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "sber",
+                "missing_inputs": [],
+                "status": "individual",
+                "value": {
+                  "kind": "individual",
+                  "schema_version": 1,
+                  "text_value": "Synthetic individually agreed price"
+                }
+              },
+              {
+                "bank": "vtb",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "sber",
+                "right": "vtb",
+                "status": "insufficient"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "328f1c23-686f-5f68-92ea-a922cccb9e36",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "sber",
+                "missing_inputs": [],
+                "status": "conflict",
+                "value": null
+              },
+              {
+                "bank": "vtb",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "sber",
+                "right": "vtb",
+                "status": "conflict"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "9e815183-e204-536a-8b2e-58d9c4de183e",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "sber",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "100",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              },
+              {
+                "bank": "alfa",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": "-100",
+                "left": "sber",
+                "right": "alfa",
+                "status": "better"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "90cf45c7-205e-5360-9f2b-1b890387fe89",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "sber",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "0",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              },
+              {
+                "bank": "alfa",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": "-200",
+                "left": "sber",
+                "right": "alfa",
+                "status": "better"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "744ab841-eee2-50e1-878d-74e616557669",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "sber",
+                "missing_inputs": [],
+                "status": "unknown",
+                "value": null
+              },
+              {
+                "bank": "alfa",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "sber",
+                "right": "alfa",
+                "status": "insufficient"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "bf478df9-6713-50fa-8e27-e714e03479e3",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "sber",
+                "missing_inputs": [],
+                "status": "individual",
+                "value": {
+                  "kind": "individual",
+                  "schema_version": 1,
+                  "text_value": "Synthetic individually agreed price"
+                }
+              },
+              {
+                "bank": "alfa",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "sber",
+                "right": "alfa",
+                "status": "insufficient"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "0346619d-a41e-5e39-9409-8ce52e8b689a",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "sber",
+                "missing_inputs": [],
+                "status": "conflict",
+                "value": null
+              },
+              {
+                "bank": "alfa",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "sber",
+                "right": "alfa",
+                "status": "conflict"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "0ae9fdb9-860e-505d-a261-447f2416ac04",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "sber",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "100",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              },
+              {
+                "bank": "kuban_credit",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": "-100",
+                "left": "sber",
+                "right": "kuban_credit",
+                "status": "better"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "e76fe06d-27f6-5e25-879b-4abd81d75c41",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "sber",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "0",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              },
+              {
+                "bank": "kuban_credit",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": "-200",
+                "left": "sber",
+                "right": "kuban_credit",
+                "status": "better"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "8290d61d-c7ba-5f37-8ccc-c933029e5366",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "sber",
+                "missing_inputs": [],
+                "status": "unknown",
+                "value": null
+              },
+              {
+                "bank": "kuban_credit",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "sber",
+                "right": "kuban_credit",
+                "status": "insufficient"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "942deffd-94e5-50ab-acce-610a77e3187b",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "sber",
+                "missing_inputs": [],
+                "status": "individual",
+                "value": {
+                  "kind": "individual",
+                  "schema_version": 1,
+                  "text_value": "Synthetic individually agreed price"
+                }
+              },
+              {
+                "bank": "kuban_credit",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "sber",
+                "right": "kuban_credit",
+                "status": "insufficient"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "481e5e19-a115-5184-97b2-f18c2b294606",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "sber",
+                "missing_inputs": [],
+                "status": "conflict",
+                "value": null
+              },
+              {
+                "bank": "kuban_credit",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "sber",
+                "right": "kuban_credit",
+                "status": "conflict"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "c147aa72-b6e5-5ff8-bb77-7102ad9d9e37",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "vtb",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "100",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              },
+              {
+                "bank": "alfa",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": "-100",
+                "left": "vtb",
+                "right": "alfa",
+                "status": "better"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "aa7eab33-1b71-5f65-9b91-627bbb0ae8f7",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "vtb",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "0",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              },
+              {
+                "bank": "alfa",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": "-200",
+                "left": "vtb",
+                "right": "alfa",
+                "status": "better"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "bea9065a-6c18-5d99-afd5-89f9698522ae",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "vtb",
+                "missing_inputs": [],
+                "status": "unknown",
+                "value": null
+              },
+              {
+                "bank": "alfa",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "vtb",
+                "right": "alfa",
+                "status": "insufficient"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "304b0239-712a-58e2-8e40-6f84374ba08c",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "vtb",
+                "missing_inputs": [],
+                "status": "individual",
+                "value": {
+                  "kind": "individual",
+                  "schema_version": 1,
+                  "text_value": "Synthetic individually agreed price"
+                }
+              },
+              {
+                "bank": "alfa",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "vtb",
+                "right": "alfa",
+                "status": "insufficient"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "23c63957-2de7-5f98-a0ce-2e45f99e2c06",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "vtb",
+                "missing_inputs": [],
+                "status": "conflict",
+                "value": null
+              },
+              {
+                "bank": "alfa",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "vtb",
+                "right": "alfa",
+                "status": "conflict"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "2937ca4e-d327-5184-9425-6f3c827dab58",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "vtb",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "100",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              },
+              {
+                "bank": "kuban_credit",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": "-100",
+                "left": "vtb",
+                "right": "kuban_credit",
+                "status": "better"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "cfb27e11-4bcc-573b-adef-49149c8e8cf6",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "vtb",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "0",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              },
+              {
+                "bank": "kuban_credit",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": "-200",
+                "left": "vtb",
+                "right": "kuban_credit",
+                "status": "better"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "1faaf836-b4ab-5ef2-a845-0299872a8f5b",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "vtb",
+                "missing_inputs": [],
+                "status": "unknown",
+                "value": null
+              },
+              {
+                "bank": "kuban_credit",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "vtb",
+                "right": "kuban_credit",
+                "status": "insufficient"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "fb472662-3685-5a82-9b57-e74407bb2b6d",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "vtb",
+                "missing_inputs": [],
+                "status": "individual",
+                "value": {
+                  "kind": "individual",
+                  "schema_version": 1,
+                  "text_value": "Synthetic individually agreed price"
+                }
+              },
+              {
+                "bank": "kuban_credit",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "vtb",
+                "right": "kuban_credit",
+                "status": "insufficient"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "1d47104d-872b-5c9d-bbec-012701b72f9e",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "vtb",
+                "missing_inputs": [],
+                "status": "conflict",
+                "value": null
+              },
+              {
+                "bank": "kuban_credit",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "vtb",
+                "right": "kuban_credit",
+                "status": "conflict"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "51c06446-c445-533d-a1e1-bd38a9c6c06a",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "alfa",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "100",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              },
+              {
+                "bank": "kuban_credit",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": "-100",
+                "left": "alfa",
+                "right": "kuban_credit",
+                "status": "better"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "c265d2e3-b188-5f9e-920b-de3b7cf23387",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "alfa",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "0",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              },
+              {
+                "bank": "kuban_credit",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": "-200",
+                "left": "alfa",
+                "right": "kuban_credit",
+                "status": "better"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "0c2e523d-d4cf-5513-96e6-197ebb8815dc",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "alfa",
+                "missing_inputs": [],
+                "status": "unknown",
+                "value": null
+              },
+              {
+                "bank": "kuban_credit",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "alfa",
+                "right": "kuban_credit",
+                "status": "insufficient"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "b2d9df9f-2060-5273-9172-f5b31b7ffb86",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "alfa",
+                "missing_inputs": [],
+                "status": "individual",
+                "value": {
+                  "kind": "individual",
+                  "schema_version": 1,
+                  "text_value": "Synthetic individually agreed price"
+                }
+              },
+              {
+                "bank": "kuban_credit",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "alfa",
+                "right": "kuban_credit",
+                "status": "insufficient"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "058193ee-4711-58eb-82fd-24da4a90f15a",
+      "result": {
+        "rows": [
+          {
+            "cells": [
+              {
+                "bank": "alfa",
+                "missing_inputs": [],
+                "status": "conflict",
+                "value": null
+              },
+              {
+                "bank": "kuban_credit",
+                "missing_inputs": [],
+                "status": "verified",
+                "value": {
+                  "amount": "200",
+                  "currency": "RUB",
+                  "kind": "money",
+                  "period": "month",
+                  "schema_version": 1,
+                  "unit": "currency"
+                }
+              }
+            ],
+            "metric": "payroll_credit_fee",
+            "pairs": [
+              {
+                "delta": null,
+                "left": "alfa",
+                "right": "kuban_credit",
+                "status": "conflict"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "corpus_kind": "synthetic",
+  "corpus_revision": 1,
+  "evidence": [
+    {
+      "chunk_id": "af343546-fa34-5e2c-924b-9d6677874a89",
+      "chunk_sha256": "00bad3d45d9157c064b9604db912f204fedf8b09e4a89e9979a9f2582eb928b1",
+      "chunk_text": "Synthetic sber:0: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5b6997f1-acd2-5918-8b46-6623c4fd0fb5",
+      "extraction_sha256": "00bad3d45d9157c064b9604db912f204fedf8b09e4a89e9979a9f2582eb928b1",
+      "id": "871c573f-d4a6-5502-ab79-cf39be8b674e",
+      "locator": {
+        "element_path": "/html/body/p[1]",
+        "kind": "html"
+      },
+      "quote": "Synthetic sber:0: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "00bad3d45d9157c064b9604db912f204fedf8b09e4a89e9979a9f2582eb928b1",
+      "source_version_id": "67709395-3b0f-52ff-93c5-6eb8905f272a"
+    },
+    {
+      "chunk_id": "55d56271-fd61-5582-a268-9bf9e29d048a",
+      "chunk_sha256": "d370720eda39daf36b208256d1d7286978f754239b8cce97448f205cfdbfc06c",
+      "chunk_text": "Synthetic sber:1: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5b6997f1-acd2-5918-8b46-6623c4fd0fb5",
+      "extraction_sha256": "d370720eda39daf36b208256d1d7286978f754239b8cce97448f205cfdbfc06c",
+      "id": "2866a43f-a19e-5f01-a79a-1463ab4f9925",
+      "locator": {
+        "element_path": "/html/body/p[2]",
+        "kind": "html"
+      },
+      "quote": "Synthetic sber:1: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "d370720eda39daf36b208256d1d7286978f754239b8cce97448f205cfdbfc06c",
+      "source_version_id": "67709395-3b0f-52ff-93c5-6eb8905f272a"
+    },
+    {
+      "chunk_id": "3ee5d167-c438-5247-b4a1-719aa504c147",
+      "chunk_sha256": "2d0595131268cb90896fd9d823fcfb847f27df6c2adaa0e8052013c334446467",
+      "chunk_text": "Synthetic sber:2: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5b6997f1-acd2-5918-8b46-6623c4fd0fb5",
+      "extraction_sha256": "2d0595131268cb90896fd9d823fcfb847f27df6c2adaa0e8052013c334446467",
+      "id": "d73a8a8d-b58a-5f74-a297-1b0859a5b4d7",
+      "locator": {
+        "element_path": "/html/body/p[3]",
+        "kind": "html"
+      },
+      "quote": "Synthetic sber:2: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "2d0595131268cb90896fd9d823fcfb847f27df6c2adaa0e8052013c334446467",
+      "source_version_id": "67709395-3b0f-52ff-93c5-6eb8905f272a"
+    },
+    {
+      "chunk_id": "c62fc66d-1ff2-5439-a026-55a465de0701",
+      "chunk_sha256": "93bcc7c5ba2fe99ed917268d7b8c393165d62678c378c6d2c21eefa21a7ffa85",
+      "chunk_text": "Synthetic sber:3: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5b6997f1-acd2-5918-8b46-6623c4fd0fb5",
+      "extraction_sha256": "93bcc7c5ba2fe99ed917268d7b8c393165d62678c378c6d2c21eefa21a7ffa85",
+      "id": "71862656-5e78-582b-a632-79033222c667",
+      "locator": {
+        "element_path": "/html/body/p[4]",
+        "kind": "html"
+      },
+      "quote": "Synthetic sber:3: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "93bcc7c5ba2fe99ed917268d7b8c393165d62678c378c6d2c21eefa21a7ffa85",
+      "source_version_id": "67709395-3b0f-52ff-93c5-6eb8905f272a"
+    },
+    {
+      "chunk_id": "7f2e71b9-399b-552f-b2ae-9bd290afe52e",
+      "chunk_sha256": "8a7bdfdc788227dad15d417c492b86b668f189b0d441e7c927c474f9bcc5d78a",
+      "chunk_text": "Synthetic sber:4: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5b6997f1-acd2-5918-8b46-6623c4fd0fb5",
+      "extraction_sha256": "8a7bdfdc788227dad15d417c492b86b668f189b0d441e7c927c474f9bcc5d78a",
+      "id": "8119192e-1695-51ec-bba9-3cbf8d3a115e",
+      "locator": {
+        "element_path": "/html/body/p[5]",
+        "kind": "html"
+      },
+      "quote": "Synthetic sber:4: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "8a7bdfdc788227dad15d417c492b86b668f189b0d441e7c927c474f9bcc5d78a",
+      "source_version_id": "67709395-3b0f-52ff-93c5-6eb8905f272a"
+    },
+    {
+      "chunk_id": "e1f7e187-c429-5a23-8b70-d8f7fbbfc4e7",
+      "chunk_sha256": "227365c158b4db7bec5c928bb65bda3d1528db761bb55986e0ad628fa58babb4",
+      "chunk_text": "Synthetic sber:5: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5b6997f1-acd2-5918-8b46-6623c4fd0fb5",
+      "extraction_sha256": "227365c158b4db7bec5c928bb65bda3d1528db761bb55986e0ad628fa58babb4",
+      "id": "14df3778-ee4b-5ff7-abfb-2ae100ea2b19",
+      "locator": {
+        "element_path": "/html/body/p[6]",
+        "kind": "html"
+      },
+      "quote": "Synthetic sber:5: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "227365c158b4db7bec5c928bb65bda3d1528db761bb55986e0ad628fa58babb4",
+      "source_version_id": "67709395-3b0f-52ff-93c5-6eb8905f272a"
+    },
+    {
+      "chunk_id": "e5510e27-81cf-533e-ac91-4efcfca040ad",
+      "chunk_sha256": "f8b2b83627e2c0bbb9820d406bdfe3f5780616965b8bda211302c4fe60284fd6",
+      "chunk_text": "Synthetic sber:6: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5b6997f1-acd2-5918-8b46-6623c4fd0fb5",
+      "extraction_sha256": "f8b2b83627e2c0bbb9820d406bdfe3f5780616965b8bda211302c4fe60284fd6",
+      "id": "334d02b4-5765-555f-9498-354aac9347a2",
+      "locator": {
+        "element_path": "/html/body/p[7]",
+        "kind": "html"
+      },
+      "quote": "Synthetic sber:6: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "f8b2b83627e2c0bbb9820d406bdfe3f5780616965b8bda211302c4fe60284fd6",
+      "source_version_id": "67709395-3b0f-52ff-93c5-6eb8905f272a"
+    },
+    {
+      "chunk_id": "fcf49ac5-b11a-5dc9-ac40-922d6bcfaedd",
+      "chunk_sha256": "421a7b0d93630ab9a54e910799d7c2d8d981135f2f0930574ae1a135bfd918a6",
+      "chunk_text": "Synthetic sber:7: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5b6997f1-acd2-5918-8b46-6623c4fd0fb5",
+      "extraction_sha256": "421a7b0d93630ab9a54e910799d7c2d8d981135f2f0930574ae1a135bfd918a6",
+      "id": "8ebe0e57-05d0-5473-a8fa-dd8701c4d899",
+      "locator": {
+        "element_path": "/html/body/p[8]",
+        "kind": "html"
+      },
+      "quote": "Synthetic sber:7: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "421a7b0d93630ab9a54e910799d7c2d8d981135f2f0930574ae1a135bfd918a6",
+      "source_version_id": "67709395-3b0f-52ff-93c5-6eb8905f272a"
+    },
+    {
+      "chunk_id": "eb81e318-ec84-5957-9652-e7d5fd2c549f",
+      "chunk_sha256": "4cfe99e801d7a8b26f15a038d95382f80fb2a73f407832b38ee5783b662c8d54",
+      "chunk_text": "Synthetic sber:8: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5b6997f1-acd2-5918-8b46-6623c4fd0fb5",
+      "extraction_sha256": "4cfe99e801d7a8b26f15a038d95382f80fb2a73f407832b38ee5783b662c8d54",
+      "id": "82a5e831-3e8b-5eb9-a829-e1ff42adaec5",
+      "locator": {
+        "element_path": "/html/body/p[9]",
+        "kind": "html"
+      },
+      "quote": "Synthetic sber:8: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "4cfe99e801d7a8b26f15a038d95382f80fb2a73f407832b38ee5783b662c8d54",
+      "source_version_id": "67709395-3b0f-52ff-93c5-6eb8905f272a"
+    },
+    {
+      "chunk_id": "e68186ba-ef31-5eb3-968e-800e45038d06",
+      "chunk_sha256": "c4d6e5a48732fb0f870452db10b1f543525cdbfdd44a4bbb7ce9fa43d1e25aa1",
+      "chunk_text": "Synthetic sber:9: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5b6997f1-acd2-5918-8b46-6623c4fd0fb5",
+      "extraction_sha256": "c4d6e5a48732fb0f870452db10b1f543525cdbfdd44a4bbb7ce9fa43d1e25aa1",
+      "id": "cae53659-7bfb-584c-8065-927517975952",
+      "locator": {
+        "element_path": "/html/body/p[10]",
+        "kind": "html"
+      },
+      "quote": "Synthetic sber:9: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "c4d6e5a48732fb0f870452db10b1f543525cdbfdd44a4bbb7ce9fa43d1e25aa1",
+      "source_version_id": "67709395-3b0f-52ff-93c5-6eb8905f272a"
+    },
+    {
+      "chunk_id": "1bba1550-54ae-5491-8b8b-59a7eabb2f52",
+      "chunk_sha256": "3cd3234179ee8a74d21e526f81dd1605a96752cfeeed390cb689003497f193f8",
+      "chunk_text": "Synthetic sber:10: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5b6997f1-acd2-5918-8b46-6623c4fd0fb5",
+      "extraction_sha256": "3cd3234179ee8a74d21e526f81dd1605a96752cfeeed390cb689003497f193f8",
+      "id": "590b9a50-7408-5b38-a9aa-97a62ca8bfa0",
+      "locator": {
+        "element_path": "/html/body/p[11]",
+        "kind": "html"
+      },
+      "quote": "Synthetic sber:10: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 75,
+      "quote_start": 0,
+      "raw_sha256": "3cd3234179ee8a74d21e526f81dd1605a96752cfeeed390cb689003497f193f8",
+      "source_version_id": "67709395-3b0f-52ff-93c5-6eb8905f272a"
+    },
+    {
+      "chunk_id": "59966b90-b800-5277-9ee2-ef9d676dc48a",
+      "chunk_sha256": "f9566f505e2254ecc74312dc3be846b00d39502819e7a4e6797427abfc860460",
+      "chunk_text": "Synthetic vtb:0: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5e798eee-ff24-547b-a5ab-2c98f2ed39d0",
+      "extraction_sha256": "f9566f505e2254ecc74312dc3be846b00d39502819e7a4e6797427abfc860460",
+      "id": "a794572e-632a-59ae-bd9a-6e7b405580d1",
+      "locator": {
+        "element_path": "/html/body/p[1]",
+        "kind": "html"
+      },
+      "quote": "Synthetic vtb:0: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 73,
+      "quote_start": 0,
+      "raw_sha256": "f9566f505e2254ecc74312dc3be846b00d39502819e7a4e6797427abfc860460",
+      "source_version_id": "e0162012-8e2e-52ea-965c-a6d2b79b93c1"
+    },
+    {
+      "chunk_id": "1f457e2f-8bd7-5c0d-8618-c5dc5dc71cef",
+      "chunk_sha256": "3797449b519fae9b76885a832d00d9ed67d1f6bf34a6e45cb233ebf9539b2761",
+      "chunk_text": "Synthetic vtb:1: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5e798eee-ff24-547b-a5ab-2c98f2ed39d0",
+      "extraction_sha256": "3797449b519fae9b76885a832d00d9ed67d1f6bf34a6e45cb233ebf9539b2761",
+      "id": "caa37294-fce7-5424-a75b-9868f1e332cf",
+      "locator": {
+        "element_path": "/html/body/p[2]",
+        "kind": "html"
+      },
+      "quote": "Synthetic vtb:1: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 73,
+      "quote_start": 0,
+      "raw_sha256": "3797449b519fae9b76885a832d00d9ed67d1f6bf34a6e45cb233ebf9539b2761",
+      "source_version_id": "e0162012-8e2e-52ea-965c-a6d2b79b93c1"
+    },
+    {
+      "chunk_id": "c3d08e88-8580-5c1c-9114-bdb50ab8245d",
+      "chunk_sha256": "8936c2bb35be45f2bd2c61e76c0bef42d6b998957ab04b10c093041b2050417c",
+      "chunk_text": "Synthetic vtb:2: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5e798eee-ff24-547b-a5ab-2c98f2ed39d0",
+      "extraction_sha256": "8936c2bb35be45f2bd2c61e76c0bef42d6b998957ab04b10c093041b2050417c",
+      "id": "db613695-42ab-5c28-af87-785bb45250bb",
+      "locator": {
+        "element_path": "/html/body/p[3]",
+        "kind": "html"
+      },
+      "quote": "Synthetic vtb:2: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 73,
+      "quote_start": 0,
+      "raw_sha256": "8936c2bb35be45f2bd2c61e76c0bef42d6b998957ab04b10c093041b2050417c",
+      "source_version_id": "e0162012-8e2e-52ea-965c-a6d2b79b93c1"
+    },
+    {
+      "chunk_id": "36bbb69d-8c14-5fcf-b63e-97cb8f33fc55",
+      "chunk_sha256": "bd08f1a5b98e341a8fbf93439d8042de3ead7b1e6c32b289c1897c722770ffd4",
+      "chunk_text": "Synthetic vtb:3: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5e798eee-ff24-547b-a5ab-2c98f2ed39d0",
+      "extraction_sha256": "bd08f1a5b98e341a8fbf93439d8042de3ead7b1e6c32b289c1897c722770ffd4",
+      "id": "ddaca781-41ed-5278-a52f-37a8ef48a984",
+      "locator": {
+        "element_path": "/html/body/p[4]",
+        "kind": "html"
+      },
+      "quote": "Synthetic vtb:3: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 73,
+      "quote_start": 0,
+      "raw_sha256": "bd08f1a5b98e341a8fbf93439d8042de3ead7b1e6c32b289c1897c722770ffd4",
+      "source_version_id": "e0162012-8e2e-52ea-965c-a6d2b79b93c1"
+    },
+    {
+      "chunk_id": "b689beee-6c6c-5119-8675-ff6a0c560b44",
+      "chunk_sha256": "2c7e1a1bae44e62be5f142437e6e4adb210cc438569a96679bfb02ddbe164454",
+      "chunk_text": "Synthetic vtb:4: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5e798eee-ff24-547b-a5ab-2c98f2ed39d0",
+      "extraction_sha256": "2c7e1a1bae44e62be5f142437e6e4adb210cc438569a96679bfb02ddbe164454",
+      "id": "d69768ff-1464-540e-b2a1-9923c9bbfe2b",
+      "locator": {
+        "element_path": "/html/body/p[5]",
+        "kind": "html"
+      },
+      "quote": "Synthetic vtb:4: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 73,
+      "quote_start": 0,
+      "raw_sha256": "2c7e1a1bae44e62be5f142437e6e4adb210cc438569a96679bfb02ddbe164454",
+      "source_version_id": "e0162012-8e2e-52ea-965c-a6d2b79b93c1"
+    },
+    {
+      "chunk_id": "adbdf9cb-e77c-5e9c-8c0b-10c96887d783",
+      "chunk_sha256": "09b2e62810e17e157febae4018799b7bbd45afd9e6f468a0f9dc6f0ec2871584",
+      "chunk_text": "Synthetic vtb:5: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5e798eee-ff24-547b-a5ab-2c98f2ed39d0",
+      "extraction_sha256": "09b2e62810e17e157febae4018799b7bbd45afd9e6f468a0f9dc6f0ec2871584",
+      "id": "1c89d575-7396-5af6-8115-f10f1124e10f",
+      "locator": {
+        "element_path": "/html/body/p[6]",
+        "kind": "html"
+      },
+      "quote": "Synthetic vtb:5: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 73,
+      "quote_start": 0,
+      "raw_sha256": "09b2e62810e17e157febae4018799b7bbd45afd9e6f468a0f9dc6f0ec2871584",
+      "source_version_id": "e0162012-8e2e-52ea-965c-a6d2b79b93c1"
+    },
+    {
+      "chunk_id": "061a52f1-a10b-574c-9203-5bd60d8632ee",
+      "chunk_sha256": "5047617dd79ebeead1ca972f1c680973cc7f58f9e3a9d3272cef7b096241f6ef",
+      "chunk_text": "Synthetic vtb:6: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5e798eee-ff24-547b-a5ab-2c98f2ed39d0",
+      "extraction_sha256": "5047617dd79ebeead1ca972f1c680973cc7f58f9e3a9d3272cef7b096241f6ef",
+      "id": "d325fd49-f102-5bd8-9056-8bdf51d91089",
+      "locator": {
+        "element_path": "/html/body/p[7]",
+        "kind": "html"
+      },
+      "quote": "Synthetic vtb:6: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 73,
+      "quote_start": 0,
+      "raw_sha256": "5047617dd79ebeead1ca972f1c680973cc7f58f9e3a9d3272cef7b096241f6ef",
+      "source_version_id": "e0162012-8e2e-52ea-965c-a6d2b79b93c1"
+    },
+    {
+      "chunk_id": "62b4305c-4789-5a06-8ae4-86e70dd6c014",
+      "chunk_sha256": "e5a99ddf8c10144522886f741b43ed30b5281abcfa5edb55fc9effc238606b33",
+      "chunk_text": "Synthetic vtb:7: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5e798eee-ff24-547b-a5ab-2c98f2ed39d0",
+      "extraction_sha256": "e5a99ddf8c10144522886f741b43ed30b5281abcfa5edb55fc9effc238606b33",
+      "id": "82b7bd8a-16ff-5315-8903-125543ac09c2",
+      "locator": {
+        "element_path": "/html/body/p[8]",
+        "kind": "html"
+      },
+      "quote": "Synthetic vtb:7: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 73,
+      "quote_start": 0,
+      "raw_sha256": "e5a99ddf8c10144522886f741b43ed30b5281abcfa5edb55fc9effc238606b33",
+      "source_version_id": "e0162012-8e2e-52ea-965c-a6d2b79b93c1"
+    },
+    {
+      "chunk_id": "2482555f-d2bb-5a88-9e6a-b7eb830841cb",
+      "chunk_sha256": "39b5f7d65bdbb8172cf53229e7cd92a918a1cf356ef24136c17f730d1e0c6c44",
+      "chunk_text": "Synthetic vtb:8: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5e798eee-ff24-547b-a5ab-2c98f2ed39d0",
+      "extraction_sha256": "39b5f7d65bdbb8172cf53229e7cd92a918a1cf356ef24136c17f730d1e0c6c44",
+      "id": "5da38fa6-1a6c-5b14-92fc-5db782d7bc54",
+      "locator": {
+        "element_path": "/html/body/p[9]",
+        "kind": "html"
+      },
+      "quote": "Synthetic vtb:8: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 73,
+      "quote_start": 0,
+      "raw_sha256": "39b5f7d65bdbb8172cf53229e7cd92a918a1cf356ef24136c17f730d1e0c6c44",
+      "source_version_id": "e0162012-8e2e-52ea-965c-a6d2b79b93c1"
+    },
+    {
+      "chunk_id": "51f5b55c-541f-5cfd-8fda-9781a6dc46f6",
+      "chunk_sha256": "3d9b90551f04d57bfae35fb9ef66126afa6441ade390cb63297ce34e5e2c2f88",
+      "chunk_text": "Synthetic vtb:9: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5e798eee-ff24-547b-a5ab-2c98f2ed39d0",
+      "extraction_sha256": "3d9b90551f04d57bfae35fb9ef66126afa6441ade390cb63297ce34e5e2c2f88",
+      "id": "bf8709b7-3051-5713-a611-b7b25aa6699e",
+      "locator": {
+        "element_path": "/html/body/p[10]",
+        "kind": "html"
+      },
+      "quote": "Synthetic vtb:9: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 73,
+      "quote_start": 0,
+      "raw_sha256": "3d9b90551f04d57bfae35fb9ef66126afa6441ade390cb63297ce34e5e2c2f88",
+      "source_version_id": "e0162012-8e2e-52ea-965c-a6d2b79b93c1"
+    },
+    {
+      "chunk_id": "138e196c-2d7e-5939-a01c-49b4299b0808",
+      "chunk_sha256": "fec28e81f3af512253801de6d1f8f2537cc38f582c88a807e8c7128f7ad64d9b",
+      "chunk_text": "Synthetic vtb:10: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "5e798eee-ff24-547b-a5ab-2c98f2ed39d0",
+      "extraction_sha256": "fec28e81f3af512253801de6d1f8f2537cc38f582c88a807e8c7128f7ad64d9b",
+      "id": "5766155c-336f-513c-93d6-7640ab78ffbc",
+      "locator": {
+        "element_path": "/html/body/p[11]",
+        "kind": "html"
+      },
+      "quote": "Synthetic vtb:10: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "fec28e81f3af512253801de6d1f8f2537cc38f582c88a807e8c7128f7ad64d9b",
+      "source_version_id": "e0162012-8e2e-52ea-965c-a6d2b79b93c1"
+    },
+    {
+      "chunk_id": "5a2ef057-0eb0-53dc-881f-719affc3dc7d",
+      "chunk_sha256": "f584de22ac5597ff7098c0957127deaedddc815ee58973445db132ec4492ceb9",
+      "chunk_text": "Synthetic alfa:0: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "d8ebf973-602b-552d-bb55-0ee4cb1aad3a",
+      "extraction_sha256": "f584de22ac5597ff7098c0957127deaedddc815ee58973445db132ec4492ceb9",
+      "id": "8a61c385-ed8b-526c-a3be-41d68e369e24",
+      "locator": {
+        "element_path": "/html/body/p[1]",
+        "kind": "html"
+      },
+      "quote": "Synthetic alfa:0: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "f584de22ac5597ff7098c0957127deaedddc815ee58973445db132ec4492ceb9",
+      "source_version_id": "54e388c7-841c-5329-8c11-45c8cba874f2"
+    },
+    {
+      "chunk_id": "2bd3b221-f3ff-5c5c-a80e-1a082b7272cb",
+      "chunk_sha256": "d4ccf5b731578505bd4a8470ec3ea5d9d848358fc9b040b4a590c7389b898cc1",
+      "chunk_text": "Synthetic alfa:1: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "d8ebf973-602b-552d-bb55-0ee4cb1aad3a",
+      "extraction_sha256": "d4ccf5b731578505bd4a8470ec3ea5d9d848358fc9b040b4a590c7389b898cc1",
+      "id": "3eee761a-abcf-52a6-92b8-32442c1a3e2b",
+      "locator": {
+        "element_path": "/html/body/p[2]",
+        "kind": "html"
+      },
+      "quote": "Synthetic alfa:1: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "d4ccf5b731578505bd4a8470ec3ea5d9d848358fc9b040b4a590c7389b898cc1",
+      "source_version_id": "54e388c7-841c-5329-8c11-45c8cba874f2"
+    },
+    {
+      "chunk_id": "0377756f-687c-5f1d-bd99-350e6300227f",
+      "chunk_sha256": "1d69ab3ac829289b3db49194b3f22bdce096d5ee96ed9b47a16ffa53c95dc49b",
+      "chunk_text": "Synthetic alfa:2: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "d8ebf973-602b-552d-bb55-0ee4cb1aad3a",
+      "extraction_sha256": "1d69ab3ac829289b3db49194b3f22bdce096d5ee96ed9b47a16ffa53c95dc49b",
+      "id": "04daaa09-bac0-5c81-9759-e6487a161fdd",
+      "locator": {
+        "element_path": "/html/body/p[3]",
+        "kind": "html"
+      },
+      "quote": "Synthetic alfa:2: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "1d69ab3ac829289b3db49194b3f22bdce096d5ee96ed9b47a16ffa53c95dc49b",
+      "source_version_id": "54e388c7-841c-5329-8c11-45c8cba874f2"
+    },
+    {
+      "chunk_id": "aa673e1c-81b0-5a07-9c78-abb9c51f635b",
+      "chunk_sha256": "acb7034c810d64b7edbda0095f38216b752a3d0a47be278d038cea4d10852888",
+      "chunk_text": "Synthetic alfa:3: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "d8ebf973-602b-552d-bb55-0ee4cb1aad3a",
+      "extraction_sha256": "acb7034c810d64b7edbda0095f38216b752a3d0a47be278d038cea4d10852888",
+      "id": "55a180b8-2847-5f9b-ba47-11f11510763e",
+      "locator": {
+        "element_path": "/html/body/p[4]",
+        "kind": "html"
+      },
+      "quote": "Synthetic alfa:3: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "acb7034c810d64b7edbda0095f38216b752a3d0a47be278d038cea4d10852888",
+      "source_version_id": "54e388c7-841c-5329-8c11-45c8cba874f2"
+    },
+    {
+      "chunk_id": "4bc5e971-06ae-571e-883f-b0bc7e0f7121",
+      "chunk_sha256": "e506a3afbb1d08fea2ee90a843722b7401f66de5b35ce4446ea03a8ef6097bc1",
+      "chunk_text": "Synthetic alfa:4: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "d8ebf973-602b-552d-bb55-0ee4cb1aad3a",
+      "extraction_sha256": "e506a3afbb1d08fea2ee90a843722b7401f66de5b35ce4446ea03a8ef6097bc1",
+      "id": "7a6dc046-6fd8-5c90-a398-4df807029444",
+      "locator": {
+        "element_path": "/html/body/p[5]",
+        "kind": "html"
+      },
+      "quote": "Synthetic alfa:4: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "e506a3afbb1d08fea2ee90a843722b7401f66de5b35ce4446ea03a8ef6097bc1",
+      "source_version_id": "54e388c7-841c-5329-8c11-45c8cba874f2"
+    },
+    {
+      "chunk_id": "2822a673-9953-5aab-8a8b-3bfdd1eafd14",
+      "chunk_sha256": "61f14c4df267b9d215cd605865a7cc82e378cf7464bf4418bb83b12a69308d6f",
+      "chunk_text": "Synthetic alfa:5: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "d8ebf973-602b-552d-bb55-0ee4cb1aad3a",
+      "extraction_sha256": "61f14c4df267b9d215cd605865a7cc82e378cf7464bf4418bb83b12a69308d6f",
+      "id": "63efe393-271c-5515-99a8-0c541ffc7bd0",
+      "locator": {
+        "element_path": "/html/body/p[6]",
+        "kind": "html"
+      },
+      "quote": "Synthetic alfa:5: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "61f14c4df267b9d215cd605865a7cc82e378cf7464bf4418bb83b12a69308d6f",
+      "source_version_id": "54e388c7-841c-5329-8c11-45c8cba874f2"
+    },
+    {
+      "chunk_id": "364167c2-4aa7-5ee0-9b97-e157b42ec15b",
+      "chunk_sha256": "9d81274c217a6072fadd29fbb2542acdce0e1615e75e62b3040a48c4ca24b538",
+      "chunk_text": "Synthetic alfa:6: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "d8ebf973-602b-552d-bb55-0ee4cb1aad3a",
+      "extraction_sha256": "9d81274c217a6072fadd29fbb2542acdce0e1615e75e62b3040a48c4ca24b538",
+      "id": "d05648d0-fd45-5513-b87f-7c9a5b3142cb",
+      "locator": {
+        "element_path": "/html/body/p[7]",
+        "kind": "html"
+      },
+      "quote": "Synthetic alfa:6: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "9d81274c217a6072fadd29fbb2542acdce0e1615e75e62b3040a48c4ca24b538",
+      "source_version_id": "54e388c7-841c-5329-8c11-45c8cba874f2"
+    },
+    {
+      "chunk_id": "8b2233ab-1f2d-58c7-bd3c-d7e6b5714a2f",
+      "chunk_sha256": "57daa19a6fc70cf3a3298ff7ee9fd32b83352cc57a14d5e3ef81872eb0f89264",
+      "chunk_text": "Synthetic alfa:7: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "d8ebf973-602b-552d-bb55-0ee4cb1aad3a",
+      "extraction_sha256": "57daa19a6fc70cf3a3298ff7ee9fd32b83352cc57a14d5e3ef81872eb0f89264",
+      "id": "ee9997df-11d1-550b-97f1-922c7a057062",
+      "locator": {
+        "element_path": "/html/body/p[8]",
+        "kind": "html"
+      },
+      "quote": "Synthetic alfa:7: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "57daa19a6fc70cf3a3298ff7ee9fd32b83352cc57a14d5e3ef81872eb0f89264",
+      "source_version_id": "54e388c7-841c-5329-8c11-45c8cba874f2"
+    },
+    {
+      "chunk_id": "0dc0c493-b485-5809-a9de-b9f1b234e681",
+      "chunk_sha256": "7312f8212b1ab547f2c8d1698b5a555869cf0f960a4cc3c45a6638ef861454d6",
+      "chunk_text": "Synthetic alfa:8: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "d8ebf973-602b-552d-bb55-0ee4cb1aad3a",
+      "extraction_sha256": "7312f8212b1ab547f2c8d1698b5a555869cf0f960a4cc3c45a6638ef861454d6",
+      "id": "e7cdd3c7-efdf-5f67-b30a-8c2c091310bf",
+      "locator": {
+        "element_path": "/html/body/p[9]",
+        "kind": "html"
+      },
+      "quote": "Synthetic alfa:8: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "7312f8212b1ab547f2c8d1698b5a555869cf0f960a4cc3c45a6638ef861454d6",
+      "source_version_id": "54e388c7-841c-5329-8c11-45c8cba874f2"
+    },
+    {
+      "chunk_id": "73ac2dd8-baa9-598d-819c-eb0d2c8cf826",
+      "chunk_sha256": "533ebc5f16d33a6c1666b58b40a216f74102a77e4adfa131d98cd594d0801ba0",
+      "chunk_text": "Synthetic alfa:9: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "d8ebf973-602b-552d-bb55-0ee4cb1aad3a",
+      "extraction_sha256": "533ebc5f16d33a6c1666b58b40a216f74102a77e4adfa131d98cd594d0801ba0",
+      "id": "ea89e648-f911-5036-a3ac-c4cb02c8cd7c",
+      "locator": {
+        "element_path": "/html/body/p[10]",
+        "kind": "html"
+      },
+      "quote": "Synthetic alfa:9: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 74,
+      "quote_start": 0,
+      "raw_sha256": "533ebc5f16d33a6c1666b58b40a216f74102a77e4adfa131d98cd594d0801ba0",
+      "source_version_id": "54e388c7-841c-5329-8c11-45c8cba874f2"
+    },
+    {
+      "chunk_id": "e9e83f73-b2cb-558f-b697-db3682f15f9e",
+      "chunk_sha256": "3d28c333b4c72868c6976f48e7dec7dd81fe93bd4399be62ae262a815a0903ea",
+      "chunk_text": "Synthetic alfa:10: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "d8ebf973-602b-552d-bb55-0ee4cb1aad3a",
+      "extraction_sha256": "3d28c333b4c72868c6976f48e7dec7dd81fe93bd4399be62ae262a815a0903ea",
+      "id": "cc18c42e-51e2-5ae6-af01-c5e5eeec4cec",
+      "locator": {
+        "element_path": "/html/body/p[11]",
+        "kind": "html"
+      },
+      "quote": "Synthetic alfa:10: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 75,
+      "quote_start": 0,
+      "raw_sha256": "3d28c333b4c72868c6976f48e7dec7dd81fe93bd4399be62ae262a815a0903ea",
+      "source_version_id": "54e388c7-841c-5329-8c11-45c8cba874f2"
+    },
+    {
+      "chunk_id": "71c0df34-fc6e-57d3-a4b8-4725f97e6efc",
+      "chunk_sha256": "60c537961713677d07b12d304cf1b2f9b3acef4100c3eed27aafdbc1546d5174",
+      "chunk_text": "Synthetic kuban_credit:0: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "239b8b42-8c63-5d3c-b3e8-6db96c0a9c41",
+      "extraction_sha256": "60c537961713677d07b12d304cf1b2f9b3acef4100c3eed27aafdbc1546d5174",
+      "id": "84aecf27-f5df-55d6-860d-14c87a26b644",
+      "locator": {
+        "element_path": "/html/body/p[1]",
+        "kind": "html"
+      },
+      "quote": "Synthetic kuban_credit:0: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 82,
+      "quote_start": 0,
+      "raw_sha256": "60c537961713677d07b12d304cf1b2f9b3acef4100c3eed27aafdbc1546d5174",
+      "source_version_id": "b7f2776b-959c-502e-b593-5864f2e71dfb"
+    },
+    {
+      "chunk_id": "8369eccb-d7c9-528a-8920-ee4dfaed2cdf",
+      "chunk_sha256": "ff982ead6803d3ef365060c34c0ea3b641510ab0ca6c28a0eeb82dbc8208cc7e",
+      "chunk_text": "Synthetic kuban_credit:1: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "239b8b42-8c63-5d3c-b3e8-6db96c0a9c41",
+      "extraction_sha256": "ff982ead6803d3ef365060c34c0ea3b641510ab0ca6c28a0eeb82dbc8208cc7e",
+      "id": "331a2a2a-8198-536a-beaa-a208e3fbbf09",
+      "locator": {
+        "element_path": "/html/body/p[2]",
+        "kind": "html"
+      },
+      "quote": "Synthetic kuban_credit:1: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 82,
+      "quote_start": 0,
+      "raw_sha256": "ff982ead6803d3ef365060c34c0ea3b641510ab0ca6c28a0eeb82dbc8208cc7e",
+      "source_version_id": "b7f2776b-959c-502e-b593-5864f2e71dfb"
+    },
+    {
+      "chunk_id": "b228a717-6454-523c-817c-7a8eb7108b6e",
+      "chunk_sha256": "21dd18a77559959859702bbc9ca86309316827f508489a85ef712ecb61a9f9d9",
+      "chunk_text": "Synthetic kuban_credit:2: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "239b8b42-8c63-5d3c-b3e8-6db96c0a9c41",
+      "extraction_sha256": "21dd18a77559959859702bbc9ca86309316827f508489a85ef712ecb61a9f9d9",
+      "id": "cf88510c-75eb-5639-a101-df9921581aac",
+      "locator": {
+        "element_path": "/html/body/p[3]",
+        "kind": "html"
+      },
+      "quote": "Synthetic kuban_credit:2: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 82,
+      "quote_start": 0,
+      "raw_sha256": "21dd18a77559959859702bbc9ca86309316827f508489a85ef712ecb61a9f9d9",
+      "source_version_id": "b7f2776b-959c-502e-b593-5864f2e71dfb"
+    },
+    {
+      "chunk_id": "ca35648a-2d14-57aa-851d-f54b38c56fd4",
+      "chunk_sha256": "d1a364ccfbd20bcc5e7cae7097fe3b39c286f78378e19d959df37ee3eead4b2a",
+      "chunk_text": "Synthetic kuban_credit:3: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "239b8b42-8c63-5d3c-b3e8-6db96c0a9c41",
+      "extraction_sha256": "d1a364ccfbd20bcc5e7cae7097fe3b39c286f78378e19d959df37ee3eead4b2a",
+      "id": "4e11bcc9-5b8a-508a-bcd6-db728769dce5",
+      "locator": {
+        "element_path": "/html/body/p[4]",
+        "kind": "html"
+      },
+      "quote": "Synthetic kuban_credit:3: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 82,
+      "quote_start": 0,
+      "raw_sha256": "d1a364ccfbd20bcc5e7cae7097fe3b39c286f78378e19d959df37ee3eead4b2a",
+      "source_version_id": "b7f2776b-959c-502e-b593-5864f2e71dfb"
+    },
+    {
+      "chunk_id": "24eee1f3-c409-5609-940e-10e0cba33a49",
+      "chunk_sha256": "3a31d15423b0211edc43fc6c66177a63d281a44925090e1033b3a9d3e23b6687",
+      "chunk_text": "Synthetic kuban_credit:4: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "239b8b42-8c63-5d3c-b3e8-6db96c0a9c41",
+      "extraction_sha256": "3a31d15423b0211edc43fc6c66177a63d281a44925090e1033b3a9d3e23b6687",
+      "id": "972aa90e-b9c5-5ac9-ac88-63cce5b0c5a6",
+      "locator": {
+        "element_path": "/html/body/p[5]",
+        "kind": "html"
+      },
+      "quote": "Synthetic kuban_credit:4: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 82,
+      "quote_start": 0,
+      "raw_sha256": "3a31d15423b0211edc43fc6c66177a63d281a44925090e1033b3a9d3e23b6687",
+      "source_version_id": "b7f2776b-959c-502e-b593-5864f2e71dfb"
+    },
+    {
+      "chunk_id": "295b6a5d-349b-5b0b-9176-dd720f88efae",
+      "chunk_sha256": "c6d1275c52d081f80caaeafb4e14ad06ff8ee331644373b26472894e538c433f",
+      "chunk_text": "Synthetic kuban_credit:5: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "239b8b42-8c63-5d3c-b3e8-6db96c0a9c41",
+      "extraction_sha256": "c6d1275c52d081f80caaeafb4e14ad06ff8ee331644373b26472894e538c433f",
+      "id": "b4d26a69-ae75-51a4-811e-eecccd6691c7",
+      "locator": {
+        "element_path": "/html/body/p[6]",
+        "kind": "html"
+      },
+      "quote": "Synthetic kuban_credit:5: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 82,
+      "quote_start": 0,
+      "raw_sha256": "c6d1275c52d081f80caaeafb4e14ad06ff8ee331644373b26472894e538c433f",
+      "source_version_id": "b7f2776b-959c-502e-b593-5864f2e71dfb"
+    },
+    {
+      "chunk_id": "f44cc4db-9eb9-5436-aa4e-0903458c7ee9",
+      "chunk_sha256": "337f9408900e0eef0774ef334041b4223096874aafca3bb358f5e189c0bcf444",
+      "chunk_text": "Synthetic kuban_credit:6: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "239b8b42-8c63-5d3c-b3e8-6db96c0a9c41",
+      "extraction_sha256": "337f9408900e0eef0774ef334041b4223096874aafca3bb358f5e189c0bcf444",
+      "id": "1390c8c3-1dc6-5ca2-a9bf-5d3f42883c0a",
+      "locator": {
+        "element_path": "/html/body/p[7]",
+        "kind": "html"
+      },
+      "quote": "Synthetic kuban_credit:6: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 82,
+      "quote_start": 0,
+      "raw_sha256": "337f9408900e0eef0774ef334041b4223096874aafca3bb358f5e189c0bcf444",
+      "source_version_id": "b7f2776b-959c-502e-b593-5864f2e71dfb"
+    },
+    {
+      "chunk_id": "860742d3-56cb-55f8-aec9-52058f14d1da",
+      "chunk_sha256": "c7e257e6ad3e0523a9d1dd01b262a6f91985ea8e06b6560fd6ef5ca350fa2936",
+      "chunk_text": "Synthetic kuban_credit:7: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "239b8b42-8c63-5d3c-b3e8-6db96c0a9c41",
+      "extraction_sha256": "c7e257e6ad3e0523a9d1dd01b262a6f91985ea8e06b6560fd6ef5ca350fa2936",
+      "id": "d95e656f-0b79-5215-a419-74e3db83678a",
+      "locator": {
+        "element_path": "/html/body/p[8]",
+        "kind": "html"
+      },
+      "quote": "Synthetic kuban_credit:7: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 82,
+      "quote_start": 0,
+      "raw_sha256": "c7e257e6ad3e0523a9d1dd01b262a6f91985ea8e06b6560fd6ef5ca350fa2936",
+      "source_version_id": "b7f2776b-959c-502e-b593-5864f2e71dfb"
+    },
+    {
+      "chunk_id": "92f28004-0679-51e4-b923-addfe6ad893a",
+      "chunk_sha256": "30cb8967efe8a447740b22d2c1f0da2fa4aab08f232fa63f735a9b7599e713b5",
+      "chunk_text": "Synthetic kuban_credit:8: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "239b8b42-8c63-5d3c-b3e8-6db96c0a9c41",
+      "extraction_sha256": "30cb8967efe8a447740b22d2c1f0da2fa4aab08f232fa63f735a9b7599e713b5",
+      "id": "55c674e7-28a7-57de-8dd7-c717efb0aceb",
+      "locator": {
+        "element_path": "/html/body/p[9]",
+        "kind": "html"
+      },
+      "quote": "Synthetic kuban_credit:8: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 82,
+      "quote_start": 0,
+      "raw_sha256": "30cb8967efe8a447740b22d2c1f0da2fa4aab08f232fa63f735a9b7599e713b5",
+      "source_version_id": "b7f2776b-959c-502e-b593-5864f2e71dfb"
+    },
+    {
+      "chunk_id": "3680436d-502f-545c-8a97-5a0b5f4f2268",
+      "chunk_sha256": "00dee395111cec799e60b710f09c98ca9b5964b8c3d42ec66d70c6f201503c88",
+      "chunk_text": "Synthetic kuban_credit:9: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "239b8b42-8c63-5d3c-b3e8-6db96c0a9c41",
+      "extraction_sha256": "00dee395111cec799e60b710f09c98ca9b5964b8c3d42ec66d70c6f201503c88",
+      "id": "1b598264-703e-5afc-8f8e-f9ac34bf88b6",
+      "locator": {
+        "element_path": "/html/body/p[10]",
+        "kind": "html"
+      },
+      "quote": "Synthetic kuban_credit:9: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 82,
+      "quote_start": 0,
+      "raw_sha256": "00dee395111cec799e60b710f09c98ca9b5964b8c3d42ec66d70c6f201503c88",
+      "source_version_id": "b7f2776b-959c-502e-b593-5864f2e71dfb"
+    },
+    {
+      "chunk_id": "3c5043f4-6eb9-56f7-805d-a6f49d644f34",
+      "chunk_sha256": "3b59eecc70be237d46b599117c4b581cc09e22d8f1bfcf878c7ce911416f0ffb",
+      "chunk_text": "Synthetic kuban_credit:10: employer fee 100 RUB monthly; payroll contract required.",
+      "extraction_run_id": "239b8b42-8c63-5d3c-b3e8-6db96c0a9c41",
+      "extraction_sha256": "3b59eecc70be237d46b599117c4b581cc09e22d8f1bfcf878c7ce911416f0ffb",
+      "id": "0c3ec42a-06b5-56a2-aab2-8aea375050b8",
+      "locator": {
+        "element_path": "/html/body/p[11]",
+        "kind": "html"
+      },
+      "quote": "Synthetic kuban_credit:10: employer fee 100 RUB monthly; payroll contract required.",
+      "quote_end": 83,
+      "quote_start": 0,
+      "raw_sha256": "3b59eecc70be237d46b599117c4b581cc09e22d8f1bfcf878c7ce911416f0ffb",
+      "source_version_id": "b7f2776b-959c-502e-b593-5864f2e71dfb"
+    }
+  ],
+  "facts": [
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "871c573f-d4a6-5502-ab79-cf39be8b674e"
+      ],
+      "id": "9a4ca032-43a6-523a-8b56-f34edbe0713a",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "2866a43f-a19e-5f01-a79a-1463ab4f9925"
+      ],
+      "id": "c21e8b9d-1697-5ac3-9b33-c6619d2c1478",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "d73a8a8d-b58a-5f74-a297-1b0859a5b4d7"
+      ],
+      "id": "63e03089-2198-5cb5-81a2-ab984e59c01c",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "71862656-5e78-582b-a632-79033222c667"
+      ],
+      "id": "8990adf9-e2af-50aa-875b-9de41f9b8cca",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "8119192e-1695-51ec-bba9-3cbf8d3a115e"
+      ],
+      "id": "15a8e60c-1ca7-587e-b80c-197f0ecf10bc",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "14df3778-ee4b-5ff7-abfb-2ae100ea2b19"
+      ],
+      "id": "d48fe0de-56ee-5c14-a141-d2002315c398",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "334d02b4-5765-555f-9498-354aac9347a2"
+      ],
+      "id": "8424251c-7741-538a-9838-ba295ecdf40b",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "8ebe0e57-05d0-5473-a8fa-dd8701c4d899"
+      ],
+      "id": "166359f7-8f18-5b58-911c-297182d66299",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "82a5e831-3e8b-5eb9-a829-e1ff42adaec5"
+      ],
+      "id": "c17923f2-8dbd-5626-95c2-1947178ee8ee",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "cae53659-7bfb-584c-8065-927517975952"
+      ],
+      "id": "a8dae982-9f1c-5cb5-beaa-976c5cd5fe56",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "590b9a50-7408-5b38-a9aa-97a62ca8bfa0"
+      ],
+      "id": "63377410-d7ce-54bd-aaa2-5ccc40d350d5",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "a794572e-632a-59ae-bd9a-6e7b405580d1"
+      ],
+      "id": "273936dc-c2d1-5bf8-9a69-cabaef5aa7f0",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "caa37294-fce7-5424-a75b-9868f1e332cf"
+      ],
+      "id": "7650b01b-1913-5e1b-9f5d-7c8b0efe45b7",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "db613695-42ab-5c28-af87-785bb45250bb"
+      ],
+      "id": "abd0b0ed-af38-5e50-b8a6-f81897c719fa",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "ddaca781-41ed-5278-a52f-37a8ef48a984"
+      ],
+      "id": "81bcb4c3-1786-5d59-9b38-89e41b1ca589",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "d69768ff-1464-540e-b2a1-9923c9bbfe2b"
+      ],
+      "id": "d35b2a80-d63e-5a6d-bd01-8174a4c42e76",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "1c89d575-7396-5af6-8115-f10f1124e10f"
+      ],
+      "id": "7a76a882-b0b8-5f29-aa18-dd6f3a083e4a",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "d325fd49-f102-5bd8-9056-8bdf51d91089"
+      ],
+      "id": "f4ef53df-87ff-50a3-8fdb-ac313138b481",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "82b7bd8a-16ff-5315-8903-125543ac09c2"
+      ],
+      "id": "d4c250ad-bc2e-5cbe-95fd-d5fa2bbe7ea0",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "5da38fa6-1a6c-5b14-92fc-5db782d7bc54"
+      ],
+      "id": "cb87aa04-7be1-5a68-9617-1899240a3261",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "bf8709b7-3051-5713-a611-b7b25aa6699e"
+      ],
+      "id": "a27fcfd4-43ea-52ed-8a35-bfb53eed0dec",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "5766155c-336f-513c-93d6-7640ab78ffbc"
+      ],
+      "id": "92a9c392-f7f2-5c9e-b0b4-48cd6a91bd32",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "8a61c385-ed8b-526c-a3be-41d68e369e24"
+      ],
+      "id": "542845cb-ca9d-5852-bc62-49e593d4a35c",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "3eee761a-abcf-52a6-92b8-32442c1a3e2b"
+      ],
+      "id": "0a653557-a17f-502c-8605-81705e44afd7",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "04daaa09-bac0-5c81-9759-e6487a161fdd"
+      ],
+      "id": "8db9990c-84e3-594c-920f-6419829bf12d",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "55a180b8-2847-5f9b-ba47-11f11510763e"
+      ],
+      "id": "0c9f8514-0301-5f59-880c-798a2e8223d4",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "7a6dc046-6fd8-5c90-a398-4df807029444"
+      ],
+      "id": "a0992a91-4194-580a-944c-07900cd9e261",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "63efe393-271c-5515-99a8-0c541ffc7bd0"
+      ],
+      "id": "06c0233a-1d23-5d7d-8146-e6bc0bbd5736",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "d05648d0-fd45-5513-b87f-7c9a5b3142cb"
+      ],
+      "id": "b9ff95f8-7e47-597a-886a-c9daae3253fb",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "ee9997df-11d1-550b-97f1-922c7a057062"
+      ],
+      "id": "8b1863e9-9623-5dbe-9bb4-c182d470f4f7",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "e7cdd3c7-efdf-5f67-b30a-8c2c091310bf"
+      ],
+      "id": "3e6a44d7-c89b-52de-9053-dff4a86eb9de",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "ea89e648-f911-5036-a3ac-c4cb02c8cd7c"
+      ],
+      "id": "7b5909c9-1f2d-5b6b-a9e6-eb7f2fe4f800",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "cc18c42e-51e2-5ae6-af01-c5e5eeec4cec"
+      ],
+      "id": "7f5ec14a-ee50-5f8b-976c-1f259735aaa4",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "84aecf27-f5df-55d6-860d-14c87a26b644"
+      ],
+      "id": "3142a507-2b5b-5ebf-9ae9-a45677ea22dc",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "331a2a2a-8198-536a-beaa-a208e3fbbf09"
+      ],
+      "id": "97e15929-53e2-5982-aa59-7333a2e0b03c",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "cf88510c-75eb-5639-a101-df9921581aac"
+      ],
+      "id": "bba0da0f-7e53-5475-8987-98d022c05192",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "4e11bcc9-5b8a-508a-bcd6-db728769dce5"
+      ],
+      "id": "e53b1d6d-a399-539f-bbed-dbcb2d2e969d",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "972aa90e-b9c5-5ac9-ac88-63cce5b0c5a6"
+      ],
+      "id": "ea070721-6271-5842-8858-cbb1dbefa37a",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "b4d26a69-ae75-51a4-811e-eecccd6691c7"
+      ],
+      "id": "99429454-a210-564b-b6b2-8dd5aec84677",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "1390c8c3-1dc6-5ca2-a9bf-5d3f42883c0a"
+      ],
+      "id": "0a015c2a-6bae-57af-b76a-1274a504a429",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "d95e656f-0b79-5215-a419-74e3db83678a"
+      ],
+      "id": "c6796578-c585-5bc8-8ad6-eb5a4abf72d8",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "55c674e7-28a7-57de-8dd7-c717efb0aceb"
+      ],
+      "id": "7d463178-a8d0-5686-8743-5920f3bf1dd1",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "1b598264-703e-5afc-8f8e-f9ac34bf88b6"
+      ],
+      "id": "20c422c0-5646-5b03-8e67-7e188686994d",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    },
+    {
+      "conditions": [
+        "payroll_contract"
+      ],
+      "effective_date": "2026-01-01",
+      "evidence_ids": [
+        "0c3ec42a-06b5-56a2-aab2-8aea375050b8"
+      ],
+      "id": "4c5c3acf-c102-553f-ac95-60a7ef8a3bba",
+      "operation": "payroll_credit",
+      "payer": "employer",
+      "period": "month",
+      "scope": {
+        "geography": "federal",
+        "segment": "any"
+      },
+      "status": "verified",
+      "value": {
+        "amount": "100",
+        "currency": "RUB",
+        "kind": "money",
+        "period": "month",
+        "schema_version": 1,
+        "unit": "currency"
+      }
+    }
+  ],
+  "gold_sha256": "ca3b3693006ceb0cb4c84000fea9d58fe2abfa597c31fb3243321a4e23b152d8",
+  "mode": "synthetic_engine",
+  "questions": [
+    {
+      "claims": [
+        "9a4ca032-43a6-523a-8b56-f34edbe0713a"
+      ],
+      "id": "e33739b1-becb-5f5a-81d1-c50bf0836a03",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "af343546-fa34-5e2c-924b-9d6677874a89"
+      ]
+    },
+    {
+      "claims": [
+        "c21e8b9d-1697-5ac3-9b33-c6619d2c1478"
+      ],
+      "id": "d2e9ed3b-6e0e-5f4d-a884-cdd5d080de7e",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "55d56271-fd61-5582-a268-9bf9e29d048a"
+      ]
+    },
+    {
+      "claims": [
+        "63e03089-2198-5cb5-81a2-ab984e59c01c"
+      ],
+      "id": "e4f0b305-402a-54e0-9cab-e3d7d11cde27",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "3ee5d167-c438-5247-b4a1-719aa504c147"
+      ]
+    },
+    {
+      "claims": [
+        "8990adf9-e2af-50aa-875b-9de41f9b8cca"
+      ],
+      "id": "a633b3e1-63a8-5f43-87d6-fe0e2c6473d2",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "c62fc66d-1ff2-5439-a026-55a465de0701"
+      ]
+    },
+    {
+      "claims": [
+        "15a8e60c-1ca7-587e-b80c-197f0ecf10bc"
+      ],
+      "id": "ef1b53d4-0afb-50f7-b32f-61a9cf20e2fc",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "7f2e71b9-399b-552f-b2ae-9bd290afe52e"
+      ]
+    },
+    {
+      "claims": [
+        "d48fe0de-56ee-5c14-a141-d2002315c398"
+      ],
+      "id": "36045479-8612-575e-8e79-b0590a22c9d4",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "e1f7e187-c429-5a23-8b70-d8f7fbbfc4e7"
+      ]
+    },
+    {
+      "claims": [
+        "8424251c-7741-538a-9838-ba295ecdf40b"
+      ],
+      "id": "986c4499-0c0a-5255-8633-e2c43800a4aa",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "e5510e27-81cf-533e-ac91-4efcfca040ad"
+      ]
+    },
+    {
+      "claims": [
+        "273936dc-c2d1-5bf8-9a69-cabaef5aa7f0"
+      ],
+      "id": "1ee01070-50eb-55c0-ace4-111ec7501e24",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "59966b90-b800-5277-9ee2-ef9d676dc48a"
+      ]
+    },
+    {
+      "claims": [
+        "7650b01b-1913-5e1b-9f5d-7c8b0efe45b7"
+      ],
+      "id": "c1ed262c-3bb9-50c1-bb96-552dfb7a50fb",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "1f457e2f-8bd7-5c0d-8618-c5dc5dc71cef"
+      ]
+    },
+    {
+      "claims": [
+        "abd0b0ed-af38-5e50-b8a6-f81897c719fa"
+      ],
+      "id": "9ab7a362-6fbe-53bd-9a48-e7118db1e441",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "c3d08e88-8580-5c1c-9114-bdb50ab8245d"
+      ]
+    },
+    {
+      "claims": [
+        "81bcb4c3-1786-5d59-9b38-89e41b1ca589"
+      ],
+      "id": "6d0a157f-16c0-56d2-bacd-db8687cdc9db",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "36bbb69d-8c14-5fcf-b63e-97cb8f33fc55"
+      ]
+    },
+    {
+      "claims": [
+        "d35b2a80-d63e-5a6d-bd01-8174a4c42e76"
+      ],
+      "id": "fbb0adc9-7c47-5ecd-86c8-d3b84234172b",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "b689beee-6c6c-5119-8675-ff6a0c560b44"
+      ]
+    },
+    {
+      "claims": [
+        "7a76a882-b0b8-5f29-aa18-dd6f3a083e4a"
+      ],
+      "id": "57d701b7-24f7-54fb-ba30-e631a6641a56",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "adbdf9cb-e77c-5e9c-8c0b-10c96887d783"
+      ]
+    },
+    {
+      "claims": [
+        "f4ef53df-87ff-50a3-8fdb-ac313138b481"
+      ],
+      "id": "e1e60157-2750-51a0-aa0d-fa61dea1eb18",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "061a52f1-a10b-574c-9203-5bd60d8632ee"
+      ]
+    },
+    {
+      "claims": [
+        "542845cb-ca9d-5852-bc62-49e593d4a35c"
+      ],
+      "id": "073cb859-324f-5d1e-b349-0fb7e378930a",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "5a2ef057-0eb0-53dc-881f-719affc3dc7d"
+      ]
+    },
+    {
+      "claims": [
+        "0a653557-a17f-502c-8605-81705e44afd7"
+      ],
+      "id": "79394bab-e447-5032-8c5e-8a53a3fc2587",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "2bd3b221-f3ff-5c5c-a80e-1a082b7272cb"
+      ]
+    },
+    {
+      "claims": [
+        "8db9990c-84e3-594c-920f-6419829bf12d"
+      ],
+      "id": "aee1dc7b-f68c-57b7-9175-576f39da5c66",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "0377756f-687c-5f1d-bd99-350e6300227f"
+      ]
+    },
+    {
+      "claims": [
+        "0c9f8514-0301-5f59-880c-798a2e8223d4"
+      ],
+      "id": "545bf79f-a52b-509c-b9ee-c049aebc7c2b",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "aa673e1c-81b0-5a07-9c78-abb9c51f635b"
+      ]
+    },
+    {
+      "claims": [
+        "a0992a91-4194-580a-944c-07900cd9e261"
+      ],
+      "id": "a7a6e990-eb01-56be-b053-1efc36e6a7ae",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "4bc5e971-06ae-571e-883f-b0bc7e0f7121"
+      ]
+    },
+    {
+      "claims": [
+        "06c0233a-1d23-5d7d-8146-e6bc0bbd5736"
+      ],
+      "id": "151c2b9c-1211-5957-80e0-a2b3ad98f9a4",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "2822a673-9953-5aab-8a8b-3bfdd1eafd14"
+      ]
+    },
+    {
+      "claims": [
+        "b9ff95f8-7e47-597a-886a-c9daae3253fb"
+      ],
+      "id": "be72a30e-c504-5e51-8912-317fa31025b9",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "364167c2-4aa7-5ee0-9b97-e157b42ec15b"
+      ]
+    },
+    {
+      "claims": [
+        "3142a507-2b5b-5ebf-9ae9-a45677ea22dc"
+      ],
+      "id": "42d4733c-1df3-57e5-a4a4-0a611081f578",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "71c0df34-fc6e-57d3-a4b8-4725f97e6efc"
+      ]
+    },
+    {
+      "claims": [
+        "97e15929-53e2-5982-aa59-7333a2e0b03c"
+      ],
+      "id": "e6fe7217-8d31-5f9a-952c-04d8718962a4",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "8369eccb-d7c9-528a-8920-ee4dfaed2cdf"
+      ]
+    },
+    {
+      "claims": [
+        "bba0da0f-7e53-5475-8987-98d022c05192"
+      ],
+      "id": "b9e3e2c4-d480-5330-b488-55b1736a7430",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "b228a717-6454-523c-817c-7a8eb7108b6e"
+      ]
+    },
+    {
+      "claims": [
+        "e53b1d6d-a399-539f-bbed-dbcb2d2e969d"
+      ],
+      "id": "332d1b5d-14a3-536b-8d6c-689a2f6fa4f7",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "ca35648a-2d14-57aa-851d-f54b38c56fd4"
+      ]
+    },
+    {
+      "claims": [
+        "ea070721-6271-5842-8858-cbb1dbefa37a"
+      ],
+      "id": "273398f2-22fb-503f-b83b-c430b663e9d8",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "24eee1f3-c409-5609-940e-10e0cba33a49"
+      ]
+    },
+    {
+      "claims": [
+        "99429454-a210-564b-b6b2-8dd5aec84677"
+      ],
+      "id": "9e3bde36-0854-5f2f-895e-697c6cb7548e",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "295b6a5d-349b-5b0b-9176-dd720f88efae"
+      ]
+    },
+    {
+      "claims": [
+        "0a015c2a-6bae-57af-b76a-1274a504a429"
+      ],
+      "id": "608f07cf-ef9f-5baa-87ff-0aabde156bab",
+      "intent": "facts",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "f44cc4db-9eb9-5436-aa4e-0903458c7ee9"
+      ]
+    },
+    {
+      "claims": [
+        "9a4ca032-43a6-523a-8b56-f34edbe0713a",
+        "273936dc-c2d1-5bf8-9a69-cabaef5aa7f0"
+      ],
+      "id": "1f7a9b0c-aaff-5e12-9fee-5097034aabbf",
+      "intent": "compare",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "af343546-fa34-5e2c-924b-9d6677874a89",
+        "59966b90-b800-5277-9ee2-ef9d676dc48a"
+      ]
+    },
+    {
+      "claims": [
+        "c21e8b9d-1697-5ac3-9b33-c6619d2c1478",
+        "7650b01b-1913-5e1b-9f5d-7c8b0efe45b7"
+      ],
+      "id": "f38ec663-0b37-5fe1-9028-f574d18f01c7",
+      "intent": "compare",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "55d56271-fd61-5582-a268-9bf9e29d048a",
+        "1f457e2f-8bd7-5c0d-8618-c5dc5dc71cef"
+      ]
+    },
+    {
+      "claims": [
+        "9a4ca032-43a6-523a-8b56-f34edbe0713a",
+        "542845cb-ca9d-5852-bc62-49e593d4a35c"
+      ],
+      "id": "c9bd1f77-2172-5c3b-82ce-04abad12c702",
+      "intent": "compare",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "af343546-fa34-5e2c-924b-9d6677874a89",
+        "5a2ef057-0eb0-53dc-881f-719affc3dc7d"
+      ]
+    },
+    {
+      "claims": [
+        "c21e8b9d-1697-5ac3-9b33-c6619d2c1478",
+        "0a653557-a17f-502c-8605-81705e44afd7"
+      ],
+      "id": "16450823-eaff-5a60-9b8c-e3e175ea4d99",
+      "intent": "compare",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "55d56271-fd61-5582-a268-9bf9e29d048a",
+        "2bd3b221-f3ff-5c5c-a80e-1a082b7272cb"
+      ]
+    },
+    {
+      "claims": [
+        "9a4ca032-43a6-523a-8b56-f34edbe0713a",
+        "3142a507-2b5b-5ebf-9ae9-a45677ea22dc"
+      ],
+      "id": "65f38a45-8d0c-58b5-a5c5-af15951f216c",
+      "intent": "compare",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "af343546-fa34-5e2c-924b-9d6677874a89",
+        "71c0df34-fc6e-57d3-a4b8-4725f97e6efc"
+      ]
+    },
+    {
+      "claims": [
+        "c21e8b9d-1697-5ac3-9b33-c6619d2c1478",
+        "97e15929-53e2-5982-aa59-7333a2e0b03c"
+      ],
+      "id": "2b74bd2a-e2d0-5dac-afd2-812a7e297d54",
+      "intent": "compare",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "55d56271-fd61-5582-a268-9bf9e29d048a",
+        "8369eccb-d7c9-528a-8920-ee4dfaed2cdf"
+      ]
+    },
+    {
+      "claims": [
+        "273936dc-c2d1-5bf8-9a69-cabaef5aa7f0",
+        "542845cb-ca9d-5852-bc62-49e593d4a35c"
+      ],
+      "id": "f53d6c0b-fe1a-5b06-b855-99dc37e9d8f0",
+      "intent": "compare",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "59966b90-b800-5277-9ee2-ef9d676dc48a",
+        "5a2ef057-0eb0-53dc-881f-719affc3dc7d"
+      ]
+    },
+    {
+      "claims": [
+        "7650b01b-1913-5e1b-9f5d-7c8b0efe45b7",
+        "0a653557-a17f-502c-8605-81705e44afd7"
+      ],
+      "id": "eacabddc-44ce-5693-bb77-fdb4e1672d23",
+      "intent": "compare",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "1f457e2f-8bd7-5c0d-8618-c5dc5dc71cef",
+        "2bd3b221-f3ff-5c5c-a80e-1a082b7272cb"
+      ]
+    },
+    {
+      "claims": [
+        "273936dc-c2d1-5bf8-9a69-cabaef5aa7f0",
+        "3142a507-2b5b-5ebf-9ae9-a45677ea22dc"
+      ],
+      "id": "25371839-4e5f-570b-b125-11e40ec59751",
+      "intent": "compare",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "59966b90-b800-5277-9ee2-ef9d676dc48a",
+        "71c0df34-fc6e-57d3-a4b8-4725f97e6efc"
+      ]
+    },
+    {
+      "claims": [
+        "7650b01b-1913-5e1b-9f5d-7c8b0efe45b7",
+        "97e15929-53e2-5982-aa59-7333a2e0b03c"
+      ],
+      "id": "44176c6b-d21a-5cf2-89ed-7b0f69773718",
+      "intent": "compare",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "1f457e2f-8bd7-5c0d-8618-c5dc5dc71cef",
+        "8369eccb-d7c9-528a-8920-ee4dfaed2cdf"
+      ]
+    },
+    {
+      "claims": [
+        "542845cb-ca9d-5852-bc62-49e593d4a35c",
+        "3142a507-2b5b-5ebf-9ae9-a45677ea22dc"
+      ],
+      "id": "fe8c1d17-f062-5898-a411-b5e34a6510c2",
+      "intent": "compare",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "5a2ef057-0eb0-53dc-881f-719affc3dc7d",
+        "71c0df34-fc6e-57d3-a4b8-4725f97e6efc"
+      ]
+    },
+    {
+      "claims": [
+        "0a653557-a17f-502c-8605-81705e44afd7",
+        "97e15929-53e2-5982-aa59-7333a2e0b03c"
+      ],
+      "id": "b64fa478-f092-524f-a75f-d2ac1017a26a",
+      "intent": "compare",
+      "numbers": [
+        "100"
+      ],
+      "retrieved_chunk_ids": [
+        "2bd3b221-f3ff-5c5c-a80e-1a082b7272cb",
+        "8369eccb-d7c9-528a-8920-ee4dfaed2cdf"
+      ]
+    }
+  ],
+  "schema_version": 1,
+  "snapshot_id": "1011be67-2332-5e44-96f1-ef5e29b24ec4"
+}
