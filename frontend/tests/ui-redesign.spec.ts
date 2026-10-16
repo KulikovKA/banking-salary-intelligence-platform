@@ -63,11 +63,31 @@ test("rate limit has a readable error and explicit retry, with no provider detai
   await page.goto("/"); await page.getByRole("button", { name: "Разрешить и продолжить" }).click();
   await send(page, "Какая комиссия?");
   await expect(page.locator(".message-error")).toContainText("Сейчас слишком много запросов");
+  await expect(page.locator(".message-error")).toHaveCSS("background-color", "rgb(44, 37, 40)");
   await expect(page.locator("body")).not.toContainText(/GROQ_HTTP|SECRET_CANARY|429/);
   expect(calls).toBe(1);
   await page.getByRole("button", { name: "Попробовать снова" }).click();
   await expect(page.getByRole("heading", { name: "Условия Альфа-Банка" })).toBeVisible();
   expect(calls).toBe(2);
+});
+
+test("comparison suggestion submits the exact button question and displays four banks", async ({ page }) => {
+  await mockApi(page);
+  let calls = 0;
+  await page.route("**/api/local-demo/questions", (route) => {
+    calls++;
+    expect(route.request().postDataJSON().question).toBe("Сравни зарплатные проекты четырёх банков: Сбер, ВТБ, Альфа-Банк и Кубань Кредит");
+    return route.fulfill({ json: { answer: "- **Сбер**: условия из базы знаний.\n- **ВТБ**: условия из базы знаний.\n- **Альфа-Банк**: индивидуальная комиссия.\n- **Кубань Кредит**: ставка зависит от договора." } });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Разрешить и продолжить" }).click();
+  await expect(page.locator(".live-suggestions button")).toHaveCount(1);
+  await page.getByRole("button", { name: "Сравнить 4 банка", exact: true }).click();
+  for (const bank of ["Сбер", "ВТБ", "Альфа-Банк", "Кубань Кредит"]) {
+    await expect(page.locator(".message-assistant")).toContainText(bank);
+  }
+  await expect(page.locator(".message-error")).toHaveCount(0);
+  expect(calls).toBe(1);
 });
 
 test("responsive start screen and mobile sidebar preserve viewport and input", async ({ page }) => {

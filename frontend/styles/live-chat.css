@@ -97,6 +97,7 @@
 .is-live .copy-button { font-size:11px; color:#797983; padding:5px 0; background:transparent; border:0; }
 .is-live .copy-button:hover { color:#c2c2cb; }
 .is-live .message-error,.is-live .message-state { color:#b7a4a4; font-size:13px; line-height:1.7; margin-top:10px; }
+.is-live .message-error { background:#2c2528; border-color:#635055; color:#efd5da; }
 .retry-button { display:block; border:1px solid #54525a; background:none; color:#dedee5; border-radius:9px; margin-top:12px; padding:7px 12px; font-size:12px; }
 .is-live .streaming-indicator { display:inline-flex; gap:11px; align-items:center; color:#96969f; font-size:12px; padding:7px 0; }
 .is-live .streaming-dots i { background:var(--accent); }

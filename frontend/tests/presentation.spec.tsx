@@ -13,6 +13,15 @@ test("presentation removes citation metadata and preserves financial qualificati
   const markup = renderToStaticMarkup(<AnswerMarkdown text={input + '\n<script>alert(1)</script>\n![image](https://evil.test/img)\n[документ](/api/local-demo/document?id=Sabcdef123456)'} />);
   expect(markup).toContain("<h2>"); expect(markup).toContain("<table>"); expect(markup).toContain("<strong>");
   expect(markup).not.toMatch(/<script|<img|href=|\/api\/|https:\/\//);
+  const compared = answerText("Ставка UNKNOWN (A4), 0 % с 12.04.2021 (K2), INDIVIDUAL (Sc07920d2538f).");
+  expect(compared).toContain("0 % с 12.04.2021");
+  expect(compared).toContain("неизвестно"); expect(compared).toContain("индивидуально");
+  expect(compared).not.toMatch(/UNKNOWN|INDIVIDUAL|A4|K2|Sc079/);
+  expect(answerText("Бесплатное (см. [Sabcdef123456]). Подтверждение pending.")).toBe(
+    "Бесплатное. Подтверждение ожидает проверки.",
+  );
+  expect(answerText("Зачисление бесплатно【Sabcdef123456】.")).toBe("Зачисление бесплатно.");
+  expect(answerText("Ставка неизвестна [С9375e7dbaf0e].")).toBe("Ставка неизвестна.");
 });
 
 test("history stores only display messages, rejects malformed state and restores interrupted answers safely", () => {

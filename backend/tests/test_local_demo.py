@@ -3,6 +3,7 @@
 import asyncio
 import hashlib
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import httpx2 as httpx
@@ -18,6 +19,7 @@ from app.local_demo import (
     load_inventory,
     public_query,
     retrieve,
+    section_role,
 )
 
 
@@ -197,3 +199,111 @@ def test_knowledge_documents_preserve_provenance_and_reject_tampering(tmp_path: 
     path.write_text("changed", encoding="utf-8")
     with pytest.raises(RuntimeError, match="DOCUMENT_HASH_MISMATCH"):
         load_documents(tmp_path)
+
+
+def comparison_corpus() -> list[Snippet]:
+    items = []
+    for index, bank in enumerate(("alfa", "kuban_credit", "sber", "vtb")):
+        for role, text in (
+            ("metadata", "Зарплатный проект банка. Аналитический документ, дата исследования."),
+            ("fee", "Комиссия работодателя за зачисление определяется договором."),
+            ("conditions", "Дополнительная плата за выплаты нерезидентам неизвестна."),
+            ("limitations", "Ежемесячное обслуживание и полная стоимость UNKNOWN."),
+        ):
+            items.append(
+                replace(
+                    snippet(bank),
+                    id=f"S{index}{role}",
+                    text=text,
+                    source_type="research_summary",
+                    section_role=role,
+                )
+            )
+    return items
+
+
+def test_four_bank_comparison_selects_fees_and_conditions_instead_of_document_titles() -> None:
+    query, banks = public_query(
+        "сравни альфа банк,сбер ,втб и кубань кредит и скажи у кого выгоднее зарплатный проект"
+    )
+    assert banks == {"alfa", "sber", "vtb", "kuban_credit"}
+    selected = retrieve(comparison_corpus(), query, banks)
+    assert len(selected) == 12 and sum(len(s.text) for s in selected) <= 6000
+    for bank in banks:
+        assert {s.section_role for s in selected if s.bank == bank} == {
+            "fee",
+            "conditions",
+            "limitations",
+        }
+    assert section_role("Сбербанк", introduction=True) == "metadata"
+    assert section_role("Комиссия работодателя за зачисление") == "fee"
+    assert "сопоставить" in public_query("Какой банк выгоднее?")[0]
+
+
+@pytest.mark.parametrize("invalid", [None, "missing_bank", "wrong_bank", "unknown_id"])
+@pytest.mark.parametrize("question", [
+    "Сравни Сбер, ВТБ, Альфа и Кубань Кредит",
+    "Сравнить зарплатные проекты банков",
+])
+def test_comparison_provider_receives_business_sections_and_must_cover_every_bank(
+    invalid: str | None, question: str,
+) -> None:
+    async def run() -> None:
+        service = DemoService("test-key", comparison_corpus())
+        calls = []
+
+        def respond(request: httpx.Request) -> httpx.Response:
+            body = json.loads(request.content)
+            prompt = json.loads(body["messages"][1]["content"])
+            calls.append(prompt)
+            assert prompt["task"] == "compare_banks"
+            assert len(prompt["snippets"]) == 12
+            assert all("Аналитический документ" not in s["text"] for s in prompt["snippets"])
+            schema = body["response_format"]["json_schema"]["schema"]["properties"]["source_ids"]
+            assert set(schema["required"]) == {"sber", "alfa", "vtb", "kuban_credit"}
+            ids = {
+                bank: [definition["items"]["enum"][0]]
+                for bank, definition in schema["properties"].items()
+            }
+            if invalid == "missing_bank":
+                del ids["sber"]
+            elif invalid == "wrong_bank":
+                ids["sber"] = ids["alfa"]
+            elif invalid == "unknown_id":
+                ids["sber"] = ["Snot-in-context"]
+            return httpx.Response(
+                200,
+                json={
+                    "choices": [
+                        {
+                            "message": {
+                                "content": json.dumps(
+                                    {
+                                        "answer": "Условия и комиссии зависят от договора.",
+                                        "source_ids": ids,
+                                    }
+                                )
+                            }
+                        }
+                    ]
+                },
+            )
+
+        await service.client.aclose()
+        service.client = httpx.AsyncClient(transport=httpx.MockTransport(respond))
+        try:
+            request = Question(
+                question=question, allow_public_text=True
+            )
+            if invalid:
+                with pytest.raises(HTTPException, match="GROQ_OUTPUT_OR_CITATION_INVALID"):
+                    await service.answer(request)
+            else:
+                result = await service.answer(request)
+                assert len(result["citations"]) == 4
+                assert result["missing_banks"] == []
+            assert len(calls) == 1
+        finally:
+            await service.client.aclose()
+
+    asyncio.run(run())

@@ -34,8 +34,9 @@ export function ChatWelcome({
     <h1 id="welcome-title">Чем могу помочь?</h1>
     {composer}
     <div className="live-suggestions">
-      {["Сравнить зарплатные проекты банков", "Какие комиссии у ВТБ?", "Условия зарплатного проекта", "Какой банк выгоднее?"].map((question) =>
-        <button key={question} onClick={() => onSuggest(question)}>{question}</button>)}
+      <button onClick={() => onSuggest("Сравни зарплатные проекты четырёх банков: Сбер, ВТБ, Альфа-Банк и Кубань Кредит")}>
+        Сравнить 4 банка
+      </button>
     </div>
   </section>;
   return (

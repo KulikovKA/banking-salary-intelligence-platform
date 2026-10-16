@@ -46,9 +46,24 @@ SYSTEM_PROMPT = (
     "Источник с source_type=research_summary — наша подготовленная сводка; "
     "ссылайся на неё как на документ базы знаний, сохраняя её ограничения. "
     "Не путай комиссии сотрудника и работодателя. Ответ — JSON: "
-    '{"answer":"текст с ссылками [ID]", "source_ids":["ID выдержки"]}. '
-    "Каждый числовой тариф сопровождай ссылкой и условиями. "
-    "Ответ краткий: до 120 слов, максимум 3 источника. "
+    'с полями answer (понятный текст без кодов источников) и source_ids. '
+    "Соблюдай JSON-схему: при сравнении source_ids — объект по кодам банков, "
+    "для каждого банка выбери одну или две его выдержки; иначе это список ID. "
+    "Источники укажи только в source_ids; не вставляй в answer их коды, ссылки или сноски. "
+    "Каждый числовой тариф должен опираться на source_ids и сохранять условия. "
+    "Для одного банка ответ до 120 слов. При сравнении — до 220 слов, "
+    "отдельный пункт по каждому банку и краткий вывод. Укажи источники всех банков. "
+    "При сравнении используй Markdown: каждый банк отдельным пунктом с новой строки. "
+    "В тексте пиши «неизвестно» и «индивидуально», а не UNKNOWN или INDIVIDUAL. "
+    "Сравни найденные условия даже при неполных данных: не подменяй неизвестную "
+    "ставку утверждением, что по банку вообще нет данных. Разделяй бесплатное "
+    "подключение, комиссию за зачисление и неизвестную полную стоимость. "
+    "Бесплатные зарплатные зачисления не обобщай на все виды выплат. "
+    "Комиссии за прочие выплаты не переноси на зачисление зарплаты. "
+    "Для research_summary стоимость обслуживания описывай только по разделам "
+    "section_role=service; если их нет в контексте банка, она неизвестна. "
+    "Бесплатное подключение и зачисление не доказывают бесплатное обслуживание. "
+    "Не используй служебное слово pending: пиши «ожидает проверки». "
     "Если точной комиссии нет, всё равно опиши найденные условия подключения "
     "и обслуживания и укажи источники. Общий вопрос не ограничивай комиссиями. "
     "У каждой суммы сохраняй все ограничения: дату заключения договора, продукт, "
@@ -72,6 +87,32 @@ class Snippet:
     text: str
     source_type: str = "bank_original"
     document_text: str = ""
+    section_role: str = "content"
+
+
+def section_role(heading: str, *, introduction: bool = False) -> str:
+    label = heading.lower()
+    if introduction or label.startswith(
+        (
+            "основные условия",
+            "основание и актуальность",
+            "что проверено",
+            "официальные источники",
+            "контроль исходных",
+            "качество",
+            "что нужно получить",
+        )
+    ):
+        return "metadata"
+    if label.startswith(("тарифы работодателя", "комиссия работодателя", "зачисление зарплаты")):
+        return "fee"
+    if label.startswith("условия применимости"):
+        return "conditions"
+    if "неизвест" in label or label.startswith(("комиссии и лимиты", "комиссии, лимиты")):
+        return "limitations"
+    if any(word in label for word in ("подключение", "обслуживание", "сроки", "интеграция")):
+        return "service"
+    return "content"
 
 
 def terms(text: str) -> set[str]:
@@ -176,6 +217,7 @@ def load_documents(root: Path) -> list[Snippet]:
                         text=fragment,
                         source_type="research_summary",
                         document_text=text,
+                        section_role=section_role(heading, introduction=number == 1),
                     )
                 )
     if not snippets:
@@ -204,7 +246,11 @@ def public_query(question: str) -> tuple[str, set[str]]:
                 "комиссия за зачисление зарплаты тариф условия",
             ),
             (("подключ", "оформ", "открыт"), "подключение зарплатного проекта документы договор"),
-            (("сравн", "различ", "отлич"), "сопоставить условия банков без выбора победителя"),
+            (
+                ("сравн", "различ", "отлич", "выгод"),
+                "сопоставить банки: подключение обслуживание комиссия работодателя "
+                "за зачисление зарплаты условия применимости договора без выбора победителя",
+            ),
             (("источник", "покаж", "откуда"), "показать точную цитату и источник комиссии"),
             (("карт",), "выпуск и обслуживание зарплатных карт"),
             (("1с", "интеграц", "реестр"), "интеграция 1С зарплатный реестр"),
@@ -221,10 +267,16 @@ def public_query(question: str) -> tuple[str, set[str]]:
 
 
 def retrieve(snippets: list[Snippet], query: str, banks: set[str]) -> list[Snippet]:
+    comparison = "сопоставить" in query
     pool = [
-        s for s in snippets if (not banks or s.bank in banks) and "tariff-index" not in s.filename
+        s
+        for s in snippets
+        if (not banks or s.bank in banks)
+        and "tariff-index" not in s.filename
+        and s.section_role != "metadata"
     ]
-    query_terms = terms(query)
+    # Bank names scope the pool; matching their titles is not evidence relevance.
+    query_terms = terms(query) - terms(" ".join(BANKS.values()))
     counts = Counter(term for s in pool for term in terms(s.text))
     ranked = sorted(
         pool,
@@ -233,18 +285,51 @@ def retrieve(snippets: list[Snippet], query: str, banks: set[str]) -> list[Snipp
             + (2 if "зарплат" in s.text.lower() else 0)
             + (3 if "product.html" in s.filename else 0)
             + (6 if "комиссия" in query and "tariff.pdf" in s.filename else 0)
+            + (10 if s.section_role == "fee" and (comparison or "комиссия" in query) else 0)
+            + (4 if comparison and s.section_role == "service" else 0)
         ),
         reverse=True,
     )
-    # Round-robin avoids one bank taking all remaining slots in comparisons.
+    # A comparison needs both the fee and its applicability, not just one title per bank.
     selected: list[Snippet] = []
     bank_order = sorted({s.bank for s in pool})
-    for rank in range(4):
+    candidates_by_bank = {bank: [s for s in ranked if s.bank == bank] for bank in bank_order}
+    if comparison:
+        for candidates in candidates_by_bank.values():
+            if candidates and candidates[0].section_role == "fee":
+                complement = next(
+                    (
+                        s
+                        for role in ("conditions", "service")
+                        for s in candidates[1:]
+                        if s.section_role == role
+                    ),
+                    None,
+                )
+                if complement:
+                    candidates.remove(complement)
+                    candidates.insert(1, complement)
+            limitations = [s for s in candidates[2:] if s.section_role == "limitations"]
+            # Keep explicit unknown running costs alongside headline payroll fees.
+            limitation = next(
+                (s for s in limitations if "ежемесяч" in s.text.lower()),
+                next(iter(limitations), None),
+            )
+            if limitation:
+                candidates.remove(limitation)
+                candidates.insert(2, limitation)
+    limit = 12 if comparison else 4
+    chars = 0
+    for rank in range(limit):
         for bank in bank_order:
-            candidates = [s for s in ranked if s.bank == bank]
+            candidates = candidates_by_bank[bank]
             if rank < len(candidates):
-                selected.append(candidates[rank])
-                if len(selected) == 4:
+                candidate = candidates[rank]
+                if chars + len(candidate.text) > 6000:
+                    continue
+                selected.append(candidate)
+                chars += len(candidate.text)
+                if len(selected) == limit:
                     return selected
     return selected
 
@@ -259,7 +344,7 @@ class Question(BaseModel):
 class Generated(BaseModel):
     model_config = ConfigDict(extra="forbid")
     answer: str = Field(min_length=1, max_length=10000)
-    source_ids: list[str] = Field(max_length=4)
+    source_ids: list[str] = Field(max_length=8)
 
 
 class DemoService:
@@ -279,6 +364,8 @@ class DemoService:
             query += " " + previous
             banks = banks or previous_banks
         selected = retrieve(self.snippets, query, banks)
+        comparison = "сопоставить" in query
+        covered_banks = {s.bank for s in selected}
         context = [
             {
                 "id": s.id,
@@ -287,15 +374,34 @@ class DemoService:
                 "locator": s.locator,
                 "text": s.text,
                 "source_type": s.source_type,
+                "section_role": s.section_role,
             }
             for s in selected
         ]
         schema = Generated.model_json_schema()
         if selected:
-            schema["properties"]["source_ids"]["minItems"] = 1
+            schema["properties"]["source_ids"]["minItems"] = len(covered_banks) if comparison else 1
             schema["properties"]["source_ids"]["items"] = {
                 "type": "string",
                 "enum": [s.id for s in selected],
+            }
+        if comparison and selected:
+            schema["properties"]["source_ids"] = {
+                "type": "object",
+                "properties": {
+                    bank: {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [s.id for s in selected if s.bank == bank],
+                        },
+                        "minItems": 1,
+                        "maxItems": 2,
+                    }
+                    for bank in sorted(covered_banks)
+                },
+                "required": sorted(covered_banks),
+                "additionalProperties": False,
             }
         if self.lock.locked():
             raise HTTPException(429, "LOCAL_DEMO_BUSY")
@@ -329,7 +435,13 @@ class DemoService:
                             {
                                 "role": "user",
                                 "content": json.dumps(
-                                    {"public_question": "Опиши: " + query, "snippets": context},
+                                    {
+                                        "public_question": query,
+                                        "task": "compare_banks"
+                                        if comparison
+                                        else "describe_conditions",
+                                        "snippets": context,
+                                    },
                                     ensure_ascii=False,
                                 ),
                             },
@@ -353,10 +465,26 @@ class DemoService:
                 payload = response.json()
                 if payload["choices"][0].get("finish_reason") == "length":
                     raise HTTPException(502, "GROQ_OUTPUT_TRUNCATED_NO_RETRY")
-                generated = Generated.model_validate_json(
-                    payload["choices"][0]["message"]["content"]
-                )
                 by_id = {s.id: s for s in selected}
+                output = json.loads(payload["choices"][0]["message"]["content"])
+                if comparison and selected:
+                    bank_sources = output["source_ids"]
+                    if not isinstance(bank_sources, dict) or set(bank_sources) != covered_banks:
+                        raise ValueError("Comparison omitted a bank")
+                    for bank, ids in bank_sources.items():
+                        if (
+                            not isinstance(ids, list)
+                            or not 1 <= len(ids) <= 2
+                            or any(
+                                not isinstance(sid, str)
+                                or sid not in by_id
+                                or by_id[sid].bank != bank
+                                for sid in ids
+                            )
+                        ):
+                            raise ValueError("Invalid bank citation")
+                    output["source_ids"] = [sid for ids in bank_sources.values() for sid in ids]
+                generated = Generated.model_validate(output)
                 for source_id in generated.source_ids:
                     if source_id not in by_id:
                         raise HTTPException(502, "GROQ_CITATION_INVALID_NO_RETRY")
@@ -365,6 +493,11 @@ class DemoService:
                     raise ValueError("Unknown reference")
                 if selected and not generated.source_ids:
                     raise ValueError("Missing citations")
+                if (
+                    comparison
+                    and {by_id[sid].bank for sid in generated.source_ids} != covered_banks
+                ):
+                    raise ValueError("Comparison omitted a bank")
             except (ValueError, KeyError, IndexError, TypeError):
                 raise HTTPException(502, "GROQ_OUTPUT_OR_CITATION_INVALID_NO_RETRY") from None
             return {
