@@ -10,6 +10,16 @@ test("an interrupted table is explicitly partial and does not claim to be loadin
   expect(markup).toContain("Таблица получена частично.");
   expect(markup).not.toContain("Таблица формируется");
 });
+test("local fragment links accept only fixed snippet IDs", () => {
+  for (const fragmentPath of ["javascript:alert(1)", "/api/local-demo/fragment?id=../../.env", "https://evil.test/"]) {
+    const table = demoTable();
+    table.sources = [{ id: "x", label: "source", detail: "text", fragmentPath }];
+    expect(renderToStaticMarkup(<ResponseTable table={table} />)).not.toContain("href=");
+  }
+  const table = demoTable();
+  table.sources = [{ id: "x", label: "source", detail: "text", fragmentPath: "/api/local-demo/fragment?id=Sabcdef123456" }];
+  expect(renderToStaticMarkup(<ResponseTable table={table} />)).toContain('href="/api/local-demo/fragment?id=Sabcdef123456"');
+});
 test("assistant text, table conditions and source titles escape HTML; arbitrary source URLs remain inert", () => {
   const payload = '<img src=x onerror="alert(1)"><script>alert(2)</script>';
   const table = demoTable();

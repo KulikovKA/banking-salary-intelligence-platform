@@ -10,6 +10,7 @@ export function ChatComposer({
   onStop,
   disabled = false,
   demo = true,
+  live = false,
 }: {
   draft: string;
   generating: boolean;
@@ -19,6 +20,7 @@ export function ChatComposer({
   onStop: () => void;
   disabled?: boolean;
   demo?: boolean;
+  live?: boolean;
 }) {
   const input = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
@@ -93,7 +95,7 @@ export function ChatComposer({
         </div>
       </form>
       <p className="composer-footnote">
-        {demo ? "DEMO · Синтетические данные. Не является банковским предложением." : "Ответ по выбранному snapshot. Не вводите ФИО, реквизиты и зарплатные ведомости."}
+        {live ? "Эксперимент · Тарифы не проверены. Не вводите персональные данные и реквизиты." : demo ? "DEMO · Синтетические данные. Не является банковским предложением." : "Ответ по выбранному snapshot. Не вводите ФИО, реквизиты и зарплатные ведомости."}
         <span>Shift + Enter — новая строка</span>
       </p>
     </div>

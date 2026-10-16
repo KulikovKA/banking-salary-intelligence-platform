@@ -27,6 +27,7 @@ export interface ResponseSource {
   detail: string;
   /** Only server-provided protected original paths can become links. */
   originalPath?: string;
+  fragmentPath?: string;
 }
 export interface TableBlock {
   id: string;
@@ -65,9 +66,9 @@ export type ChatStreamEvent = { sequence: number } & (
   | { type: "complete" }
 );
 export interface ChatTransport {
-  readonly mode: "demo" | "backend";
+  readonly mode: "demo" | "backend" | "live";
   stream(
-    request: { question: string },
+    request: { question: string; previousTopic?: string },
     signal: AbortSignal,
   ): AsyncIterable<ChatStreamEvent>;
 }

@@ -91,7 +91,7 @@ export function ChatShell({
     let complete = false;
     try {
       for await (const event of transport.stream(
-        { question },
+        { question, previousTopic: active.messages.filter((m) => m.role === "user").at(-1)?.blocks.map((b) => b.kind === "text" ? b.text : "").join(" ") },
         controller.signal,
       )) {
         if (controller.signal.aborted) break;
@@ -138,7 +138,7 @@ export function ChatShell({
           </div>
           <span className="mode-pill">
             <span />
-            {transport.mode === "demo" ? "DEMO-режим" : "Доказательный ответ"}
+            {transport.mode === "demo" ? "DEMO-режим" : transport.mode === "live" ? "Groq · GPT-OSS 120B · эксперимент" : "Доказательный ответ"}
           </span>
         </header>
         <div
@@ -193,6 +193,7 @@ export function ChatShell({
           onStop={stop}
           disabled={disabled}
           demo={transport.mode === "demo"}
+          live={transport.mode === "live"}
         />
       </main>
     </div>
