@@ -19,6 +19,8 @@ test("local fragment links accept only fixed snippet IDs", () => {
   const table = demoTable();
   table.sources = [{ id: "x", label: "source", detail: "text", fragmentPath: "/api/local-demo/fragment?id=Sabcdef123456" }];
   expect(renderToStaticMarkup(<ResponseTable table={table} />)).toContain('href="/api/local-demo/fragment?id=Sabcdef123456"');
+  table.sources[0].fragmentPath = "/api/local-demo/document?id=Sabcdef123456";
+  expect(renderToStaticMarkup(<ResponseTable table={table} />)).toContain('href="/api/local-demo/document?id=Sabcdef123456"');
 });
 test("assistant text, table conditions and source titles escape HTML; arbitrary source URLs remain inert", () => {
   const payload = '<img src=x onerror="alert(1)"><script>alert(2)</script>';

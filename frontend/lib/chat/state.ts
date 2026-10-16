@@ -11,6 +11,7 @@ export function initialState(): ChatState {
   return { activeId: "initial", conversations: [newConversation("initial")] };
 }
 export type ChatAction =
+  | { type: "restore"; state: ChatState }
   | { type: "new"; id: string }
   | { type: "select"; id: string }
   | { type: "delete"; id: string; replacementId: string }
@@ -90,6 +91,7 @@ export function applyStreamEvent(
 }
 
 export function chatReducer(state: ChatState, action: ChatAction): ChatState {
+  if (action.type === "restore") return action.state;
   if (action.type === "new")
     return {
       activeId: action.id,

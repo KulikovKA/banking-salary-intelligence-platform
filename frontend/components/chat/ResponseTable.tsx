@@ -103,7 +103,7 @@ export function ResponseTable({
         <span className="source-label">Источники</span>
         {table.sources.map((source) => {
           const path = safeOriginalPath(source.originalPath) ??
-            (source.fragmentPath && /^\/api\/local-demo\/fragment\?id=S[a-f0-9]{12}$/.test(source.fragmentPath)
+            (source.fragmentPath && /^\/api\/local-demo\/(?:fragment|document)\?id=S[a-f0-9]{12}$/.test(source.fragmentPath)
               ? source.fragmentPath : undefined);
           return (
             <div className="source" key={source.id}>

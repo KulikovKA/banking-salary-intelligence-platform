@@ -1,4 +1,5 @@
 import { Icon } from "./Icon";
+import type { ReactNode } from "react";
 const suggestions = [
   {
     icon: "table" as const,
@@ -21,9 +22,22 @@ const suggestions = [
 ];
 export function ChatWelcome({
   onSuggest,
+  modern = false,
+  composer,
 }: {
   onSuggest: (question: string) => void;
+  modern?: boolean;
+  composer?: ReactNode;
 }) {
+  if (modern) return <section className="welcome live-welcome" aria-labelledby="welcome-title">
+    <div className="welcome-kicker"><span />Ваш помощник в банковских вопросах</div>
+    <h1 id="welcome-title">Чем могу помочь?</h1>
+    {composer}
+    <div className="live-suggestions">
+      {["Сравнить зарплатные проекты банков", "Какие комиссии у ВТБ?", "Условия зарплатного проекта", "Какой банк выгоднее?"].map((question) =>
+        <button key={question} onClick={() => onSuggest(question)}>{question}</button>)}
+    </div>
+  </section>;
   return (
     <section className="welcome" aria-labelledby="welcome-title">
       <div className="welcome-symbol">

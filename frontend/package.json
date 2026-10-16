@@ -13,12 +13,15 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "playwright test --config tests/playwright.config.ts"
+    "test": "playwright test --config tests/playwright.config.ts",
+    "test:ui": "playwright test --config tests/ui-redesign.config.ts"
   },
   "dependencies": {
     "next": "16.4.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "16.4.0",

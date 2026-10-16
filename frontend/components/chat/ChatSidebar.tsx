@@ -8,6 +8,8 @@ export function ChatSidebar({
   onNew,
   onSelect,
   onDelete,
+  modern = false,
+  onSettings,
 }: {
   conversations: Conversation[];
   activeId: string;
@@ -16,6 +18,8 @@ export function ChatSidebar({
   onNew: () => void;
   onSelect: (id: string) => void;
   onDelete: (id: string) => void;
+  modern?: boolean;
+  onSettings?: () => void;
 }) {
   const saved = conversations.filter(
     (c) => c.messages.length > 0 || c.draft.trim().length > 0,
@@ -32,7 +36,7 @@ export function ChatSidebar({
         {!collapsed && (
           <div>
             <strong>Зарплатный AI</strong>
-            <span>Банковская аналитика</span>
+            <span>{modern ? "Банковский ассистент" : "Банковская аналитика"}</span>
           </div>
         )}
         <button
@@ -96,18 +100,21 @@ export function ChatSidebar({
                     />
                   )}
                 </button>
-                <button
+                {modern ? <details className="conversation-menu">
+                  <summary className="icon-button" aria-label={`Меню диалога: ${conversation.title}`}><Icon name="more" size={18} /></summary>
+                  <div className="conversation-menu-popover"><button onClick={() => onDelete(conversation.id)}><Icon name="trash" size={15} />Удалить чат</button></div>
+                </details> : <button
                   className="conversation-delete icon-button"
                   onClick={() => onDelete(conversation.id)}
                   aria-label={`Удалить диалог: ${conversation.title}`}
                   title="Удалить диалог"
                 >
                   <Icon name="trash" size={15} />
-                </button>
+                </button>}
               </div>
             ))}
           </nav>
-          <div className="sidebar-bottom">
+          {!modern && <div className="sidebar-bottom">
             <div className="session-note">
               <span className="session-dot" />
               <span>История в этой вкладке</span>
@@ -120,9 +127,13 @@ export function ChatSidebar({
                 <span>Зарплатные проекты</span>
               </div>
             </div>
-          </div>
+          </div>}
         </>
       )}
+      {modern && <div className="live-sidebar-bottom">
+        <button className="settings-button" onClick={onSettings} aria-label="Настройки"><Icon name="settings" size={19} />{!collapsed && <span>Настройки</span>}</button>
+        {!collapsed && <span className="local-history-note">История хранится на этом устройстве</span>}
+      </div>}
     </aside>
   );
 }

@@ -5,7 +5,9 @@ import { messagePlainText } from "@/lib/chat/format";
 import { Icon } from "./Icon";
 import { ResponseTable } from "./ResponseTable";
 import { StreamingIndicator } from "./StreamingIndicator";
-export function ChatMessage({ message, demo = true }: { message: ChatMessageModel; demo?: boolean }) {
+import { AnswerMarkdown } from "./AnswerMarkdown";
+import { answerText } from "@/lib/chat/presentation";
+export function ChatMessage({ message, demo = true, modern = false, onRetry }: { message: ChatMessageModel; demo?: boolean; modern?: boolean; onRetry?: () => void }) {
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "failed">(
     "idle",
   );
@@ -18,7 +20,7 @@ export function ChatMessage({ message, demo = true }: { message: ChatMessageMode
   );
   async function copy() {
     try {
-      await navigator.clipboard.writeText(messagePlainText(message));
+      await navigator.clipboard.writeText(modern ? message.blocks.filter((b) => b.kind === "text").map((b) => message.role === "assistant" ? answerText(b.text) : b.text).join("\n\n") : messagePlainText(message));
       setCopyStatus("copied");
     } catch {
       setCopyStatus("failed");
@@ -33,24 +35,24 @@ export function ChatMessage({ message, demo = true }: { message: ChatMessageMode
       aria-label={assistant ? "Сообщение ассистента" : "Ваше сообщение"}
       data-message-id={message.id}
     >
-      {assistant && (
+      {assistant && !modern && (
         <div className="assistant-avatar">
           <Icon name="spark" size={18} />
         </div>
       )}
       <div className="message-body">
-        {assistant && (
+        {assistant && !modern && (
           <div className="message-author">
             Ассистент{demo && <span>DEMO</span>}
           </div>
         )}
         <div className="message-content">
           {message.blocks.map((block) =>
-            block.kind === "text" ? (
+            block.kind === "text" ? (modern && assistant ? <AnswerMarkdown key={block.id} text={block.text} /> :
               <p className="message-text" key={block.id}>
                 {block.text}
               </p>
-            ) : (
+            ) : modern ? null : (
               <ResponseTable
                 key={block.table.id}
                 table={block.table}
@@ -60,20 +62,20 @@ export function ChatMessage({ message, demo = true }: { message: ChatMessageMode
           )}
         </div>
         {message.status === "streaming" && (
-          <StreamingIndicator empty={!message.blocks.length} />
+          <StreamingIndicator empty={!message.blocks.length} modern={modern} />
         )}
         {message.status === "stopped" && (
           <p className="message-state" role="status">
-            {demo ? "Генерация остановлена. Показана полученная часть ответа." : "Клиентский запрос остановлен. Backend может продолжить обработку."}
+            {modern ? "Ответ остановлен." : demo ? "Генерация остановлена. Показана полученная часть ответа." : "Клиентский запрос остановлен. Backend может продолжить обработку."}
           </p>
         )}
         {message.status === "error" && (
           <p className="message-error" role="alert">
-            {message.error} Полученная часть ответа сохранена. Можно отправить
-            запрос ещё раз.
+            {message.error}{!modern && " Полученная часть ответа сохранена. Можно отправить запрос ещё раз."}
+            {modern && onRetry && <button className="retry-button" onClick={onRetry}>Попробовать снова</button>}
           </p>
         )}
-        {message.blocks.length > 0 && (
+        {message.blocks.length > 0 && (!modern || assistant) && (
           <div className="message-actions">
             <button
               type="button"

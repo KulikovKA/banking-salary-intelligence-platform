@@ -42,7 +42,9 @@ SYSTEM_PROMPT = (
     "Не вычисляй стоимость, не выбирай победителя. Не называй тариф "
     "проверенным или действующим. Неизвестные даты, комиссии и условия "
     "не выдумывай; отсутствие сведений не означает нулевую комиссию. "
-    "Если банка нет в выдержках, явно укажи отсутствие его оригинала. "
+    "Если банка нет в выдержках, явно укажи отсутствие материала в базе знаний. "
+    "Источник с source_type=research_summary — наша подготовленная сводка; "
+    "ссылайся на неё как на документ базы знаний, сохраняя её ограничения. "
     "Не путай комиссии сотрудника и работодателя. Ответ — JSON: "
     '{"answer":"текст с ссылками [ID]", "source_ids":["ID выдержки"]}. '
     "Каждый числовой тариф сопровождай ссылкой и условиями. "
@@ -68,6 +70,8 @@ class Snippet:
     sha256: str
     locator: str
     text: str
+    source_type: str = "bank_original"
+    document_text: str = ""
 
 
 def terms(text: str) -> set[str]:
@@ -130,6 +134,52 @@ def load_inventory(path: Path) -> list[Snippet]:
                         text=fragment,
                     )
                 )
+    return snippets
+
+
+def load_documents(root: Path) -> list[Snippet]:
+    """Index our prepared knowledge documents with their own hashes and provenance."""
+    root = root.resolve()
+    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    snippets: list[Snippet] = []
+    for entry in manifest["files"]:
+        if (
+            entry.get("bank_code") not in BANKS
+            or entry.get("kind") != "md"
+            or entry.get("provenance_type") != "analytical_compilation"
+        ):
+            continue
+        path = (root / entry["relative_path"]).resolve()
+        if not path.is_relative_to(root):
+            raise RuntimeError("LOCAL_DOCUMENT_PATH_INVALID")
+        raw = path.read_bytes()
+        digest = hashlib.sha256(raw).hexdigest()
+        if digest != entry["sha256"]:
+            raise RuntimeError("LOCAL_DOCUMENT_HASH_MISMATCH")
+        text = raw.decode("utf-8-sig")
+        sections = re.split(r"(?m)^(?=## )", text)
+        for number, section in enumerate(sections, start=1):
+            heading = section.splitlines()[0].lstrip("# ") if section.strip() else "Введение"
+            for start in range(0, len(section), 1100):
+                fragment = section[start : start + 1400].strip()
+                if len(fragment) < 35:
+                    continue
+                identity = hashlib.sha256(f"{digest}:{number}:{start}".encode()).hexdigest()[:12]
+                snippets.append(
+                    Snippet(
+                        id="S" + identity,
+                        bank=entry["bank_code"],
+                        filename=f"{BANKS[entry['bank_code']]} · документ базы знаний",
+                        url=f"/api/local-demo/document?id=S{identity}",
+                        sha256=digest,
+                        locator=f"раздел {number}: {heading}",
+                        text=fragment,
+                        source_type="research_summary",
+                        document_text=text,
+                    )
+                )
+    if not snippets:
+        raise RuntimeError("LOCAL_DOCUMENTS_EMPTY")
     return snippets
 
 
@@ -236,6 +286,7 @@ class DemoService:
                 "document": s.filename,
                 "locator": s.locator,
                 "text": s.text,
+                "source_type": s.source_type,
             }
             for s in selected
         ]
@@ -326,7 +377,10 @@ class DemoService:
                     for sid in dict.fromkeys(generated.source_ids)
                 ],
                 "sources": context,
-                "provenance": [{"id": s.id, "sha256": s.sha256, "url": s.url} for s in selected],
+                "provenance": [
+                    {"id": s.id, "sha256": s.sha256, "url": s.url, "source_type": s.source_type}
+                    for s in selected
+                ],
                 "model": MODEL,
                 "provider": "groq",
                 "usage": payload.get("usage", {}),
@@ -348,7 +402,13 @@ def create_app() -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(application: FastAPI) -> AsyncIterator[None]:
-        service = DemoService(key, load_inventory(Path(os.environ["LIVE_DEMO_INVENTORY"])))
+        documents = os.environ.get("LIVE_DEMO_DOCUMENTS")
+        snippets = (
+            load_documents(Path(documents))
+            if documents
+            else load_inventory(Path(os.environ["LIVE_DEMO_INVENTORY"]))
+        )
+        service = DemoService(key, snippets)
         application.state.demo = service
         try:
             yield
@@ -384,6 +444,7 @@ def create_app() -> FastAPI:
             "snippets": len(service.snippets),
             "notice": NOTICE,
             "banks": [BANKS[b] for b in BANKS if b in {s.bank for s in service.snippets}],
+            "source_types": sorted({s.source_type for s in service.snippets}),
         }
 
     @application.post("/local-demo/questions")
@@ -400,6 +461,18 @@ def create_app() -> FastAPI:
         return Response(
             f"[{source.id}] {BANKS[source.bank]} · {source.filename}\n{source.locator}\n"
             f"URL: {source.url}\nSHA-256: {source.sha256}\n\n{source.text}\n\n{NOTICE}",
+            media_type="text/plain",
+        )
+
+    @application.get("/local-demo/document")
+    async def document(id: str) -> Response:
+        service: DemoService = application.state.demo
+        source = next((s for s in service.snippets if s.id == id), None)
+        if source is None or not source.document_text:
+            raise HTTPException(404, "LOCAL_DOCUMENT_NOT_FOUND")
+        return Response(
+            f"Документ базы знаний · {BANKS[source.bank]}\nSHA-256: {source.sha256}\n\n"
+            + source.document_text,
             media_type="text/plain",
         )
 

@@ -7,12 +7,13 @@ async function proxy(request: NextRequest, context: { params: Promise<{ action: 
   const host = request.headers.get("host");
   if (process.env.NODE_ENV !== "development" || process.env.LIVE_DEMO_ENABLED !== "true" ||
       process.env.APP_ENV !== "poc" || !["127.0.0.1:3010", "localhost:3010"].includes(host ?? "") ||
-      !["status", "questions", "fragment"].includes(action)) return new Response(null, { status: 404 });
+      !["status", "questions", "fragment", "document"].includes(action)) return new Response(null, { status: 404 });
   if ((action === "questions") !== (request.method === "POST")) return new Response(null, { status: 405 });
   if (request.method === "POST" && request.headers.get("origin") !== `http://${host}`)
     return new Response(null, { status: 403 });
   const id = request.nextUrl.searchParams.get("id") ?? "";
-  if (action === "fragment" && !/^S[a-f0-9]{12}$/.test(id)) return new Response(null, { status: 404 });
+  const sourceAction = action === "fragment" || action === "document";
+  if (sourceAction && !/^S[a-f0-9]{12}$/.test(id)) return new Response(null, { status: 404 });
   let body: string | undefined;
   if (request.method === "POST") {
     const reader = request.body?.getReader();
@@ -28,7 +29,7 @@ async function proxy(request: NextRequest, context: { params: Promise<{ action: 
     body = Buffer.concat(chunks).toString("utf8");
   }
   try {
-    const upstream = await fetch(`http://127.0.0.1:8010/local-demo/${action}${action === "fragment" ? `?id=${id}` : ""}`, {
+    const upstream = await fetch(`http://127.0.0.1:8010/local-demo/${action}${sourceAction ? `?id=${id}` : ""}`, {
       method: request.method, body, cache: "no-store", redirect: "error",
       headers: { "Content-Type": "application/json", "X-Live-Demo-Token": process.env.LIVE_DEMO_TOKEN ?? "" },
       signal: AbortSignal.any([request.signal, AbortSignal.timeout(25000)]),

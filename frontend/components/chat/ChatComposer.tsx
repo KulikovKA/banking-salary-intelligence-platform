@@ -45,7 +45,7 @@ export function ChatComposer({
           ref={input}
           value={draft}
           onChange={(e) => onDraft(e.target.value)}
-          placeholder="Спросите об условиях зарплатного проекта…"
+          placeholder={live ? "Спросите о зарплатных проектах..." : "Спросите об условиях зарплатного проекта…"}
           aria-label="Сообщение"
           maxLength={2000}
           rows={1}
@@ -62,7 +62,7 @@ export function ChatComposer({
           }}
         />
         <div className="composer-toolbar">
-          <span className="composer-context">
+          <span className="composer-context" aria-hidden={live}>
             <Icon name="spark" size={15} />
             Зарплатные проекты
           </span>
@@ -95,7 +95,7 @@ export function ChatComposer({
         </div>
       </form>
       <p className="composer-footnote">
-        {live ? "Эксперимент · Тарифы не проверены. Не вводите персональные данные и реквизиты." : demo ? "DEMO · Синтетические данные. Не является банковским предложением." : "Ответ по выбранному snapshot. Не вводите ФИО, реквизиты и зарплатные ведомости."}
+        {live ? "Ответы могут содержать ошибки. Проверяйте важные условия." : demo ? "DEMO · Синтетические данные. Не является банковским предложением." : "Ответ по выбранному snapshot. Не вводите ФИО, реквизиты и зарплатные ведомости."}
         <span>Shift + Enter — новая строка</span>
       </p>
     </div>

@@ -18,6 +18,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--env-file", type=Path, required=True)
     parser.add_argument("--inventory", type=Path, required=True)
+    parser.add_argument(
+        "--documents",
+        type=Path,
+        help="Prepared knowledge package; defaults to inventory's sibling manifest",
+    )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     env = os.environ.copy()
@@ -44,6 +49,9 @@ def main() -> None:
             "PYTHONUNBUFFERED": "1",
         }
     )
+    documents = args.documents or args.inventory.resolve().parent
+    if args.documents or (documents / "manifest.json").is_file():
+        env["LIVE_DEMO_DOCUMENTS"] = str(documents.resolve())
     npm = shutil.which("npm.cmd" if os.name == "nt" else "npm")
     if not npm:
         parser.error("npm is required")

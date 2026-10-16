@@ -1,5 +1,9 @@
 import type { CSSProperties } from "react";
 const paths = {
+  more: "M5 12h.01M12 12h.01M19 12h.01",
+  close: "m6 6 12 12M6 18 18 6",
+  menu: "M4 6h16M4 12h16M4 18h16",
+  settings: "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8M9 3h6l1 3 3 1 2 5-2 5-3 1-1 3H9l-1-3-3-1-2-5 2-5 3-1z",
   plus: "M12 5v14M5 12h14",
   panel: "M9 4v16M4 4h16v16H4z",
   chat: "M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l-3 3V11.5a9 9 0 0 1 18 0Z",

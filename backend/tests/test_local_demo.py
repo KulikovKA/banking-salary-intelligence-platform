@@ -1,6 +1,7 @@
 """Offline tests for the separate local entrypoint and public-only provider payload."""
 
 import asyncio
+import hashlib
 import json
 from pathlib import Path
 
@@ -13,6 +14,7 @@ from app.local_demo import (
     Question,
     Snippet,
     create_app,
+    load_documents,
     load_inventory,
     public_query,
     retrieve,
@@ -139,6 +141,7 @@ def test_loopback_token_host_and_exact_fragment(monkeypatch: pytest.MonkeyPatch)
     monkeypatch.delenv("GROQ_API_KEY", raising=False)
     monkeypatch.setenv("LIVE_DEMO_TOKEN", "t" * 32)
     monkeypatch.setenv("LIVE_DEMO_INVENTORY", "unused-in-test")
+    monkeypatch.delenv("LIVE_DEMO_DOCUMENTS", raising=False)
     monkeypatch.setattr("app.local_demo.load_inventory", lambda _: [snippet()])
 
     async def run() -> None:
@@ -169,3 +172,28 @@ def test_loopback_token_host_and_exact_fragment(monkeypatch: pytest.MonkeyPatch)
                 assert (await remote.get("/local-demo/status")).status_code == 403
 
     asyncio.run(run())
+
+
+def test_knowledge_documents_preserve_provenance_and_reject_tampering(tmp_path: Path) -> None:
+    text = "# Наш документ\n\n## Условия\nИндивидуальная комиссия; точная ставка неизвестна."
+    path = tmp_path / "alfa.md"
+    path.write_bytes(text.encode("utf-8"))
+    manifest = {
+        "files": [
+            {
+                "relative_path": "alfa.md",
+                "kind": "md",
+                "bank_code": "alfa",
+                "provenance_type": "analytical_compilation",
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            }
+        ]
+    }
+    (tmp_path / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    loaded = load_documents(tmp_path)
+    assert loaded and all(s.bank == "alfa" for s in loaded)
+    assert all(s.source_type == "research_summary" and s.document_text == text for s in loaded)
+    assert all(s.text in text and s.url.startswith("/api/local-demo/document?id=") for s in loaded)
+    path.write_text("changed", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="DOCUMENT_HASH_MISMATCH"):
+        load_documents(tmp_path)

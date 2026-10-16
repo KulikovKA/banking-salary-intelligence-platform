@@ -4,7 +4,7 @@ import path from "node:path";
 export default defineConfig({
   testDir: ".",
   testMatch: /.*\.spec\.tsx?$/,
-  testIgnore: "backend-browser.spec.ts",
+  testIgnore: ["backend-browser.spec.ts", "ui-redesign.spec.ts"],
   outputDir: path.resolve(
     __dirname,
     "../../.local/frontend-chat-mvp/test-results",
